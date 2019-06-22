@@ -12,7 +12,7 @@
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
+    public class ApplicationDbContext : IdentityDbContext<CnbUser, ApplicationRole, string>
     {
         private static readonly MethodInfo SetIsDeletedQueryFilterMethod =
             typeof(ApplicationDbContext).GetMethod(
@@ -76,26 +76,23 @@
 
         private static void ConfigureUserIdentityRelations(ModelBuilder builder)
         {
-            builder.Entity<ApplicationUser>()
-                .HasMany(e => e.Claims)
-                .WithOne()
-                .HasForeignKey(e => e.UserId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
+            // Mapping Tables
+            builder.Entity<ShoppingCartProduct>().HasKey(x => new { x.ShoppingCartId, x.ProductId });
 
-            builder.Entity<ApplicationUser>()
-                .HasMany(e => e.Logins)
-                .WithOne()
-                .HasForeignKey(e => e.UserId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<OrderProduct>().HasKey(x => new { x.OrderId, x.ProductId });
 
-            builder.Entity<ApplicationUser>()
-                .HasMany(e => e.Roles)
-                .WithOne()
-                .HasForeignKey(e => e.UserId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<CategoryProduct>().HasKey(x => new { x.ProductId, x.SubCategoryId });
+
+            // Tables
+            builder.Entity<Product>()
+                .HasOne(sc => sc.SubCategory)
+                .WithMany(pr => pr.Products)
+                .HasForeignKey(fk => fk.SubCategoryId);
+
+            builder.Entity<ShoppingCart>()
+                .HasOne(u => u.CnbUser)
+                .WithOne(sc => sc.ShoppingCart)
+                .HasForeignKey<CnbUser>(fk => fk.ShoppingCartId);
         }
 
         private static void SetIsDeletedQueryFilter<T>(ModelBuilder builder)

@@ -3,16 +3,16 @@
     using System;
     using System.Collections.Generic;
 
-    public class User
+    using Microsoft.AspNetCore.Identity;
+
+    public class CnbUser : IdentityUser
     {
-        public User()
+        public CnbUser()
         {
             this.Id = Guid.NewGuid().ToString();
             this.Orders = new HashSet<Order>();
             this.Addresses = new HashSet<Address>();
         }
-
-        public string Id { get; set; }
 
         public string FirstName { get; set; }
 
@@ -22,8 +22,11 @@
 
         public virtual ICollection<Order> Orders { get; set; }
 
-        public int ShoppingCartId { get; set; }
+        public string ShoppingCartId { get; set; }
 
         public virtual ShoppingCart ShoppingCart { get; set; }
+
+        // public bool IsDeleted { get; set; }
+        // public DateTime? DeletedOn { get; set; }
     }
 }

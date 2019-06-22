@@ -29,9 +29,9 @@
 
         public PaymentType PaymentType { get; set; }
 
-        public string UserId { get; set; }
+        public string CnbUserId { get; set; }
 
-        public User User { get; set; }
+        public CnbUser CnbUser { get; set; }
 
         public ICollection<OrderProduct> OrderProducts { get; set; }
 

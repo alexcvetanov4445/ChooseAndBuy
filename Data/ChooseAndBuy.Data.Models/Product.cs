@@ -23,7 +23,7 @@
 
         public decimal Price { get; set; }
 
-        public int SubCategoryId { get; set; }
+        public string SubCategoryId { get; set; }
 
         public virtual SubCategory SubCategory { get; set; }
 
