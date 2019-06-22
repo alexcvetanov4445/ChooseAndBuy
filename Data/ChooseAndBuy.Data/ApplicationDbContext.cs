@@ -12,7 +12,7 @@
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 
-    public class ApplicationDbContext : IdentityDbContext<CnbUser, ApplicationRole, string>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
         private static readonly MethodInfo SetIsDeletedQueryFilterMethod =
             typeof(ApplicationDbContext).GetMethod(
@@ -90,9 +90,9 @@
                 .HasForeignKey(fk => fk.SubCategoryId);
 
             builder.Entity<ShoppingCart>()
-                .HasOne(u => u.CnbUser)
+                .HasOne(u => u.ApplicationUser)
                 .WithOne(sc => sc.ShoppingCart)
-                .HasForeignKey<CnbUser>(fk => fk.ShoppingCartId);
+                .HasForeignKey<ApplicationUser>(fk => fk.ShoppingCartId);
         }
 
         private static void SetIsDeletedQueryFilter<T>(ModelBuilder builder)

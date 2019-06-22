@@ -27,7 +27,7 @@
 
         public string CnbUserId { get; set; }
 
-        public CnbUser CnbUser { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
 
         public ICollection<Order> Orders { get; set; }
     }

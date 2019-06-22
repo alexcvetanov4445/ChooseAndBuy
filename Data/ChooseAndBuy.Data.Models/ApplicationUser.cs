@@ -16,7 +16,22 @@ namespace ChooseAndBuy.Data.Models
             this.Roles = new HashSet<IdentityUserRole<string>>();
             this.Claims = new HashSet<IdentityUserClaim<string>>();
             this.Logins = new HashSet<IdentityUserLogin<string>>();
+
+            this.Addresses = new HashSet<Address>();
+            this.Orders = new HashSet<Order>();
         }
+
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
+
+        public virtual ICollection<Address> Addresses { get; set; }
+
+        public virtual ICollection<Order> Orders { get; set; }
+
+        public string ShoppingCartId { get; set; }
+
+        public virtual ShoppingCart ShoppingCart { get; set; }
 
         // Audit info
         public DateTime CreatedOn { get; set; }

@@ -13,9 +13,9 @@
 
         public string Id { get; set; }
 
-        public string CnbUserId { get; set; }
+        public string ApplicationUserId { get; set; }
 
-        public virtual CnbUser CnbUser { get; set; }
+        public virtual ApplicationUser ApplicationUser { get; set; }
 
         public virtual ICollection<ShoppingCartProduct> ShoppingCartProducts { get; set; }
     }
