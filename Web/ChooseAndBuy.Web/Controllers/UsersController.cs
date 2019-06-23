@@ -24,9 +24,34 @@
 
         public SignInManager<ApplicationUser> SignInManager { get; }
 
+        [HttpGet]
         public IActionResult Login()
         {
             return this.View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginBindingModel model)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(model);
+            }
+
+            var result = await this.SignInManager.PasswordSignInAsync(
+                model.Username,
+                model.Password,
+                isPersistent: model.RememberMe,
+                lockoutOnFailure: false);
+
+            if (result.Succeeded)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            this.ModelState.AddModelError(string.Empty, "The username or password was incorrect!");
+
+            return this.View(model);
         }
 
         [HttpGet]
@@ -54,7 +79,7 @@
             if (result.Succeeded)
             {
                 // isPersistent can be set to true to keep the user logged in after closing
-                await this.SignInManager.SignInAsync(user, isPersistent: false);
+                // await this.SignInManager.SignInAsync(user, isPersistent: false);
                 return this.RedirectToAction("Login", "Users");
             }
 
@@ -79,6 +104,13 @@
         public IActionResult Confirmation()
         {
             return this.View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await this.SignInManager.SignOutAsync();
+            return this.RedirectToAction("index", "home");
         }
     }
 }

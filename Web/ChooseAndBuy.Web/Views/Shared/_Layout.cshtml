@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using ChooseAndBuy.Data.Models
+
+@inject SignInManager<ApplicationUser> signInManager
+
+
+<!DOCTYPE html>
 <html lang="zxx" class="no-js">
 
 <head>
@@ -49,14 +55,30 @@
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
                         <ul class="nav navbar-nav menu_nav ml-auto">
-                            <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/Products">Products</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/Contact">Contact Us</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/Users/Login">Sign In</a></li>
+                            <li class="nav-item"><a asp-action="index" asp-controller="home" class="nav-link">Home</a></li>
+                            <li class="nav-item"><a asp-action="products" asp-controller="categories" class="nav-link">Products</a></li>
+                            <li class="nav-item"><a asp-action="contact" asp-controller="home" class="nav-link">Contact Us</a></li>
+                            @if (signInManager.IsSignedIn(User))
+                            {
+                                <li class="nav-item active submenu dropdown">
+                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                                       aria-expanded="false">@User.Identity.Name</a>
+                                    <ul class="dropdown-menu">
+                                        <li class="nav-item"><a asp-action="account" asp-controller="users" class="nav-link">Account</a></li>
+                                        <li class="nav-item"><a class="nav-link">My Orders</a></li>
+                                    </ul>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a asp-action="login" asp-controller="users" class="nav-link">Sign In</a>
+                                </li>
+                            }
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
                             <li class="nav-item"><a href="/Users/Cart" class="cart"><span class="ti-bag"></span></a></li>
-                            <li class="nav-item">   
+                            <li class="nav-item">
                                 <button class="search"><span class="lnr lnr-magnifier" id="search"></span></button>
                             </li>
                         </ul>

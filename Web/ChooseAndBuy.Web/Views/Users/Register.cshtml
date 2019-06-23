@@ -35,7 +35,7 @@
             <div class="col-lg-6 shadow p-3 mb-5 bg-white rounded">
                 <div class="register_form_inner m-3">
                     <h3>Register</h3>
-                    <form class="row login_form mt-4" method="post" id="contactForm" novalidate="novalidate">
+                    <form class="row login_form mt-4" method="post">
                         <div asp-validation-summary="All" class="text-danger"></div>
                         <div class="col-md-12 form-group">
                             <label asp-for="Username"></label>
@@ -44,16 +44,18 @@
                         </div>
                         <div class="col-md-12 form-group">
                             <label asp-for="Password"></label>
-                            <input asp-for="Password" type="text" class="form-control" id="name" name="password" placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'">
+                            <input asp-for="Password" type="password" class="form-control" id="name" name="password" placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'">
                             <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
                         <div class="col-md-12 form-group">
                             <label asp-for="ConfirmPassword"></label>
-                            <input asp-for="ConfirmPassword" type="text" class="form-control" id="name" name="confirmPassword" placeholder="ConfirmPassword" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Confirm Password'">
+                            <input asp-for="ConfirmPassword" type="password" class="form-control" id="name" name="confirmPassword" placeholder="ConfirmPassword" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Confirm Password'">
                             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                         </div>
                         <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" id="name" name="email" placeholder="Email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email'">
+                            <label asp-for="Email"></label>
+                            <input asp-for="Email" type="text" class="form-control" id="name" name="email" placeholder="Email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email'">
+                            <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
                         <div class="col-md-12 form-group">
                         </div>
