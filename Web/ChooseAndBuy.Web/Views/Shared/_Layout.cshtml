@@ -66,13 +66,14 @@
                                     <ul class="dropdown-menu">
                                         <li class="nav-item"><a asp-action="account" asp-controller="users" class="nav-link">Account</a></li>
                                         <li class="nav-item"><a class="nav-link">My Orders</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="/Identity/Account/Logout">My Orders</a></li>
                                     </ul>
                                 </li>
                             }
                             else
                             {
                                 <li class="nav-item">
-                                    <a asp-action="login" asp-controller="users" class="nav-link">Sign In</a>
+                                    <a class="nav-link" href="/Identity/Account/Login">Sign In</a>
                                 </li>
                             }
                         </ul>
