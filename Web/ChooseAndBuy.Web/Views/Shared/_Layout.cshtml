@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using ChooseAndBuy.Data.Models
+@using ChooseAndBuy.Common
 
 @inject SignInManager<ApplicationUser> signInManager
 
@@ -66,7 +67,15 @@
                                     <ul class="dropdown-menu">
                                         <li class="nav-item"><a asp-action="account" asp-controller="users" class="nav-link">Account</a></li>
                                         <li class="nav-item"><a class="nav-link">My Orders</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="/Identity/Account/Logout">My Orders</a></li>
+                                        <li class="nav-item">
+                                            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@(this.Url.Action("Index", "Home", new { area = string.Empty }))">
+                                                <button type="submit" class="nav-link btn btn-link btn-block text-left rounded-0">Logout</button>
+                                            </form>
+                                        </li>
+                                        @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
+                                        {
+                                            <li class="nav-item"><a class="nav-link">Admin Pane</a></li>
+                                        }
                                     </ul>
                                 </li>
                             }

@@ -93,6 +93,27 @@
                 .HasOne(u => u.ApplicationUser)
                 .WithOne(sc => sc.ShoppingCart)
                 .HasForeignKey<ApplicationUser>(fk => fk.ShoppingCartId);
+
+            // User Tables
+            builder.Entity<ApplicationUser>()
+                .HasMany(e => e.Claims)
+                .WithOne()
+                .HasForeignKey(e => e.UserId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<ApplicationUser>()
+                .HasMany(e => e.Logins)
+                .WithOne()
+                .HasForeignKey(e => e.UserId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<ApplicationUser>()
+                .HasMany(e => e.Roles)
+                .WithOne()
+                .HasForeignKey(e => e.UserId)
+                .IsRequired();
         }
 
         private static void SetIsDeletedQueryFilter<T>(ModelBuilder builder)

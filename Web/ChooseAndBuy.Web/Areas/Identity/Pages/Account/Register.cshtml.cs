@@ -1,9 +1,11 @@
 ﻿namespace ChooseAndBuy.Web.Areas.Identity.Pages.Account
 {
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
     using System.Text.Encodings.Web;
     using System.Threading.Tasks;
-
+    using ChooseAndBuy.Common;
+    using ChooseAndBuy.Data;
     using ChooseAndBuy.Data.Models;
 
     using Microsoft.AspNetCore.Authorization;
@@ -54,6 +56,15 @@
                 var result = await this.userManager.CreateAsync(user, this.Input.Password);
                 if (result.Succeeded)
                 {
+                    if (this.userManager.Users.Count() == 1)
+                    {
+                        await this.userManager.AddToRoleAsync(user, GlobalConstants.AdministratorRoleName);
+                    }
+                    else
+                    {
+                        await this.userManager.AddToRoleAsync(user, GlobalConstants.UserRoleName);
+                    }
+
                     this.logger.LogInformation("User created a new account with password.");
 
                     var code = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
