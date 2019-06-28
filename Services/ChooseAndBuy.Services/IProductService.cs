@@ -4,6 +4,8 @@
 
     public interface IProductService
     {
-            void AddProduct(Product product);
+        void AddProduct(Product product);
+
+        string GetIdByName(string productName);
     }
 }

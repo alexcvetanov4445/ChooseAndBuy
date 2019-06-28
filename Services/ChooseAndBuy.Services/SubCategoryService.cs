@@ -6,6 +6,7 @@
     using System.Text;
 
     using ChooseAndBuy.Data;
+    using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Services.ServiceModels;
 
     public class SubCategoryService : ISubCategoryService
@@ -15,6 +16,13 @@
         public SubCategoryService(ApplicationDbContext context)
         {
             this.context = context;
+        }
+
+        public void AddSubCategory(SubCategory subCategory)
+        {
+            this.context.SubCategories.Add(subCategory);
+
+            this.context.SaveChanges();
         }
 
         public IEnumerable<SubCategoryServiceModel> GetSubCategories()

@@ -1,5 +1,6 @@
 ﻿namespace ChooseAndBuy.Web.Areas.Administration.Controllers
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -30,16 +31,10 @@
 
         public IActionResult Create()
         {
-            var categories = this.subCategoryService
-                .GetSubCategories()
-                .Select(sc => new SelectListItem
-                {
-                    Value = sc.Id,
-                    Text = $"{sc.Name} ({sc.MainCategory})",
-                })
-                .ToList();
 
-            var model = new CreateProductBindingModel { ChildCategories = categories };
+            var categories = this.GetCategories();
+
+            var model = new CreateProductBindingModel { SubCategories = categories };
 
             return this.View(model);
         }
@@ -49,13 +44,33 @@
         {
             if (!this.ModelState.IsValid)
             {
+                model.SubCategories = this.GetCategories();
+
                 return this.View(model);
             }
 
             Product product = this.mapper.Map<Product>(model);
 
             this.productService.AddProduct(product);
-            return this.RedirectToAction("Index", "Home");
+
+            string productId = this.productService.GetIdByName(product.Name);
+
+            // TODO: upload images from the collection in the model into image entity using product id for relation
+            return this.Redirect("/Administration/Home/Index");
+        }
+
+        public List<SelectListItem> GetCategories()
+        {
+            var categories = this.subCategoryService
+                .GetSubCategories()
+                .Select(sc => new SelectListItem
+                {
+                    Value = sc.Id,
+                    Text = $"{sc.Name} ({sc.MainCategory})",
+                })
+                .ToList();
+
+            return categories;
         }
     }
 }

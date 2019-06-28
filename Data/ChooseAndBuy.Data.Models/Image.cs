@@ -11,7 +11,7 @@
 
         public string Id { get; set; }
 
-        public string ImageUrl { get; set; }
+        public byte[] Img { get; set; }
 
         public string ProductId { get; set; }
 

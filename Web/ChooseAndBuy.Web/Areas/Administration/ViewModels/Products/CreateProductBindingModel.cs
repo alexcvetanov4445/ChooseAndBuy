@@ -24,11 +24,11 @@
         [Range(1, int.MaxValue, ErrorMessage = "The field \"{0}\" must be in the range between {1} and {2}")]
         public decimal Price { get; set; }
 
-        [Display(Name = "Category")]
         [Required(ErrorMessage = "The field \"{0}\" is required.")]
-        public int ChildCategoryId { get; set; }
+        public int SubCategoryId { get; set; }
 
-        public ICollection<SelectListItem> ChildCategories { get; set; }
+        [Display(Name = "Category")]
+        public ICollection<SelectListItem> SubCategories { get; set; }
 
         [Display(Name = "Images")]
         [Required(ErrorMessage = "The field \"{0}\" is required.")]

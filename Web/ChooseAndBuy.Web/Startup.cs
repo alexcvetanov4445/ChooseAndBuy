@@ -112,6 +112,7 @@
             services.AddTransient<ISmsSender, NullMessageSender>();
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<ISubCategoryService, SubCategoryService>();
+            services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IProductService, ProductService>();
         }
 

@@ -2,6 +2,7 @@
 {
     using ChooseAndBuy.Data;
     using ChooseAndBuy.Data.Models;
+    using System.Linq;
 
     public class ProductService : IProductService
     {
@@ -17,6 +18,13 @@
             this.context.Products.Add(product);
 
             this.context.SaveChanges();
+        }
+
+        public string GetIdByName(string productName)
+        {
+            var name = this.context.Products.SingleOrDefault(x => x.Name == productName).Name;
+
+            return name;
         }
     }
 }
