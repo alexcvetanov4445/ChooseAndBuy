@@ -39,7 +39,6 @@
     <ProjectReference Include="..\..\Services\ChooseAndBuy.Services.Data\ChooseAndBuy.Services.Data.csproj" />
     <ProjectReference Include="..\..\Services\ChooseAndBuy.Services.Mapping\ChooseAndBuy.Services.Mapping.csproj" />
     <ProjectReference Include="..\..\Services\ChooseAndBuy.Services.Messaging\ChooseAndBuy.Services.Messaging.csproj" />
-    <ProjectReference Include="..\..\Services\ChooseAndBuy.Services\ChooseAndBuy.Services.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,18 +1,16 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ChooseAndBuy.Web.Areas.Administration.ViewModels.Products
+﻿namespace ChooseAndBuy.Web.Areas.Administration.ViewModels.Products
 {
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+
     public class CreateProductBindingModel
     {
         [Display(Name = "Name")]
-        [Required(ErrorMessage = "Полето\"{0}\" e задължително.")]
-        [StringLength(100, MinimumLength = 5, ErrorMessage = "Полето \"{0}\" трябва да бъде текст с минимална дължина {2} и максимална дължина {1}.")]
+        [Required(ErrorMessage = "The field \"{0}\" is required.")]
+        [StringLength(100, MinimumLength = 5, ErrorMessage = "The field \"{0}\" must be a text with minimum legth of {2} and maximum length of {1}.")]
         public string Name { get; set; }
 
         [Display(Name = "Description")]
@@ -22,18 +20,18 @@ namespace ChooseAndBuy.Web.Areas.Administration.ViewModels.Products
         public string Specification { get; set; }
 
         [Display(Name = "Price")]
-        [Required(ErrorMessage = "Полето \"{0}\" e задължително.")]
-        [Range(1, int.MaxValue, ErrorMessage = "Полето \"{0}\" трябва да е число в диапазона от {1} до {2}")]
+        [Required(ErrorMessage = "The field \"{0}\" is required.")]
+        [Range(1, int.MaxValue, ErrorMessage = "The field \"{0}\" must be in the range between {1} and {2}")]
         public decimal Price { get; set; }
 
         [Display(Name = "Category")]
-        [Required(ErrorMessage = "Полето \"{0}\" e задължително.")]
+        [Required(ErrorMessage = "The field \"{0}\" is required.")]
         public int ChildCategoryId { get; set; }
 
         public ICollection<SelectListItem> ChildCategories { get; set; }
 
         [Display(Name = "Images")]
-        [Required(ErrorMessage = "Полето \"{0}\" e задължително.")]
+        [Required(ErrorMessage = "The field \"{0}\" is required.")]
         public ICollection<IFormFile> FormImages { get; set; }
     }
 }

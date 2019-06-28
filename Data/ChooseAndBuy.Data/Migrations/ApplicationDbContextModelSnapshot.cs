@@ -44,7 +44,7 @@ namespace ChooseAndBuy.Data.Migrations
 
                     b.HasIndex("CityId");
 
-                    b.ToTable("Address");
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("ChooseAndBuy.Data.Models.ApplicationRole", b =>
@@ -161,7 +161,7 @@ namespace ChooseAndBuy.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category");
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("ChooseAndBuy.Data.Models.CategoryProduct", b =>
@@ -174,7 +174,7 @@ namespace ChooseAndBuy.Data.Migrations
 
                     b.HasIndex("SubCategoryId");
 
-                    b.ToTable("CategoryProduct");
+                    b.ToTable("CategoryProducts");
                 });
 
             modelBuilder.Entity("ChooseAndBuy.Data.Models.City", b =>
@@ -186,7 +186,7 @@ namespace ChooseAndBuy.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("City");
+                    b.ToTable("Cities");
                 });
 
             modelBuilder.Entity("ChooseAndBuy.Data.Models.Image", b =>
@@ -202,7 +202,7 @@ namespace ChooseAndBuy.Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Image");
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("ChooseAndBuy.Data.Models.Order", b =>
@@ -236,7 +236,7 @@ namespace ChooseAndBuy.Data.Migrations
 
                     b.HasIndex("DeliveryAddressId");
 
-                    b.ToTable("Order");
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("ChooseAndBuy.Data.Models.OrderProduct", b =>
@@ -253,7 +253,7 @@ namespace ChooseAndBuy.Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderProduct");
+                    b.ToTable("OrderProducts");
                 });
 
             modelBuilder.Entity("ChooseAndBuy.Data.Models.Product", b =>
@@ -275,7 +275,7 @@ namespace ChooseAndBuy.Data.Migrations
 
                     b.HasIndex("SubCategoryId");
 
-                    b.ToTable("Product");
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("ChooseAndBuy.Data.Models.Review", b =>
@@ -293,7 +293,7 @@ namespace ChooseAndBuy.Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Review");
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("ChooseAndBuy.Data.Models.Setting", b =>
@@ -330,7 +330,7 @@ namespace ChooseAndBuy.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ShoppingCart");
+                    b.ToTable("ShoppingCarts");
                 });
 
             modelBuilder.Entity("ChooseAndBuy.Data.Models.ShoppingCartProduct", b =>
@@ -345,7 +345,7 @@ namespace ChooseAndBuy.Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ShoppingCartProduct");
+                    b.ToTable("ShoppingCartProducts");
                 });
 
             modelBuilder.Entity("ChooseAndBuy.Data.Models.SubCategory", b =>
@@ -363,7 +363,7 @@ namespace ChooseAndBuy.Data.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("SubCategory");
+                    b.ToTable("SubCategories");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

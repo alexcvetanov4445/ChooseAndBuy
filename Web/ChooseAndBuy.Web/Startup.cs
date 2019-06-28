@@ -1,16 +1,20 @@
 ﻿namespace ChooseAndBuy.Web
 {
+    using System;
     using System.Reflection;
-
+    using System.Threading.Tasks;
+    using AutoMapper;
     using ChooseAndBuy.Data;
     using ChooseAndBuy.Data.Common;
     using ChooseAndBuy.Data.Common.Repositories;
     using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Data.Repositories;
     using ChooseAndBuy.Data.Seeding;
+    using ChooseAndBuy.Services;
     using ChooseAndBuy.Services.Data;
     using ChooseAndBuy.Services.Mapping;
     using ChooseAndBuy.Services.Messaging;
+    using ChooseAndBuy.Web.MappingConfiguration;
     using ChooseAndBuy.Web.ViewModels;
 
     using Microsoft.AspNetCore.Builder;
@@ -57,6 +61,14 @@
                 .AddDefaultTokenProviders()
                 .AddDefaultUI(UIFramework.Bootstrap4);
 
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new ChooseAndBuyProfile());
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
             services
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
@@ -99,12 +111,16 @@
             services.AddTransient<IEmailSender, NullMessageSender>();
             services.AddTransient<ISmsSender, NullMessageSender>();
             services.AddTransient<ISettingsService, SettingsService>();
+            services.AddTransient<ISubCategoryService, SubCategoryService>();
+            services.AddTransient<IProductService, ProductService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
         {
             AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).GetTypeInfo().Assembly);
+
+            this.CreateRoles(serviceProvider).Wait();
 
             // Seed data on application startup
             using (var serviceScope = app.ApplicationServices.CreateScope())
@@ -140,6 +156,25 @@
                 routes.MapRoute("areaRoute", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                 routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        private async Task CreateRoles(IServiceProvider serviceProvider)
+        {
+            // initializing custom roles
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            string[] roleNames = { "Admin", "User", };
+            IdentityResult roleResult;
+
+            foreach (var roleName in roleNames)
+            {
+                var roleExist = await roleManager.RoleExistsAsync(roleName);
+                if (!roleExist)
+                {
+                    // create the roles and seed them to the database
+                    roleResult = await roleManager.CreateAsync(new ApplicationRole(roleName));
+                }
+            }
         }
     }
 }

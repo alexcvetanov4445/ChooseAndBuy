@@ -74,7 +74,7 @@
                                         </li>
                                         @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
                                         {
-                                            <li class="nav-item"><a class="nav-link">Admin Pane</a></li>
+                                            <li class="nav-item"><a asp-action="index" asp-controller="home" asp-area="Administration" class="nav-link">Admin Pane</a></li>
                                         }
                                     </ul>
                                 </li>
