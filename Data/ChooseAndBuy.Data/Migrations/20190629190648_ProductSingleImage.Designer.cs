@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChooseAndBuy.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190628172103_ImagesFromStringToBytesEdit")]
-    partial class ImagesFromStringToBytesEdit
+    [Migration("20190629190648_ProductSingleImage")]
+    partial class ProductSingleImage
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -191,22 +191,6 @@ namespace ChooseAndBuy.Data.Migrations
                     b.ToTable("Cities");
                 });
 
-            modelBuilder.Entity("ChooseAndBuy.Data.Models.Image", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<byte[]>("Img");
-
-                    b.Property<string>("ProductId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("Images");
-                });
-
             modelBuilder.Entity("ChooseAndBuy.Data.Models.Order", b =>
                 {
                     b.Property<string>("Id")
@@ -264,6 +248,8 @@ namespace ChooseAndBuy.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Description");
+
+                    b.Property<string>("ImageName");
 
                     b.Property<string>("Name");
 
@@ -483,13 +469,6 @@ namespace ChooseAndBuy.Data.Migrations
                         .WithMany()
                         .HasForeignKey("SubCategoryId")
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("ChooseAndBuy.Data.Models.Image", b =>
-                {
-                    b.HasOne("ChooseAndBuy.Data.Models.Product", "Product")
-                        .WithMany("Images")
-                        .HasForeignKey("ProductId");
                 });
 
             modelBuilder.Entity("ChooseAndBuy.Data.Models.Order", b =>

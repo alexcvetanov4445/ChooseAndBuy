@@ -3,10 +3,11 @@
     using System.Collections.Generic;
     using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Services.ServiceModels;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     public interface ISubCategoryService
     {
-        IEnumerable<SubCategoryServiceModel> GetSubCategories();
+        IEnumerable<SelectListItem> GetSubCategories();
 
         void AddSubCategory(SubCategory subCategory);
     }

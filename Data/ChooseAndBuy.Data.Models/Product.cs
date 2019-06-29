@@ -8,7 +8,6 @@
         public Product()
         {
             this.Id = Guid.NewGuid().ToString();
-            this.Images = new HashSet<Image>();
             this.ShoppingCartProducts = new HashSet<ShoppingCartProduct>();
             this.Reviews = new HashSet<Review>();
         }
@@ -27,7 +26,7 @@
 
         public virtual SubCategory SubCategory { get; set; }
 
-        public virtual ICollection<Image> Images { get; set; }
+        public string ImageName { get; set; }
 
         public virtual ICollection<ShoppingCartProduct> ShoppingCartProducts { get; set; }
 

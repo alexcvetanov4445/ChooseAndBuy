@@ -21,48 +21,53 @@
     <div class="row">
         <div class="col-xl-3 col-lg-4 col-md-5">
             <div class="sidebar-categories">
-                <div class="head">Browse Categories</div>
+                <div class="head">Options</div>
                 <ul class="main-categories">
                     <li class="main-nav-list">
                         <a href="#"><span class="lnr lnr-arrow-right"></span>Pending Orders</a>
                     </li>
                     <li class="main-nav-list">
-                        <a href="#mobileDevices"><span class="lnr lnr-arrow-right"></span>Active Orders</a>
+                        <a asp-route="/Administration/Home/Index"><span class="lnr lnr-arrow-right"></span>Active Orders</a>
                     </li>
                     <li class="main-nav-list">
-                        <a href="#mobileDevices"><span class="lnr lnr-arrow-right"></span>Add Category</a>
+                        <a asp-action="create" asp-controller="categories"><span class="lnr lnr-arrow-right"></span>Add Category</a>
                     </li>
                     <li class="main-nav-list">
-                        <a href="#mobileDevices"><span class="lnr lnr-arrow-right"></span>Add SubCategory</a>
+                        <a asp-action="create" asp-controller="subcategories"><span class="lnr lnr-arrow-right"></span>Add SubCategory</a>
                     </li>
                     <li class="main-nav-list">
-                        <a href="#"><span class="lnr lnr-arrow-right"></span>Add Product</a>
+                        <a asp-action="create" asp-controller="products"><span class="lnr lnr-arrow-right"></span>Add Product</a>
                     </li>
                     <li class="main-nav-list">
-                        <a href="#mobileDevices"><span class="lnr lnr-arrow-right"></span>Edit Products</a>
+                        <a asp-action="#" asp-controller="#"><span class="lnr lnr-arrow-right"></span>Edit Products</a>
                     </li>
                 </ul>
             </div>
         </div>
         <div class="col-xl-9 col-lg-8 col-md-7">
             <!-- Start Content Section -->
-            <section class="lattest-product-area pb-40 category-list">
-                <div class="row">
-                    <form id="account" class="row login_form mt-4" method="post">
-                        <div asp-validation-summary="All" class="text-danger"></div>
-                        <div class="col-md-12 form-group">
+            <section class="container mt-4 mb-4">
+                <div class="row login-form shadow justify-content-center">
+                    <div class="col-md-12">
+                        <h3 class="text-center">Create Sub-Category</h3>
+                    </div>
+                    <hr class="w-50 h2" />
+                    <form id="account" class="row login_form mt-4 justify-content-center" method="post">
+                        <div class="col-md-6 form-group text-center">
                             <label asp-for="Name" class="float-left"></label>
                             <input asp-for="Name" class="form-control" />
                             <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
-                        <div class="col-md-12 form-group">
+                        <div class="col-md-6 form-group">
                             <label asp-for="Categories" class="float-left"></label>
                             <div class="default-select" id="default-select">
                                 <select asp-for="CategoryId" class="default-select" asp-items="@Model.Categories"></select>
                             </div>
                             <span asp-validation-for="Categories" class="text-danger"></span>
                         </div>
-                        <button type="submit" value="submit" class"genric-btn default circle">Create Product</button>
+                        <div class="col-md-12 mt-3 text-center">
+                            <button class="primary-btn text-center" type="submit" value="submit">Create</button>
+                        </div>
                     </form>
                 </div>
             </section>
@@ -70,5 +75,8 @@
         </div>
     </div>
 </div>
+
+
+
 
 

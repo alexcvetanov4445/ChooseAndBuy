@@ -8,6 +8,7 @@
     using ChooseAndBuy.Data;
     using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Services.ServiceModels;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     public class SubCategoryService : ISubCategoryService
     {
@@ -25,13 +26,12 @@
             this.context.SaveChanges();
         }
 
-        public IEnumerable<SubCategoryServiceModel> GetSubCategories()
+        public IEnumerable<SelectListItem> GetSubCategories()
         {
-            var categories = this.context.SubCategories.Select(sc => new SubCategoryServiceModel
+            var categories = this.context.SubCategories.Select(sc => new SelectListItem
             {
-                Id = sc.Id,
-                Name = sc.Name,
-                MainCategory = sc.Category.Name,
+                Value = sc.Id,
+                Text = sc.Name + $"({sc.Category.Name})",
             })
             .ToList();
 
