@@ -25,11 +25,11 @@
 
         public decimal TotalPrice { get; set; }
 
-        public decimal DeliveryPrice { get; set; }
+        public int Quantity { get; set; }
 
         public PaymentType PaymentType { get; set; }
 
-        public string CnbUserId { get; set; }
+        public string ApplicationUserId { get; set; }
 
         public ApplicationUser ApplicationUser { get; set; }
 

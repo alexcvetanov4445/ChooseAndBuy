@@ -26,5 +26,17 @@
 
             return name;
         }
+
+        public bool ProductExists(string name)
+        {
+            var result = this.context.Products.SingleOrDefault(n => n.Name == name);
+
+            if (result == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

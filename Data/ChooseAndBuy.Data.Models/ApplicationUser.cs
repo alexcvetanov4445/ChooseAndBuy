@@ -21,10 +21,6 @@ namespace ChooseAndBuy.Data.Models
             this.Orders = new HashSet<Order>();
         }
 
-        public string FirstName { get; set; }
-
-        public string LastName { get; set; }
-
         public virtual ICollection<Address> Addresses { get; set; }
 
         public virtual ICollection<Order> Orders { get; set; }

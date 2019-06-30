@@ -15,6 +15,8 @@
 
         public string Name { get; set; }
 
+        public string Postcode { get; set; }
+
         public ICollection<Address> Addresses { get; set; }
     }
 }

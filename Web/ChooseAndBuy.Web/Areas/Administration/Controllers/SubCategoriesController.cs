@@ -26,7 +26,7 @@
 
         public IActionResult Create()
         {
-            var categories = this.GetCategories();
+            var categories = this.categoryService.GetCategories().ToList();
 
             var model = new SubCategoryBindingModel { Categories = categories };
 
@@ -36,9 +36,10 @@
         [HttpPost]
         public async Task<IActionResult> Create(SubCategoryBindingModel model)
         {
+            model.Categories = this.categoryService.GetCategories().ToList();
+
             if (!this.ModelState.IsValid)
             {
-                model.Categories = this.GetCategories();
                 return this.View(model);
             }
 
@@ -50,21 +51,9 @@
 
             this.subCategoryService.AddSubCategory(subCategory);
 
-            return this.Redirect("/Administration/Home/Index");
-        }
+            this.TempData["Success"] = $"Successully created {model.Name} sub-category.";
 
-        private List<SelectListItem> GetCategories()
-        {
-            var categories = this.categoryService
-                                 .GetCategories()
-                                 .Select(c => new SelectListItem
-                                 {
-                                     Value = c.Id,
-                                     Text = c.Name,
-                                 })
-                                 .ToList();
-
-            return categories;
+            return this.View(model);
         }
     }
 }

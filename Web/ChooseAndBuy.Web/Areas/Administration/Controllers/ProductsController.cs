@@ -10,6 +10,7 @@
     using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Services;
     using ChooseAndBuy.Web.Areas.Administration.ViewModels.Products;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
@@ -48,10 +49,10 @@
         [HttpPost]
         public async Task<IActionResult> Create(CreateProductBindingModel model)
         {
+            model.SubCategories = this.subCategoryService.GetSubCategories().ToList();
+
             if (!this.ModelState.IsValid)
             {
-                model.SubCategories = this.subCategoryService.GetSubCategories().ToList();
-
                 return this.View(model);
             }
 
@@ -64,8 +65,23 @@
 
             string productId = this.productService.GetIdByName(product.Name);
 
-            // TODO: upload images from the collection in the model into image entity using product id for relation
-            return this.Redirect("/Administration/Home/Index");
+            this.TempData["Success"] = $"Successully created {product.Name}";
+
+            return this.View(model);
+        }
+
+        [AllowAnonymous]
+        [AcceptVerbs("get", "post")]
+        public IActionResult ValidateProductName(string productName)
+        {
+            bool productExists = this.productService.ProductExists(productName);
+
+            if (productExists == true)
+            {
+                return this.Json(false);
+            }
+
+            return this.Json(true);
         }
     }
 }

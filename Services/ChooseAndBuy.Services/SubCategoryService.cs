@@ -7,7 +7,6 @@
 
     using ChooseAndBuy.Data;
     using ChooseAndBuy.Data.Models;
-    using ChooseAndBuy.Services.ServiceModels;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
     public class SubCategoryService : ISubCategoryService

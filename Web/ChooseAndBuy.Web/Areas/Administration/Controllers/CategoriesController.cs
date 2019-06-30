@@ -39,7 +39,9 @@
 
             this.categoryService.AddCategory(category);
 
-            return this.Redirect("/Administration/Home/Index");
+            this.TempData["Success"] = $"Successully created {model.Name} category.";
+
+            return this.View(model);
         }
 
         [AcceptVerbs("Get", "Post")]

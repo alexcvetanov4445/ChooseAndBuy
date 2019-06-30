@@ -7,7 +7,7 @@
 
     using ChooseAndBuy.Data;
     using ChooseAndBuy.Data.Models;
-    using ChooseAndBuy.Services.ServiceModels;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     public class CategoryService : ICategoryService
     {
@@ -25,13 +25,14 @@
             this.context.SaveChanges();
         }
 
-        public IEnumerable<CategoryServiceModel> GetCategories()
+        public IEnumerable<SelectListItem> GetCategories()
         {
-            var result = this.context.Categories.Select(c => new CategoryServiceModel
+            var result = this.context.Categories.Select(c => new SelectListItem
             {
-                Id = c.Id,
-                Name = c.Name,
-            }).ToList();
+                Value = c.Id,
+                Text = c.Name,
+            })
+            .ToList();
 
             return result;
         }
