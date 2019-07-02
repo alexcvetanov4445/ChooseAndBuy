@@ -14,5 +14,7 @@
         string GetIdByName(string productName);
 
         IEnumerable<Product> GetProducts(string search, string subCategoryId);
+
+        Product GetById(string id);
     }
 }

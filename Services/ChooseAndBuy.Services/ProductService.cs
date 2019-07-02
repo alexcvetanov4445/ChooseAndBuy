@@ -1,12 +1,13 @@
 ﻿namespace ChooseAndBuy.Services
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     using ChooseAndBuy.Data;
     using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Web.ViewModels.Products;
     using Microsoft.EntityFrameworkCore;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     public class ProductService : IProductService
     {
@@ -22,6 +23,16 @@
             this.context.Products.Add(product);
 
             this.context.SaveChanges();
+        }
+
+        public Product GetById(string id)
+        {
+            var product = this.context.Products
+                .Include(r => r.Reviews)
+                .Include(c => c.SubCategory)
+                .SingleOrDefault(pr => pr.Id == id);
+
+            return product;
         }
 
         public string GetIdByName(string productName)

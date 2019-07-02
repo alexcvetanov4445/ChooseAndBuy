@@ -13,6 +13,10 @@
             this.CreateMap<CreateProductBindingModel, Product>();
             this.CreateMap<CreateCategoryBindingModel, Category>();
             this.CreateMap<Product, ProductViewModel>();
+            this.CreateMap<Review, ProductReviewViewModel>();
+
+            this.CreateMap<Product, ProductDetailsViewModel>()
+                .ForMember(cat => cat.Category, opt => opt.MapFrom(src => src.SubCategory.Name));
         }
     }
 }

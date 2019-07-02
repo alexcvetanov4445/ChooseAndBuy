@@ -4,18 +4,22 @@ for details on configuring this project to bundle and minify static web assets. 
 
 /* Product Image Customisation
 -------------------------------------------------- */
-/*Zoom picture*/
-img-fit {
-    width: 200px; /* You can set the dimensions to whatever you want */
-    height: 200px;
-    object-fit: cover;
+/*Picture alignment*/
+
+.ImageContainer {
+    text-align: center;
 }
 
-.square {
-    width: 100%;
-    padding-bottom: 100%;
-    background-size: cover;
-    background-position: center;
+.ImageContainer:before {
+    content: '';
+    height: 100%;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.ImageContent {
+    display: inline-block;
+    vertical-align: middle;
 }
 
 /* Some other
