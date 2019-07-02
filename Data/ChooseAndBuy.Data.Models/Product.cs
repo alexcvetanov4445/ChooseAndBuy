@@ -16,6 +16,8 @@
 
         public string Name { get; set; }
 
+        public bool IsRecommended { get; set; }
+
         public string Description { get; set; }
 
         public string Specification { get; set; }

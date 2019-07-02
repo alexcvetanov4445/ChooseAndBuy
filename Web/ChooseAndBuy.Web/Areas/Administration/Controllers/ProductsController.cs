@@ -70,18 +70,17 @@
             return this.View(model);
         }
 
-        [AllowAnonymous]
-        [AcceptVerbs("get", "post")]
+        [AcceptVerbs("Get", "Post")]
         public IActionResult ValidateProductName(string productName)
         {
             bool productExists = this.productService.ProductExists(productName);
 
             if (productExists == true)
             {
-                return this.Json(false);
+                return this.Json(true);
             }
 
-            return this.Json(true);
+            return this.Json(false);
         }
     }
 }

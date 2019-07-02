@@ -8,6 +8,7 @@
     using ChooseAndBuy.Data;
     using ChooseAndBuy.Data.Models;
     using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.EntityFrameworkCore;
 
     public class CategoryService : ICategoryService
     {
@@ -35,6 +36,29 @@
             .ToList();
 
             return result;
+        }
+
+        public Dictionary<string, ICollection<SelectListItem>> GetCategoriesWithSubCategories()
+        {
+            var dict = new Dictionary<string, ICollection<SelectListItem>>();
+
+            var categories = this.context.Categories.Include(x => x.SubCategories).ToList();
+
+            foreach (var ctg in categories)
+            {
+                dict.Add(ctg.Name, new List<SelectListItem>());
+
+                foreach (var subctg in ctg.SubCategories)
+                {
+                    dict[ctg.Name].Add(new SelectListItem
+                    {
+                        Text = subctg.Name,
+                        Value = subctg.Id,
+                    });
+                }
+            }
+
+            return dict;
         }
 
         public bool ValidateCategoryName(string name)

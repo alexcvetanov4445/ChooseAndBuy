@@ -55,5 +55,17 @@
 
             return this.View(model);
         }
+
+        public IActionResult ValidateSubCategoryName (string name)
+        {
+            var subCategoryExists = this.subCategoryService.SubCategoryExists(name);
+
+            if (subCategoryExists)
+            {
+                return this.Json(false);
+            }
+
+            return this.Json(true);
+        }
     }
 }

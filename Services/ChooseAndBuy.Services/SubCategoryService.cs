@@ -36,5 +36,10 @@
 
             return categories;
         }
+
+        public bool SubCategoryExists(string name)
+        {
+            return this.context.SubCategories.Any(sc => sc.Name == name);
+        }
     }
 }

@@ -11,6 +11,8 @@
 
         IEnumerable<SelectListItem> GetCategories();
 
+        Dictionary<string, ICollection<SelectListItem>> GetCategoriesWithSubCategories();
+
         bool ValidateCategoryName(string name);
     }
 }

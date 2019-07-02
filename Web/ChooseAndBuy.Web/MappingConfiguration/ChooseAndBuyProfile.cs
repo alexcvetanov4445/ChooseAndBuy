@@ -4,6 +4,7 @@
     using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Web.Areas.Administration.ViewModels.Categories;
     using ChooseAndBuy.Web.Areas.Administration.ViewModels.Products;
+    using ChooseAndBuy.Web.ViewModels.Products;
 
     public class ChooseAndBuyProfile : Profile
     {
@@ -11,6 +12,7 @@
         {
             this.CreateMap<CreateProductBindingModel, Product>();
             this.CreateMap<CreateCategoryBindingModel, Category>();
+            this.CreateMap<Product, ProductViewModel>();
         }
     }
 }

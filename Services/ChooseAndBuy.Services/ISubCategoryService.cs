@@ -9,5 +9,7 @@
         IEnumerable<SelectListItem> GetSubCategories();
 
         void AddSubCategory(SubCategory subCategory);
+
+        bool SubCategoryExists(string name);
     }
 }

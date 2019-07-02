@@ -1,6 +1,9 @@
 ﻿namespace ChooseAndBuy.Services
 {
+    using System.Collections.Generic;
+
     using ChooseAndBuy.Data.Models;
+    using ChooseAndBuy.Web.ViewModels.Products;
 
     public interface IProductService
     {
@@ -9,5 +12,7 @@
         void AddProduct(Product product);
 
         string GetIdByName(string productName);
+
+        IEnumerable<Product> GetProducts(string search, string subCategoryId);
     }
 }

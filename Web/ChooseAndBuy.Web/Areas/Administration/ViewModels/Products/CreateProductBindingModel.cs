@@ -12,7 +12,7 @@
         [Display(Name = "Name")]
         [Required(ErrorMessage = "The field \"{0}\" is required.")]
         [StringLength(50, MinimumLength = 5, ErrorMessage = "The field \"{0}\" must be a text with minimum legth of {2} and maximum length of {1}.")]
-        [Remote(action: "ValidateProductName", controller: "Products", areaName: "Administration", ErrorMessage = "Product name already exists!")]
+        [Remote(action: "ValidateProductName", controller: "Products", ErrorMessage = "Product name already exists!")]
         public string Name { get; set; }
 
         [Display(Name = "Description")]

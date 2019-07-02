@@ -1,5 +1,9 @@
-﻿@{
-    ViewData["Title"] = "Products";
+﻿@using ChooseAndBuy.Web.ViewModels.Products
+
+@model ProductsViewModel
+
+@{
+    ViewData["Title"] = "Products-Home";
 }
 
 <!-- Start Banner Area -->
@@ -23,82 +27,20 @@
             <div class="sidebar-categories">
                 <div class="head">Browse Categories</div>
                 <ul class="main-categories">
-
-                    <li class="main-nav-list">
-                        <a data-toggle="collapse" href="#books" aria-expanded="false" aria-controls="books">
-                            <span class="lnr lnr-arrow-right"></span>Books<span class="number">(53)</span>
-                        </a>
-                        <ul class="collapse" id="books" data-toggle="collapse" aria-expanded="false" aria-controls="books">
-                            <li class="main-nav-list child"><a href="#">Literature<span class="number">(13)</span></a></li>
-                            <li class="main-nav-list child"><a href="#">Novels<span class="number">(09)</span></a></li>
-                            <li class="main-nav-list child"><a href="#">Poetry<span class="number">(17)</span></a></li>
-                            <li class="main-nav-list child"><a href="#">Science<span class="number">(01)</span></a></li>
-                            <li class="main-nav-list child"><a href="#">Magazines<span class="number">(11)</span></a></li>
-                            <li class="main-nav-list child"><a href="#">Teaching Aids<span class="number">(11)</span></a></li>
-                        </ul>
-                    </li>
-
-                    <li class="main-nav-list">
-                        <a data-toggle="collapse" href="#pcAndLaptop" aria-expanded="false" aria-controls="pcAndLaptop">
-                            <span class="lnr lnr-arrow-right"></span>PC and Laptop<span class="number">(53)</span>
-                        </a>
-                        <ul class="collapse" id="pcAndLaptop" data-toggle="collapse" aria-expanded="false" aria-controls="pcAndLaptop">
-                            <li class="main-nav-list child"><a href="#">Laptops<span class="number">(13)</span></a></li>
-                            <li class="main-nav-list child"><a href="#">PC Components<span class="number">(09)</span></a></li>
-                            <li class="main-nav-list child"><a href="#">Software<span class="number">(17)</span></a></li>
-                            <li class="main-nav-list child"><a href="#">Accessories<span class="number">(01)</span></a></li>
-                        </ul>
-                    </li>
-
-                    <li class="main-nav-list">
-                        <a data-toggle="collapse" href="#gaming" aria-expanded="false" aria-controls="gaming">
-                            <span class="lnr lnr-arrow-right"></span>Gaming<span class="number">(53)</span>
-                        </a>
-                        <ul class="collapse" id="gaming" data-toggle="collapse" aria-expanded="false" aria-controls="gaming">
-                            <li class="main-nav-list child"><a href="#">For PC<span class="number">(13)</span></a></li>
-                            <li class="main-nav-list child"><a href="#">For Console<span class="number">(09)</span></a></li>
-                            <li class="main-nav-list child"><a href="#">Accessories PC<span class="number">(17)</span></a></li>
-                            <li class="main-nav-list child"><a href="#">Accessories PC<span class="number">(01)</span></a></li>
-                        </ul>
-                    </li>
-
-                    <li class="main-nav-list">
-                        <a data-toggle="collapse" href="#audioVideo" aria-expanded="false" aria-controls="audioVideo">
-                            <span class="lnr lnr-arrow-right"></span>Audio and Video<span class="number">(24)</span>
-                        </a>
-                        <ul class="collapse" id="audioVideo" data-toggle="collapse" aria-expanded="false" aria-controls="audioVideo">
-                            <li class="main-nav-list child"><a href="#">Headphones<span class="number">(13)</span></a></li>
-                            <li class="main-nav-list child"><a href="#">Audio Systems<span class="number">(09)</span></a></li>
-                            <li class="main-nav-list child"><a href="#">TVs<span class="number">(17)</span></a></li>
-                            <li class="main-nav-list child"><a href="#">Monitors<span class="number">(01)</span></a></li>
-                            <li class="main-nav-list child"><a href="#">Cameras<span class="number">(11)</span></a></li>
-                        </ul>
-                    </li>
-
-                    <li class="main-nav-list">
-                        <a data-toggle="collapse" href="#mobileDevices" aria-expanded="false" aria-controls="mobileDevices">
-                            <span class="lnr lnr-arrow-right"></span>Mobile Devices<span class="number">(53)</span>
-                        </a>
-                        <ul class="collapse" id="mobileDevices" data-toggle="collapse" aria-expanded="false" aria-controls="mobileDevices">
-                            <li class="main-nav-list child"><a href="#">Smartphones<span class="number">(13)</span></a></li>
-                            <li class="main-nav-list child"><a href="#">Tablets<span class="number">(09)</span></a></li>
-                            <li class="main-nav-list child"><a href="#">E-Readers<span class="number">(17)</span></a></li>
-                            <li class="main-nav-list child"><a href="#">Graphics Tablets<span class="number">(01)</span></a></li>
-                        </ul>
-                    </li>
-
-                    <li class="main-nav-list">
-                        <a data-toggle="collapse" href="#hobbies" aria-expanded="false" aria-controls="hobbies">
-                            <span class="lnr lnr-arrow-right"></span>Hobbies<span class="number">(77)</span>
-                        </a>
-                        <ul class="collapse" id="hobbies" data-toggle="collapse" aria-expanded="false" aria-controls="hobbies">
-                            <li class="main-nav-list child"><a href="#">Card Games<span class="number">(13)</span></a></li>
-                            <li class="main-nav-list child"><a href="#">Desk Games<span class="number">(09)</span></a></li>
-                            <li class="main-nav-list child"><a href="#">Drones<span class="number">(17)</span></a></li>
-                            <li class="main-nav-list child"><a href="#">Crafting Models<span class="number">(01)</span></a></li>
-                        </ul>
-                    </li>
-
+                    @foreach (var ctg in Model.Categories)
+                    {
+                        <li class="main-nav-list">
+                            <a data-toggle="collapse" href="#@ctg.Key" aria-expanded="false" aria-controls="@ctg.Key">
+                                <span class="lnr lnr-arrow-right"></span>@ctg.Key<span class="number">(@ctg.Value.Count())</span>
+                            </a>
+                            <ul class="collapse" id="@ctg.Key" data-toggle="collapse" aria-expanded="false" aria-controls="@ctg.Key">
+                                @foreach (var subctg in ctg.Value)
+                                {
+                                    <li class="main-nav-list child"><a asp-action="index" asp-controller="products" asp-route-id="@subctg.Value">@subctg.Text</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
                 </ul>
             </div>
             <div class="sidebar-filter mt-50">
@@ -162,6 +104,44 @@
             <!-- Start Best Seller -->
             <section class="lattest-product-area pb-40 category-list">
                 <div class="row">
+                    @foreach (var pr in Model.Products)
+                    {
+                        <div class="col-lg-4 col-md-6">
+                            <div class="single-product">
+                                <a asp-action="detials" asp-controller="products" asp-route-id="@pr.Id">
+                                        <img class="img-fluid" src="~/img/product/@pr.ImageName" alt="">
+                                </a>
+                                <div class="product-details">
+                                    <h6>
+                                        @pr.Name
+                                    </h6>
+                                    <div class="price">
+                                        <h6>$@pr.Price</h6>
+                                        <!--<h6 class="l-through">$210.00</h6>-->
+                                    </div>
+                                    <div class="prd-bottom">
+
+                                        <a href="" class="social-info">
+                                            <span class="ti-bag"></span>
+                                            <p class="hover-text">add to bag</p>
+                                        </a>
+                                        <a href="" class="social-info">
+                                            <span class="lnr lnr-heart"></span>
+                                            <p class="hover-text">Wishlist</p>
+                                        </a>
+                                        <a href="" class="social-info">
+                                            <span class="lnr lnr-sync"></span>
+                                            <p class="hover-text">compare</p>
+                                        </a>
+                                        <a href="" class="social-info">
+                                            <span class="lnr lnr-move"></span>
+                                            <p class="hover-text">view more</p>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
                     <!-- single product -->
                     <div class="col-lg-4 col-md-6">
                         <div class="single-product">
@@ -236,111 +216,6 @@
                     <div class="col-lg-4 col-md-6">
                         <div class="single-product">
                             <img class="img-fluid" src="~/img/product/p3.jpg" alt="">
-                            <div class="product-details">
-                                <h6>
-                                    addidas New Hammer sole
-                                    for Sports person
-                                </h6>
-                                <div class="price">
-                                    <h6>$150.00</h6>
-                                    <h6 class="l-through">$210.00</h6>
-                                </div>
-                                <div class="prd-bottom">
-
-                                    <a href="" class="social-info">
-                                        <span class="ti-bag"></span>
-                                        <p class="hover-text">add to bag</p>
-                                    </a>
-                                    <a href="" class="social-info">
-                                        <span class="lnr lnr-heart"></span>
-                                        <p class="hover-text">Wishlist</p>
-                                    </a>
-                                    <a href="" class="social-info">
-                                        <span class="lnr lnr-sync"></span>
-                                        <p class="hover-text">compare</p>
-                                    </a>
-                                    <a href="" class="social-info">
-                                        <span class="lnr lnr-move"></span>
-                                        <p class="hover-text">view more</p>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- single product -->
-                    <div class="col-lg-4 col-md-6">
-                        <div class="single-product">
-                            <img class="img-fluid" src="~/img/product/p4.jpg" alt="">
-                            <div class="product-details">
-                                <h6>
-                                    addidas New Hammer sole
-                                    for Sports person
-                                </h6>
-                                <div class="price">
-                                    <h6>$150.00</h6>
-                                    <h6 class="l-through">$210.00</h6>
-                                </div>
-                                <div class="prd-bottom">
-
-                                    <a href="" class="social-info">
-                                        <span class="ti-bag"></span>
-                                        <p class="hover-text">add to bag</p>
-                                    </a>
-                                    <a href="" class="social-info">
-                                        <span class="lnr lnr-heart"></span>
-                                        <p class="hover-text">Wishlist</p>
-                                    </a>
-                                    <a href="" class="social-info">
-                                        <span class="lnr lnr-sync"></span>
-                                        <p class="hover-text">compare</p>
-                                    </a>
-                                    <a href="" class="social-info">
-                                        <span class="lnr lnr-move"></span>
-                                        <p class="hover-text">view more</p>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- single product -->
-                    <div class="col-lg-4 col-md-6">
-                        <div class="single-product">
-                            <img class="img-fluid" src="~/img/product/p5.jpg" alt="">
-                            <div class="product-details">
-                                <h6>
-                                    addidas New Hammer sole
-                                    for Sports person
-                                </h6>
-                                <div class="price">
-                                    <h6>$150.00</h6>
-                                    <h6 class="l-through">$210.00</h6>
-                                </div>
-                                <div class="prd-bottom">
-
-                                    <a href="" class="social-info">
-                                        <span class="ti-bag"></span>
-                                        <p class="hover-text">add to bag</p>
-                                    </a>
-                                    <a href="" class="social-info">
-                                        <span class="lnr lnr-heart"></span>
-                                        <p class="hover-text">Wishlist</p>
-                                    </a>
-                                    <a href="" class="social-info">
-                                        <span class="lnr lnr-sync"></span>
-                                        <p class="hover-text">compare</p>
-                                    </a>
-                                    <a href="" class="social-info">
-                                        <span class="lnr lnr-move"></span>
-                                        <p class="hover-text">view more</p>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- single product -->
-                    <div class="col-lg-4 col-md-6">
-                        <div class="single-product">
-                            <img class="img-fluid" src="~/img/product/p6.jpg" alt="">
                             <div class="product-details">
                                 <h6>
                                     addidas New Hammer sole
