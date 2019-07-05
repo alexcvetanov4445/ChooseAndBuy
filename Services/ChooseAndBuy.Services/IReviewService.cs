@@ -9,5 +9,7 @@
     public interface IReviewService
     {
         IEnumerable<Review> GetReviewsForProduct(string productId);
+
+        bool AddReview(Review review);
     }
 }

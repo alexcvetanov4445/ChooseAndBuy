@@ -1,6 +1,6 @@
 ﻿@using ChooseAndBuy.Web.ViewModels.Products
 
-@model ProductDetailsViewModel
+@model AllDetailsViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -26,23 +26,23 @@
 <div class="product_image_area">
     <div class="container">
         <div class="row s_product_inner">
-            <div class="col-lg-6">
+            <div class="col-lg-6 offset-lg-1">
                 <div class="s_product_inner">
                     <div class="single-prd-item">
-                        <img class="img-fluid" src="~/img/product/@Model.ImageName" alt="">
+                        <img class="img-fluid" src="~/img/product/@Model.DetailsInfo.ImageName" />
                     </div>
                 </div>
             </div>
-            <div class="col-lg-5 offset-lg-1">
+            <div class="col-lg-5">
                 <div class="s_product_text">
-                    <h3>@Model.Name</h3>
-                    <h2>$@Model.Price</h2>
+                    <h3>@Model.DetailsInfo.Name</h3>
+                    <h2>$@Model.DetailsInfo.Price</h2>
                     <ul class="list">
-                        <li><a class="active"><span>Category</span> : @Model.Category</a></li>
+                        <li><a class="active"><span>Category</span> : @Model.DetailsInfo.Category</a></li>
                         <li><a><span>Availibility</span> : In Stock</a></li>
                     </ul>
                     <p>
-                        @(Model.Description.Substring(0, 200) + "...");
+                        @(Model.DetailsInfo.Description.Substring(0, 200) + "...");
                     </p>
                     <div class="product_count">
                         <label for="qty">Quantity:</label>
@@ -84,10 +84,10 @@
         </ul>
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
-                @Model.Description
+                @Model.DetailsInfo.Description
             </div>
             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                @Model.Specification
+                @Model.DetailsInfo.Specification
             </div>
             <div class="tab-pane fade show active" id="review" role="tabpanel" aria-labelledby="review-tab">
                 <div class="row">
@@ -102,13 +102,13 @@
                             </div>
                         </div>
                         <div class="review_list mt-3">
-                            @if (Model.Reviews.Count == 0)
+                            @if (Model.DetailsInfo.Reviews.Count == 0)
                             {
                                 <div class="mt3 text-center">
                                     <h4>There are no user reviews for this product.</h4>
                                 </div>
                             }
-                            @foreach (var rev in Model.Reviews)
+                            @foreach (var rev in Model.DetailsInfo.Reviews)
                             {
                                 <div class="review_item">
                                     <div class="media">
@@ -140,29 +140,31 @@
                     <div class="col-lg-6">
                         <div class="review_box">
                             <h4>Add a Review</h4>
-                            <p>Your Rating:</p>
-                            <ul class="list">
-                                <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                <li><a href="#"><i class="fa fa-star"></i></a></li>
-                            </ul>
-                            <p>Outstanding</p>
-                            <form class="row contact_form" action="contact_process.php" method="post" id="contactForm" novalidate="novalidate">
-                                <div class="col-md-12">
+                            <form class="row contact_form" method="post" id="contactForm">
+                                <input asp-for="ReviewModel.ProductId" type="hidden" name="ProductId" id="ProductIdValue" />
+                                <div class="col-md-12 text-warning">
+                                    <p class="text-dark">Your Rating:</p>
+                                    <i class="ratingStar fa fa-star fa-lg" dataValue="1"></i>
+                                    <i class="ratingStar fa fa-star fa-lg" dataValue="2"></i>
+                                    <i class="ratingStar fa fa-star fa-lg" dataValue="3"></i>
+                                    <i class="ratingStar fa fa-star fa-lg" dataValue="4"></i>
+                                    <i class="ratingStar fa fa-star fa-lg" dataValue="5"></i>
+                                    <p class="text-dark">Outstanding</p>
+                                    <input asp-for="ReviewModel.Rating" type="hidden" name="Rating" id="ratingsValue" />
+                                    <span asp-validation-for="ReviewModel.Rating" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-12 mt-3">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" id="name" name="name" placeholder="Your Full name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Your Full name'">
+                                        <label asp-for="ReviewModel.ClientFullName"></label>
+                                        <input asp-for="ReviewModel.ClientFullName" type="text" class="form-control" id="name" name="clientFullName" placeholder="Your Full name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Your Full name'">
+                                        <span asp-validation-for="ReviewModel.ClientFullName" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <input type="email" class="form-control" id="email" name="email" placeholder="Email Address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email Address'">
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <textarea class="form-control" name="comment" id="comment" rows="1" placeholder="Comment" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Comment'"></textarea>
+                                        <label asp-for="ReviewModel.Comment"></label>
+                                        <textarea asp-for="ReviewModel.Comment" class="form-control" name="comment" id="comment" rows="1" placeholder="Comment" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Comment'"></textarea>
+                                        <span asp-validation-for="ReviewModel.Comment" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-12 text-right">
@@ -315,3 +317,19 @@
     </div>
 </section>
 <!-- End related-product Area -->
+@section Scripts{
+    <script>
+        $(".ratingStar").hover(function () {
+            $(".ratingStar").addClass("fa-star-o").removeClass("fa-star");
+
+            $(this).addClass("fa-star").removeClass("fa-star-o");
+            $(this).prevAll(".ratingStar").addClass("fa-star").removeClass("fa-star-o");
+        });
+
+        $(".ratingStar").click(function () {
+            var starRating = $(this).attr("dataValue");
+
+            $("#ratingsValue").val(starRating);
+        });
+    </script>
+}

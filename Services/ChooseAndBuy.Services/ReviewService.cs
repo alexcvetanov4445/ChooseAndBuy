@@ -17,6 +17,14 @@
             this.context = context;
         }
 
+        public bool AddReview(Review review)
+        {
+            this.context.Reviews.Add(review);
+            this.context.SaveChanges();
+
+            return true;
+        }
+
         public IEnumerable<Review> GetReviewsForProduct(string productId)
         {
             var reviews = this.context.Reviews.Where(pr => pr.ProductId == productId);

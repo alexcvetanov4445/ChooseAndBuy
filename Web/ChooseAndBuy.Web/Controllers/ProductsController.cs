@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
 
     using AutoMapper;
+    using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Services;
     using ChooseAndBuy.Web.ViewModels.Products;
     using Microsoft.AspNetCore.Mvc;
@@ -44,14 +45,29 @@
         public IActionResult Details(string id)
         {
             var product = this.productsService.GetById(id);
-            var reviews = this.reviewService.GetReviewsForProduct(id);
+            var reviews = this.reviewService.GetReviewsForProduct(id).ToList();
 
-            var model = this.mapper.Map<ProductDetailsViewModel>(product);
-            model.Reviews = this.mapper.Map<List<ProductReviewViewModel>>(reviews);
+            var detailsInfo = this.mapper.Map<ProductDetailsViewModel>(product);
+            detailsInfo.Reviews = this.mapper.Map<List<ProductReviewViewModel>>(reviews);
 
-            return this.View(model);
+            AllDetailsViewModel productModel = new AllDetailsViewModel
+            {
+                DetailsInfo = detailsInfo,
+                ReviewModel = new ReviewBindingModel { ProductId = id },
+            };
+
+            return this.View(productModel);
         }
 
-        // TODO: MAKE METHOD FOR AddReview (separate from details)
+        [HttpPost]
+        public IActionResult Details(ReviewBindingModel productModel)
+        {
+            // ReviewBindingModel reviewModel = productModel.ReviewModel;
+            Review review = this.mapper.Map<Review>(productModel);
+
+            this.reviewService.AddReview(review);
+
+            return this.RedirectToAction("Details", new { id = productModel.ProductId });
+        }
     }
 }
