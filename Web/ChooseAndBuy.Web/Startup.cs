@@ -116,6 +116,7 @@
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<IImageService, ImageService>();
             services.AddTransient<IReviewService, ReviewService>();
+            services.AddTransient<IShoppingCartService, ShoppingCartService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

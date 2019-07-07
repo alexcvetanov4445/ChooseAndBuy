@@ -11,7 +11,7 @@
     <div class="container">
         <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
             <div class="col-first">
-                <h1>Product Details Page</h1>
+                <h1>Product Details</h1>
                 <nav class="d-flex align-items-center">
                     <a asp-action="index" asp-controller="home">Home<span class="lnr lnr-arrow-right"></span></a>
                     <a asp-action="index" asp-controller="products">Products<span class="lnr lnr-arrow-right"></span></a>
@@ -42,7 +42,7 @@
                         <li><a><span>Availibility</span> : In Stock</a></li>
                     </ul>
                     <p>
-                        @(Model.DetailsInfo.Description.Substring(0, 200) + "...");
+                        @(Model.DetailsInfo.Description.Substring(0, 200) + "...")
                     </p>
                     <div class="product_count">
                         <label for="qty">Quantity:</label>
@@ -57,7 +57,9 @@
                         </button>
                     </div>
                     <div class="card_area d-flex align-items-center">
-                        <a class="primary-btn" href="#">Add to Cart</a>
+                        <a hidden id="productIdValue">@Model.ReviewModel.ProductId</a>
+                        <input class="addCart primary-btn" id="addCart" type="button" value="Add to Cart" />
+                        <p id="successP" hidden>Product added to cart!</p>
                         <a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a>
                     </div>
                 </div>
@@ -96,44 +98,41 @@
                             <div class="col-12">
                                 <div class="box_total">
                                     <h5>Overall</h5>
-                                    <h4>4.0</h4>
-                                    <h6>(03 Reviews)</h6>
+                                    <h4>@(Model.DetailsInfo.Reviews.Sum(x => x.Rating) / Model.DetailsInfo.Reviews.Count())</h4>
+                                    <h6>(@Model.DetailsInfo.Reviews.Count() Reviews)</h6>
                                 </div>
                             </div>
                         </div>
                         <div class="review_list mt-3">
                             @if (Model.DetailsInfo.Reviews.Count == 0)
                             {
-                                <div class="mt3 text-center">
-                                    <h4>There are no user reviews for this product.</h4>
-                                </div>
+                            <div class="mt3 text-center">
+                                <h4>There are no user reviews for this product.</h4>
+                            </div>
                             }
                             @foreach (var rev in Model.DetailsInfo.Reviews)
                             {
-                                <div class="review_item">
-                                    <div class="media">
-                                        <div class="d-flex">
-                                            <img src="~/img/product/review-1.png" alt="">
-                                        </div>
-                                        <div class="media-body">
-                                            <h4>@rev.ClientFullName</h4>
-                                            @for (int i = 1; i <= 5; i++)
-                                            {
-                                                if (i <= rev.Rating)
-                                                {
-                                                    <i class="fa fa-star"></i>
-                                                }
-                                                else
-                                                {
-                                                    <i class="fa fa-star-o"></i>
-                                                }
-                                            }
-                                        </div>
+                            <div class="review_item">
+                                <div class="media">
+                                    <div class="media-body">
+                                        <h4>@rev.ClientFullName</h4>
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                        if (i <= rev.Rating)
+                                        {
+                                        <i class="fa fa-star"></i>
+                                        }
+                                        else
+                                        {
+                                        <i class="fa fa-star-o"></i>
+                                        }
+                                        }
                                     </div>
-                                    <p>
-                                        @rev.Comment
-                                    </p>
                                 </div>
+                                <p>
+                                    @rev.Comment
+                                </p>
+                            </div>
                             }
                         </div>
                     </div>
@@ -208,90 +207,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-                        <div class="single-related-product d-flex">
-                            <a href="#"><img src="~/img/r2.jpg" alt=""></a>
-                            <div class="desc">
-                                <a href="#" class="title">Black lace Heels</a>
-                                <div class="price">
-                                    <h6>$189.00</h6>
-                                    <h6 class="l-through">$210.00</h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-                        <div class="single-related-product d-flex">
-                            <a href="#"><img src="~/img/r3.jpg" alt=""></a>
-                            <div class="desc">
-                                <a href="#" class="title">Black lace Heels</a>
-                                <div class="price">
-                                    <h6>$189.00</h6>
-                                    <h6 class="l-through">$210.00</h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-                        <div class="single-related-product d-flex">
-                            <a href="#"><img src="~/img/r5.jpg" alt=""></a>
-                            <div class="desc">
-                                <a href="#" class="title">Black lace Heels</a>
-                                <div class="price">
-                                    <h6>$189.00</h6>
-                                    <h6 class="l-through">$210.00</h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-                        <div class="single-related-product d-flex">
-                            <a href="#"><img src="~/img/r6.jpg" alt=""></a>
-                            <div class="desc">
-                                <a href="#" class="title">Black lace Heels</a>
-                                <div class="price">
-                                    <h6>$189.00</h6>
-                                    <h6 class="l-through">$210.00</h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-                        <div class="single-related-product d-flex">
-                            <a href="#"><img src="~/img/r7.jpg" alt=""></a>
-                            <div class="desc">
-                                <a href="#" class="title">Black lace Heels</a>
-                                <div class="price">
-                                    <h6>$189.00</h6>
-                                    <h6 class="l-through">$210.00</h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-6">
-                        <div class="single-related-product d-flex">
-                            <a href="#"><img src="~/img/r9.jpg" alt=""></a>
-                            <div class="desc">
-                                <a href="#" class="title">Black lace Heels</a>
-                                <div class="price">
-                                    <h6>$189.00</h6>
-                                    <h6 class="l-through">$210.00</h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-6">
-                        <div class="single-related-product d-flex">
-                            <a href="#"><img src="~/img/r10.jpg" alt=""></a>
-                            <div class="desc">
-                                <a href="#" class="title">Black lace Heels</a>
-                                <div class="price">
-                                    <h6>$189.00</h6>
-                                    <h6 class="l-through">$210.00</h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <div class="col-lg-4 col-md-4 col-sm-6">
                         <div class="single-related-product d-flex">
                             <a href="#"><img src="~/img/r11.jpg" alt=""></a>
@@ -318,18 +233,41 @@
 </section>
 <!-- End related-product Area -->
 @section Scripts{
-    <script>
-        $(".ratingStar").hover(function () {
-            $(".ratingStar").addClass("fa-star-o").removeClass("fa-star");
+<script>
+    $(".ratingStar").hover(function () {
+        $(".ratingStar").addClass("fa-star-o").removeClass("fa-star");
 
-            $(this).addClass("fa-star").removeClass("fa-star-o");
-            $(this).prevAll(".ratingStar").addClass("fa-star").removeClass("fa-star-o");
+        $(this).addClass("fa-star").removeClass("fa-star-o");
+        $(this).prevAll(".ratingStar").addClass("fa-star").removeClass("fa-star-o");
+    });
+
+    $(".ratingStar").click(function () {
+        var starRating = $(this).attr("dataValue");
+
+        $("#ratingsValue").val(starRating);
+    });
+
+    $("#addCart").click(function () {
+
+        var property1 = $("#productIdValue").val();
+        var property2 = $("#sst").val();
+
+        var JSONObject = {
+            productId: property1,
+            quantity: property2
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "/ShoppingCart/Add",
+            data: JSON.stringify(JSONObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
         });
 
-        $(".ratingStar").click(function () {
-            var starRating = $(this).attr("dataValue");
+        $("#successp").removeAttr("hidden");
+    });
+</script>
 
-            $("#ratingsValue").val(starRating);
-        });
-    </script>
+<partial name="_ValidationScriptsPartial" />
 }

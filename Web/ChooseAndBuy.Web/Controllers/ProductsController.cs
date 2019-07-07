@@ -62,7 +62,7 @@
         [HttpPost]
         public IActionResult Details(ReviewBindingModel productModel)
         {
-            // ReviewBindingModel reviewModel = productModel.ReviewModel;
+
             Review review = this.mapper.Map<Review>(productModel);
 
             this.reviewService.AddReview(review);
