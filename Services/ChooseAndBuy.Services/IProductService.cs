@@ -11,9 +11,15 @@
 
         void AddProduct(Product product);
 
+        bool DeleteProduct(string id);
+
+        bool EditProduct(Product product);
+
         string GetIdByName(string productName);
 
         IEnumerable<Product> GetProducts(string search, string subCategoryId);
+
+        IEnumerable<Product> GetAllProducts();
 
         Product GetById(string id);
     }

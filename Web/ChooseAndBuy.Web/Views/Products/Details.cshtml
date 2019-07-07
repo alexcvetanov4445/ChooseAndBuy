@@ -6,6 +6,10 @@
     ViewData["Title"] = "Details";
 }
 
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/jquery-validation/jquery.validate.js"></script>
+<script src="~/lib/jquery-validate-unobtrusive/jquery.validate.unobtrusive.js"></script>
+
 <!-- Start Banner Area -->
 <section class="banner-area organic-breadcrumb">
     <div class="container">
@@ -42,7 +46,14 @@
                         <li><a><span>Availibility</span> : In Stock</a></li>
                     </ul>
                     <p>
-                        @(Model.DetailsInfo.Description.Substring(0, 200) + "...")
+                        @if (Model.DetailsInfo.Description.Length <= 200)
+                        {
+                            @Model.DetailsInfo.Description
+                        }
+                        else
+                        {
+                            @(Model.DetailsInfo.Description.Substring(0, 200) + "...")
+                        }
                     </p>
                     <div class="product_count">
                         <label for="qty">Quantity:</label>
@@ -98,7 +109,14 @@
                             <div class="col-12">
                                 <div class="box_total">
                                     <h5>Overall</h5>
-                                    <h4>@(Model.DetailsInfo.Reviews.Sum(x => x.Rating) / Model.DetailsInfo.Reviews.Count())</h4>
+                                    @if (Model.DetailsInfo.Reviews.Count() == 0)
+                                    {
+                                        <h4>0</h4>
+                                    }
+                                    else
+                                    {
+                                        <h4>@(Model.DetailsInfo.Reviews.Sum(x => x.Rating) / Model.DetailsInfo.Reviews.Count())</h4>
+                                    }
                                     <h6>(@Model.DetailsInfo.Reviews.Count() Reviews)</h6>
                                 </div>
                             </div>
@@ -106,33 +124,33 @@
                         <div class="review_list mt-3">
                             @if (Model.DetailsInfo.Reviews.Count == 0)
                             {
-                            <div class="mt3 text-center">
-                                <h4>There are no user reviews for this product.</h4>
-                            </div>
+                                <div class="mt3 text-center">
+                                    <h4>There are no user reviews for this product.</h4>
+                                </div>
                             }
                             @foreach (var rev in Model.DetailsInfo.Reviews)
                             {
-                            <div class="review_item">
-                                <div class="media">
-                                    <div class="media-body">
-                                        <h4>@rev.ClientFullName</h4>
-                                        @for (int i = 1; i <= 5; i++)
-                                        {
-                                        if (i <= rev.Rating)
-                                        {
-                                        <i class="fa fa-star"></i>
-                                        }
-                                        else
-                                        {
-                                        <i class="fa fa-star-o"></i>
-                                        }
-                                        }
+                                <div class="review_item">
+                                    <div class="media">
+                                        <div class="media-body">
+                                            <h4>@rev.ClientFullName</h4>
+                                            @for (int i = 1; i <= 5; i++)
+                                            {
+                                                if (i <= rev.Rating)
+                                                {
+                                                    <i class="fa fa-star"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="fa fa-star-o"></i>
+                                                }
+                                            }
+                                        </div>
                                     </div>
+                                    <p>
+                                        @rev.Comment
+                                    </p>
                                 </div>
-                                <p>
-                                    @rev.Comment
-                                </p>
-                            </div>
                             }
                         </div>
                     </div>
@@ -233,41 +251,41 @@
 </section>
 <!-- End related-product Area -->
 @section Scripts{
-<script>
-    $(".ratingStar").hover(function () {
-        $(".ratingStar").addClass("fa-star-o").removeClass("fa-star");
+    <script>
+        $(".ratingStar").hover(function () {
+            $(".ratingStar").addClass("fa-star-o").removeClass("fa-star");
 
-        $(this).addClass("fa-star").removeClass("fa-star-o");
-        $(this).prevAll(".ratingStar").addClass("fa-star").removeClass("fa-star-o");
-    });
-
-    $(".ratingStar").click(function () {
-        var starRating = $(this).attr("dataValue");
-
-        $("#ratingsValue").val(starRating);
-    });
-
-    $("#addCart").click(function () {
-
-        var property1 = $("#productIdValue").val();
-        var property2 = $("#sst").val();
-
-        var JSONObject = {
-            productId: property1,
-            quantity: property2
-        };
-
-        $.ajax({
-            type: "POST",
-            url: "/ShoppingCart/Add",
-            data: JSON.stringify(JSONObject),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json"
+            $(this).addClass("fa-star").removeClass("fa-star-o");
+            $(this).prevAll(".ratingStar").addClass("fa-star").removeClass("fa-star-o");
         });
 
-        $("#successp").removeAttr("hidden");
-    });
-</script>
+        $(".ratingStar").click(function () {
+            var starRating = $(this).attr("dataValue");
 
-<partial name="_ValidationScriptsPartial" />
+            $("#ratingsValue").val(starRating);
+        });
+
+        $("#addCart").click(function () {
+
+            var property1 = $("#productIdValue").val();
+            var property2 = $("#sst").val();
+
+            var JSONObject = {
+                productId: property1,
+                quantity: property2
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/ShoppingCart/Add",
+                data: JSON.stringify(JSONObject),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json"
+            });
+
+            $("#successp").removeAttr("hidden");
+        });
+    </script>
+
+    <partial name="_ValidationScriptsPartial" />
 }

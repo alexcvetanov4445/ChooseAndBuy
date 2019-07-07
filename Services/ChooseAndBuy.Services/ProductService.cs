@@ -25,6 +25,34 @@
             this.context.SaveChanges();
         }
 
+        public bool DeleteProduct(string id)
+        {
+            var product = this.context.Products.SingleOrDefault(x => x.Id == id);
+
+            if (product == null)
+            {
+                return false;
+            }
+
+            this.context.Products.Remove(product);
+            this.context.SaveChanges();
+
+            return true;
+        }
+
+        public bool EditProduct(Product product)
+        {
+            this.context.Products.Update(product);
+            this.context.SaveChanges();
+
+            return true;
+        }
+
+        public IEnumerable<Product> GetAllProducts()
+        {
+            return this.context.Products.Include(p => p.SubCategory);
+        }
+
         public Product GetById(string id)
         {
             var product = this.context.Products

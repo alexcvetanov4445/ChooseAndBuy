@@ -35,6 +35,14 @@
             this.imageService = imageService;
         }
 
+        public IActionResult All()
+        {
+            var products = this.productService.GetAllProducts().ToList();
+            var mappedProducts = this.mapper.Map<List<TableProductViewModel>>(products);
+
+            AllProductsViewModel model = new AllProductsViewModel { Products = mappedProducts };
+            return this.View(model);
+        }
 
         public IActionResult Create()
         {
@@ -70,17 +78,58 @@
             return this.View(model);
         }
 
-        [AcceptVerbs("Get", "Post")]
-        public IActionResult ValidateProductName(string productName)
+        [HttpDelete]
+        public IActionResult Delete([FromBody]string productId)
         {
-            bool productExists = this.productService.ProductExists(productName);
+            var isSuccessfull = this.productService.DeleteProduct(productId);
 
-            if (productExists == true)
+            if (isSuccessfull)
             {
                 return this.Json(true);
             }
 
             return this.Json(false);
+        }
+
+        public IActionResult Edit(string productId)
+        {
+            var product = this.productService.GetById(productId);
+            var model = this.mapper.Map<EditProductBindingModel>(product);
+
+            model.Id = productId;
+            model.SubCategories = this.subCategoryService.GetSubCategories().ToList();
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(EditProductBindingModel model)
+        {
+            var product = this.productService.GetById(model.Id);
+
+            this.mapper.Map(model, product);
+
+            this.productService.EditProduct(product);
+
+            this.TempData["Success"] = $"Successully edited {product.Name}";
+
+            return this.RedirectToAction("All");
+        }
+
+        [AcceptVerbs("Get", "Post")]
+        public IActionResult ValidateProductName([Bind(Prefix = "Name")]string productName)
+        {
+            bool productExists = this.productService.ProductExists(productName);
+
+            if (productExists == true)
+            {
+                return this.Json(false);
+            }
+            else
+            {
+                return this.Json(true);
+            }
+
         }
     }
 }

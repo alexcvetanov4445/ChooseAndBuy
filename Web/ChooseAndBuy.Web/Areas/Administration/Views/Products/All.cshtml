@@ -1,0 +1,123 @@
+﻿@using ChooseAndBuy.Web.Areas.Administration.ViewModels.Products
+
+@model AllProductsViewModel
+
+@{
+    ViewData["Title"] = "All";
+}
+
+<!-- Start Banner Area -->
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Admin Pane</h1>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Banner Area -->
+<div class="container">
+    <div class="row">
+        <div class="col-xl-3 col-lg-4 col-md-5">
+            <div class="sidebar-categories">
+                <div class="head">Options</div>
+                <ul class="main-categories">
+                    <li class="main-nav-list">
+                        <a href="#"><span class="lnr lnr-arrow-right"></span>Pending Orders</a>
+                    </li>
+                    <li class="main-nav-list">
+                        <a asp-route="/Administration/Home/Index"><span class="lnr lnr-arrow-right"></span>Active Orders</a>
+                    </li>
+                    <li class="main-nav-list">
+                        <a asp-action="create" asp-controller="categories"><span class="lnr lnr-arrow-right"></span>Add Category</a>
+                    </li>
+                    <li class="main-nav-list">
+                        <a asp-action="create" asp-controller="subcategories"><span class="lnr lnr-arrow-right"></span>Add SubCategory</a>
+                    </li>
+                    <li class="main-nav-list">
+                        <a asp-action="create" asp-controller="products"><span class="lnr lnr-arrow-right"></span>Add Product</a>
+                    </li>
+                    <li class="main-nav-list">
+                        <a asp-action="all" asp-controller="products"><span class="lnr lnr-arrow-right"></span>All Products</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-xl-9 col-lg-8 col-md-7">
+            <!-- Start Content Section -->
+            <section class="container mt-4 mb-4">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Product Name</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Recommended</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var product in Model.Products)
+                        {
+                            <tr id="@product.Id">
+                                <td hidden><button id="prdId" value="@product.Id"></button></td>
+                                <td class="text-warning">
+                                    <strong>
+                                        <a asp-action="details" asp-controller="products" asp-route-id="@product.Id" asp-area="">
+                                            @product.Name
+                                        </a>
+                                    </strong>
+                                </td>
+                                <td>$@product.Price</td>
+                                <td>@product.SubCategoryName</td>
+                                @if (product.IsRecommended)
+                                {
+                                    <td>Yes</td>
+                                }
+                                else
+                                {
+                                    <td>No</td>
+                                }
+                                <td>
+                                    <a asp-action="edit" asp-controller="products" asp-area="administration" asp-route-productId="@product.Id" class="genric-btn primary radius text-dark">
+                                        Edit
+                                    </a>
+                                </td>
+                                <td><a class="genric-btn danger radius text-dark" id="deleteAction">Delete</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </section>
+            <!-- End Content Section -->
+        </div>
+    </div>
+</div>
+
+
+<!-- Delete product ajax -->
+@section Scripts{
+    <script>
+        $("#deleteAction").click(function () {
+
+            var prdId = $("#prdId").val();
+
+            var JSONObject = {
+                productId: prdId
+            };
+
+            $.ajax({
+                type: "DELETE",
+                url: "@Url.Action("Delete", "Products", new { area = "Administration" })",
+                data: JSON.stringify(JSONObject),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function () {
+                    $("#deleteAction").attr("hidden");
+                }
+            });
+        });
+    </script>
+}

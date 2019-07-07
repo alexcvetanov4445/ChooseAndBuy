@@ -1,9 +1,13 @@
-﻿@using ChooseAndBuy.Web.Areas.Administration.ViewModels.SubCategories
+﻿@using ChooseAndBuy.Web.Areas.Administration.ViewModels.Products
 
-@model SubCategoryBindingModel
+@model EditProductBindingModel
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/jquery-validation/jquery.validate.js"></script>
+<script src="~/lib/jquery-validate-unobtrusive/jquery.validate.unobtrusive.js"></script>
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
 }
 
 <!-- Start Banner Area -->
@@ -56,26 +60,44 @@
         <div class="col-xl-9 col-lg-8 col-md-7">
             <!-- Start Content Section -->
             <section class="container mt-4 mb-4">
-                <div class="row login-form shadow justify-content-center">
+                <div class="row login-form shadow">
                     <div class="col-md-12">
-                        <h3 class="text-center">Create Sub-Category</h3>
+                        <h3 class="text-center">Edit Product</h3>
                     </div>
                     <hr class="w-50 h2" />
-                    <form id="account" class="row login_form mt-4 justify-content-center" method="post">
-                        <div class="col-md-6 form-group text-center">
-                            <label asp-for="Name" class="float-left"></label>
-                            <input asp-for="Name" class="form-control" />
-                            <span asp-validation-for="Name" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <label asp-for="Categories" class="float-left"></label>
-                            <div class="default-select" id="default-select">
-                                <select asp-for="CategoryId" class="default-select" asp-items="@Model.Categories"></select>
+                    <form enctype="multipart/form-data" id="account" class="row login_form mt-4" method="post">
+                        <div class="row col-md-12 text-align-center">
+                            <input hidden asp-for="Id" />
+                            <div class="col-sm-6 form-group">
+                                <label asp-for="Name" class="float-left"></label>
+                                <input readonly asp-for="Name" class="form-control" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
                             </div>
-                            <span asp-validation-for="Categories" class="text-danger"></span>
+                            <div class="col-md-2 form-group">
+                                <label asp-for="Price" class="float-left"></label>
+                                <input asp-for="Price" class="form-control" />
+                                <span asp-validation-for="Price" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <label asp-for="SubCategoryId" class="float-left"></label>
+                                <div class="default-select" id="default-select">
+                                    <select asp-for="SubCategoryId" class="default-select" asp-items="@Model.SubCategories"></select>
+                                </div>
+                                <span asp-validation-for="SubCategoryId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <label asp-for="Description" class="float-left"></label>
+                            <textarea asp-for="Description" class="form-control"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <label asp-for="Specification" class="float-left"></label>
+                            <textarea asp-for="Specification" class="form-control"></textarea>
+                            <span asp-validation-for="Specification" class="text-danger"></span>
                         </div>
                         <div class="col-md-12 mt-3 text-center">
-                            <button class="primary-btn text-center" type="submit" value="submit">Create</button>
+                            <button class="primary-btn text-center" type="submit" value="submit">Edit</button>
                         </div>
                     </form>
                 </div>
@@ -88,6 +110,3 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
-
-
-
