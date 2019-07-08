@@ -5,6 +5,7 @@
     using System.Text;
 
     using Microsoft.AspNetCore.Mvc.Rendering;
+    using X.PagedList;
 
     public class ProductsViewModel
     {
@@ -12,10 +13,16 @@
         // <mainCategory, listOfSubCategories>
         public string Search { get; set; }
 
+        public int? PageNum { get; set; }
+
+        public int? ShowNum { get; set; }
+
+        public int? SortBy { get; set; }
+
         public string SubCategoryId { get; set; }
 
         public Dictionary<string, ICollection<SelectListItem>> Categories { get; set; }
 
-        public ICollection<ProductViewModel> Products { get; set; }
+        public IPagedList<ProductViewModel> Products { get; set; }
     }
 }

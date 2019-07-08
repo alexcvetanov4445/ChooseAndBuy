@@ -70,19 +70,37 @@
             return name;
         }
 
-        public IEnumerable<Product> GetProducts(string search, string subCategoryId)
+        public IEnumerable<Product> GetProducts(string search, string subCategoryId, int sortBy)
         {
+            var products = new List<Product>();
+
             if (search != null)
             {
                 // get searched products
             }
 
+
             if (subCategoryId != null)
             {
-                return this.GetProductsByCategory(subCategoryId);
+                products = this.GetProductsByCategory(subCategoryId).ToList();
+            }
+            else
+            {
+                products = this.context.Products.Where(pr => pr.IsRecommended == true).ToList();
             }
 
-            var products = this.context.Products.Where(pr => pr.IsRecommended == true);
+
+            switch (sortBy)
+            {
+                case 1: // price ascending
+                    return products.OrderBy(p => p.Price).ToList();
+                case 2: // price descending
+                    return products.OrderByDescending(p => p.Price).ToList();
+                case 3: // name ascending
+                    return products.OrderBy(p => p.Name).ToList();
+                case 4: // name descending
+                    return products.OrderByDescending(p => p.Name).ToList();
+            }
 
             return products;
         }

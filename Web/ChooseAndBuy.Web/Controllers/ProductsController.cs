@@ -11,6 +11,7 @@
     using ChooseAndBuy.Web.ViewModels.Products;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Routing;
+    using X.PagedList;
 
     public class ProductsController : Controller
     {
@@ -31,12 +32,19 @@
             this.mapper = mapper;
         }
 
-        public IActionResult Index(ProductsViewModel model, string id)
+        public IActionResult Index(ProductsViewModel model)
         {
-            var products = this.productsService.GetProducts(model.Search, id);
-            model.Categories = this.categoryService.GetCategoriesWithSubCategories();
+            // TODO: make the default values contstants
+            var page = model.PageNum ?? 1;
+            var show = model.ShowNum ?? 6;
+            var sortBy = model.SortBy ?? 1;
 
-            model.Products = this.mapper.Map<List<ProductViewModel>>(products);
+            var products = this.productsService.GetProducts(model.Search, model.SubCategoryId, sortBy);
+            var mappedProducts = this.mapper.Map<IList<ProductViewModel>>(products);
+            var pagedProducts = mappedProducts.ToPagedList(page, show);
+
+            model.Categories = this.categoryService.GetCategoriesWithSubCategories();
+            model.Products = pagedProducts;
 
             // TODO: Fix the size of the images in products page
             return this.View(model);

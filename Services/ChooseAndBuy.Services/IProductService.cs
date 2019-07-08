@@ -17,7 +17,7 @@
 
         string GetIdByName(string productName);
 
-        IEnumerable<Product> GetProducts(string search, string subCategoryId);
+        IEnumerable<Product> GetProducts(string search, string subCategoryId, int sortBy);
 
         IEnumerable<Product> GetAllProducts();
 
