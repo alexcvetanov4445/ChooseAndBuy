@@ -6,6 +6,10 @@
     ViewData["Title"] = "Cart";
 }
 
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/jquery-validation/jquery.validate.js"></script>
+<script src="~/lib/jquery-validate-unobtrusive/jquery.validate.unobtrusive.js"></script>
+
 <!-- Start Banner Area -->
 <section class="banner-area organic-breadcrumb">
     <div class="container">
@@ -42,10 +46,16 @@
                                 <td>
                                     <div class="media">
                                         <div class="d-flex">
-                                            <img src="~/img/product/@product.ImageName" alt="">
+                                            <div class="col-md-4 px-0">
+                                                <img src="~/img/product/@product.ImageName" class="img-fluid" alt="">
+                                            </div>
                                         </div>
                                         <div class="media-body">
-                                            <p>@product.Name</p>
+                                            <h4 class="text-primary float-right mr-5">
+                                                <a asp-action="details" asp-controller="products" asp-route-id="@product.Id" asp-area="">
+                                                    @product.Name
+                                                </a>
+                                            </h4>
                                         </div>
                                     </div>
                                 </td>
@@ -54,31 +64,34 @@
                                 </td>
                                 <td>
                                     <div class="product_count">
+                                        <a>
+
+                                        </a>
                                         <input type="text" name="qty" id="sst" maxlength="12" value="@product.Quantity" title="Quantity:"
                                                class="input-text qty">
-                                        <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
-                                                class="increase items-count" type="button">
-                                            <i class="lnr lnr-chevron-up"></i>
-                                        </button>
-                                        <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 1 ) result.value--;return false;"
-                                                class="reduced items-count" type="button">
-                                            <i class="lnr lnr-chevron-down"></i>
-                                        </button>
+                                        <form method="post">
+                                            <button asp-controller="ShoppingCart" asp-action="UpdateProductCount" asp-route-ProductId="@product.Id" asp-route-Quantity="@(product.Quantity + 1)"
+                                                    class="increase items-count" type="submit">
+                                                <i class="lnr lnr-chevron-up"></i>
+                                            </button>
+                                            <button asp-controller="ShoppingCart" asp-action="UpdateProductCount" asp-route-ProductId="@product.Id" asp-route-Quantity="@(product.Quantity - 1)"
+                                                    class="reduced items-count" type="submit">
+                                                <i class="lnr lnr-chevron-down"></i>
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                                 <td>
                                     <h5>$@product.TotalPrice</h5>
                                 </td>
+                                <td>
+                                    <a asp-action="Remove" asp-controller="ShoppingCart" asp-route-productId="@product.Id"
+                                       class="genric-btn danger radius text-dark">
+                                        Remove
+                                    </a>
+                                </td>
                             </tr>
                         }
-                        <tr class="bottom_button">
-                            <td></td>
-                            <td></td>
-                            <td>
-                                <a class="gray_btn" href="#">Update Cart</a>
-                            </td>
-                            <td></td>
-                        </tr>
                         <tr>
                             <td></td>
                             <td></td>
@@ -95,7 +108,7 @@
                             <td></td>
                             <td>
                                 <div class="checkout_btn_inner d-flex align-items-center">
-                                    <a class="gray_btn" href="/Products">Continue Shopping</a>
+                                    <a asp-action="Index" asp-controller="Products" class="gray_btn">Continue Shopping</a>
                                     <a class="primary-btn" href="/Users/Checkout">Proceed to checkout</a>
                                 </div>
                             </td>
@@ -107,3 +120,7 @@
     </div>
 </section>
 <!--================End Cart Area =================-->
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

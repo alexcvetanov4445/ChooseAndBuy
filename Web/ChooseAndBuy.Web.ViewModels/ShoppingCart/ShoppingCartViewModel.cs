@@ -8,6 +8,8 @@
     {
         public ICollection<ShoppingCartProductViewModel> Products { get; set; }
 
+        public ShoppingCartUpdateCountBindingModel UpdateCountProduct { get; set; }
+
         public double TotalPrice { get; set; }
     }
 }

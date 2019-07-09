@@ -5,31 +5,39 @@
     using System.Security.Claims;
 
     using AutoMapper;
+    using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Services;
     using ChooseAndBuy.Web.ViewModels.ShoppingCart;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
     public class ShoppingCartController : Controller
     {
         private readonly IShoppingCartService shoppingCartService;
         private readonly IMapper mapper;
+        private readonly UserManager<ApplicationUser> userManager;
 
         public ShoppingCartController(
             IShoppingCartService shoppingCartService,
-            IMapper mapper)
+            IMapper mapper,
+            UserManager<ApplicationUser> userManager)
         {
             this.shoppingCartService = shoppingCartService;
             this.mapper = mapper;
+            this.userManager = userManager;
         }
 
-        public IActionResult Index(string userId)
+        [Authorize]
+        public IActionResult Index()
         {
+            // TODO: think about using the cookie if the user is not logged in
+            string userId = this.userManager.GetUserId(this.HttpContext.User);
+
             var products = this.shoppingCartService.GetCartProductsByUserId(userId).ToList();
 
             var mappedProducts = this.mapper.Map<List<ShoppingCartProductViewModel>>(products);
 
-            // mappedProducts.ForEach(x => x.TotalPrice = (double)(x.Quantity * x.Price));
             var model = new ShoppingCartViewModel
             {
                 Products = mappedProducts,
@@ -40,18 +48,33 @@
         }
 
         [HttpPost]
-        public IActionResult Add([FromBody]string productId, [FromBody]int quantity)
+        public IActionResult Add([FromBody]ShoppingCartAddInputModel model)
         {
-            string userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            // TODO: think about using the cookie if the user is not logged in
+            string userId = this.userManager.GetUserId(this.HttpContext.User);
 
-            var isProductAdded = this.shoppingCartService.AddProductToCart(productId, userId);
+            var isProductAdded = this.shoppingCartService.AddProductToCart(model.ProductId, userId, model.Quantity);
 
-            if (!isProductAdded)
-            {
-                return this.RedirectToAction("Details", "Products", new { id = productId });
-            }
+            return this.Json(isProductAdded);
+        }
 
-            return this.RedirectToAction("Index", new { userId = userId });
+        [HttpPost]
+        public IActionResult UpdateProductCount(ShoppingCartUpdateCountBindingModel model)
+        {
+            string userId = this.userManager.GetUserId(this.HttpContext.User);
+
+            this.shoppingCartService.UpdateProductCount(model.ProductId, userId, model.Quantity);
+
+            return this.RedirectToAction("Index");
+        }
+
+        public IActionResult Remove(string productId)
+        {
+            string userId = this.userManager.GetUserId(this.HttpContext.User);
+
+            this.shoppingCartService.RemoveProductFromCart(productId, userId);
+
+            return this.RedirectToAction("Index");
         }
     }
 }

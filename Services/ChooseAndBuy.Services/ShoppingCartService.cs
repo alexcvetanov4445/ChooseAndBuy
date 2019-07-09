@@ -8,6 +8,7 @@
     using ChooseAndBuy.Data;
     using ChooseAndBuy.Data.Models;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
 
     public class ShoppingCartService : IShoppingCartService
     {
@@ -18,35 +19,34 @@
             this.context = context;
         }
 
-        public bool AddProductToCart(string productId, string userId)
+        public bool AddProductToCart(string productId, string userId, int quantity)
         {
-            var shoppingCartId = this.context
-                .ShoppingCarts
-                .SingleOrDefault(u => u.ApplicationUserId == userId)
-                .Id;
+            // Calls a private method to do the job for getting the shopping cart id
+            string shoppingCartId = this.GetOrCreateUserShoppingCart(userId);
 
+            // Checks if a product is added to the cart and if so, applies just the quantity
+            // Otherwise shopping cart product is created with the data
             bool isProductAdded = this.context
                 .ShoppingCartProducts
-                .Any(scp => scp.ProductId == productId);
+                .Any(scp => scp.ProductId == productId && scp.ShoppingCartId == shoppingCartId);
 
             if (isProductAdded)
             {
                 this.context
                     .ShoppingCartProducts
-                    .SingleOrDefault(scp => scp.ProductId == productId)
-                    .Quantity++;
+                    .SingleOrDefault(scp => scp.ProductId == productId && scp.ShoppingCartId == shoppingCartId)
+                    .Quantity += quantity;
 
                 this.context.SaveChanges();
 
                 return true;
             }
 
-            // TODO: make the user select quantity of product in the product details view
             var shoppingCartProduct = new ShoppingCartProduct
             {
                 ProductId = productId,
                 ShoppingCartId = shoppingCartId,
-                Quantity = 1,
+                Quantity = quantity,
             };
 
             this.context.ShoppingCartProducts.Add(shoppingCartProduct);
@@ -58,19 +58,84 @@
 
         public IEnumerable<ShoppingCartProduct> GetCartProductsByUserId(string userId)
         {
-            if (!this.context
+            // Checks if products exists in the user's cart.
+            // If there are no products returns a new list empty list so no exceptions are thrown
+            // Otherwise gets the products and returns them
+            bool productsExist = this.context
                 .ShoppingCarts
-                .Any(u => u.ApplicationUserId == userId))
+                .Any(u => u.ApplicationUserId == userId);
+
+            if (!productsExist)
             {
                 return new List<ShoppingCartProduct>();
             }
 
             var products = this.context
                 .ShoppingCarts
+                .Include(p => p.ShoppingCartProducts)
+                .ThenInclude(x => x.Product)
                 .SingleOrDefault(u => u.ApplicationUserId == userId)
                 .ShoppingCartProducts;
 
             return products;
+        }
+
+        public bool RemoveProductFromCart(string productId, string userId)
+        {
+            string shoppingCartId = this.GetOrCreateUserShoppingCart(userId);
+
+            var product = this.context
+                .ShoppingCartProducts
+                .Where(x => x.ShoppingCartId == shoppingCartId && x.ProductId == productId)
+                .SingleOrDefault();
+
+            this.context.ShoppingCartProducts.Remove(product);
+            this.context.SaveChanges();
+
+            return true;
+        }
+
+        public bool UpdateProductCount(string productId, string userId, int quantity)
+        {
+            if (quantity <= 0)
+            {
+                return false;
+            }
+
+            var shoppingCartId = this.GetOrCreateUserShoppingCart(userId);
+
+            var shoppingCartProduct = this.context
+                 .ShoppingCartProducts
+                 .SingleOrDefault(scp => scp.ProductId == productId && scp.ShoppingCartId == shoppingCartId);
+
+            shoppingCartProduct.Quantity = quantity;
+            this.context.SaveChanges();
+
+            return true;
+        }
+
+        private string GetOrCreateUserShoppingCart(string userId)
+        {
+            // Creates shopping cart if the user dont have one and returns it's Id
+            bool doesHaveShoppingCart = this.context
+                .ShoppingCarts
+                .Any(u => u.ApplicationUserId == userId);
+
+            if (!doesHaveShoppingCart)
+            {
+                ShoppingCart cart = new ShoppingCart
+                {
+                    ApplicationUserId = userId,
+                };
+
+                this.context.ShoppingCarts.Add(cart);
+                this.context.SaveChanges();
+            }
+
+            return this.context
+                .ShoppingCarts
+                .SingleOrDefault(sc => sc.ApplicationUserId == userId)
+                .Id;
         }
     }
 }

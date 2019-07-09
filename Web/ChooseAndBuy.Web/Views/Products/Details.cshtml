@@ -7,8 +7,8 @@
 }
 
 <script src="~/lib/jquery/dist/jquery.js"></script>
-<script src="~/lib/jquery-validation/jquery.validate.js"></script>
-<script src="~/lib/jquery-validate-unobtrusive/jquery.validate.unobtrusive.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
 
 <!-- Start Banner Area -->
 <section class="banner-area organic-breadcrumb">
@@ -68,11 +68,11 @@
                         </button>
                     </div>
                     <div class="card_area d-flex align-items-center">
-                        <a hidden id="productIdValue">@Model.ReviewModel.ProductId</a>
+                        <button hidden id="productIdValue" value="@Model.ReviewModel.ProductId"></button>
                         <input class="addCart primary-btn" id="addCart" type="button" value="Add to Cart" />
-                        <p id="successP" hidden>Product added to cart!</p>
                         <a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a>
                     </div>
+                    <div><h4 class="successP text-success mt-3" hidden>Product added to cart!</h4></div>
                 </div>
             </div>
         </div>
@@ -271,20 +271,24 @@
             var property2 = $("#sst").val();
 
             var JSONObject = {
-                productId: property1,
-                quantity: property2
+                "ProductId" : property1,
+                "Quantity" : property2
             };
 
             $.ajax({
                 type: "POST",
-                url: "/ShoppingCart/Add",
+                url: "@Url.Action("Add", "ShoppingCart")",
                 data: JSON.stringify(JSONObject),
+                success: function () {
+                    $(".successP").removeAttr("hidden").delay(2000).fadeOut();
+                },
                 contentType: "application/json; charset=utf-8",
                 dataType: "json"
             });
 
-            $("#successp").removeAttr("hidden");
+
         });
+
     </script>
 
     <partial name="_ValidationScriptsPartial" />

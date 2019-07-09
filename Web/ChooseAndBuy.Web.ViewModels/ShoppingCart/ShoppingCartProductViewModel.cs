@@ -2,6 +2,8 @@
 {
     public class ShoppingCartProductViewModel
     {
+        public string Id { get; set; }
+
         public string ImageName { get; set; }
 
         public string Name { get; set; }

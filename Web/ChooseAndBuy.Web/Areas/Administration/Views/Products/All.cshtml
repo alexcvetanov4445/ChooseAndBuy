@@ -85,7 +85,7 @@
                                         Edit
                                     </a>
                                 </td>
-                                <td><a class="genric-btn danger radius text-dark" id="deleteAction">Delete</a></td>
+                                <td><a class="deleteAction genric-btn danger radius text-dark" id="@product.Id">Delete</a></td>
                             </tr>
                         }
                     </tbody>
@@ -100,12 +100,12 @@
 <!-- Delete product ajax -->
 @section Scripts{
     <script>
-        $("#deleteAction").click(function () {
+        $(".deleteAction").click(function () {
 
-            var prdId = $("#prdId").val();
+            var prdId = $(this).attr("id");
 
             var JSONObject = {
-                productId: prdId
+                "productId" : prdId
             };
 
             $.ajax({
@@ -115,7 +115,7 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function () {
-                    $("#deleteAction").attr("hidden");
+                    $("#" + prdId).fadeOut();
                 }
             });
         });

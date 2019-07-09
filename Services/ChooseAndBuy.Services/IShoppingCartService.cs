@@ -8,7 +8,11 @@
 
     public interface IShoppingCartService
     {
-        bool AddProductToCart(string productId, string userId);
+        bool AddProductToCart(string productId, string userId, int quantity);
+
+        bool UpdateProductCount(string productId, string userId, int quantity);
+
+        bool RemoveProductFromCart(string productId, string userId);
 
         IEnumerable<ShoppingCartProduct> GetCartProductsByUserId(string userId);
     }

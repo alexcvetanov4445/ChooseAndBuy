@@ -21,6 +21,7 @@
             this.CreateMap<Product, EditProductBindingModel>().ReverseMap();
 
             this.CreateMap<ShoppingCartProduct, ShoppingCartProductViewModel>()
+                .ForMember(model => model.Id, opt => opt.MapFrom(src => src.Product.Id))
                 .ForMember(model => model.Name, opt => opt.MapFrom(src => src.Product.Name))
                 .ForMember(model => model.Price, opt => opt.MapFrom(src => src.Product.Price))
                 .ForMember(model => model.ImageName, opt => opt.MapFrom(src => src.Product.ImageName))
