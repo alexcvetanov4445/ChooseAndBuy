@@ -12,7 +12,7 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
-    public class ShoppingCartController : Controller
+    public class ShoppingCartController : BaseController
     {
         private readonly IShoppingCartService shoppingCartService;
         private readonly IMapper mapper;

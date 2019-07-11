@@ -29,6 +29,8 @@ namespace ChooseAndBuy.Data.Models
 
         public virtual ShoppingCart ShoppingCart { get; set; }
 
+        public virtual ICollection<UserFavoriteProduct> FavoriteProducts { get; set; }
+
         // Audit info
         public DateTime CreatedOn { get; set; }
 

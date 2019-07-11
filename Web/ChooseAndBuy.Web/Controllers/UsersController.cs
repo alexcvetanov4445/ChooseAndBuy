@@ -6,48 +6,36 @@
     using System.Threading.Tasks;
 
     using ChooseAndBuy.Data.Models;
+    using ChooseAndBuy.Web.Controllers;
+    using ChooseAndBuy.Web.ViewModels.Users;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
-    public class UsersController : Controller
+    [Authorize]
+    public class UsersController : BaseController
     {
+        private readonly UserManager<ApplicationUser> userManager;
+
+        private readonly SignInManager<ApplicationUser> signInManager;
+
         public UsersController(
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager)
         {
-            this.UserManager = userManager;
-            this.SignInManager = signInManager;
+            this.userManager = userManager;
+            this.signInManager = signInManager;
         }
 
-        public UserManager<ApplicationUser> UserManager { get; }
-
-        public SignInManager<ApplicationUser> SignInManager { get; }
-
-        [HttpGet]
-        public IActionResult Cart()
-        {
-            return this.View();
-        }
-
-        [HttpGet]
-        [Authorize]
-        public IActionResult Checkout()
-        {
-            return this.View();
-        }
-
-        [HttpGet]
-        public IActionResult Confirmation()
+        public IActionResult Index(UserInfoBindingModel model)
         {
             return this.View();
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> Logout()
         {
-            await this.SignInManager.SignOutAsync();
+            await this.signInManager.SignOutAsync();
             return this.RedirectToAction("index", "home");
         }
     }

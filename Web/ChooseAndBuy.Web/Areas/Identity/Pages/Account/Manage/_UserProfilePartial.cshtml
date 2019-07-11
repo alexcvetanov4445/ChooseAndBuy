@@ -1,0 +1,20 @@
+﻿<div class="col-xl-3 col-lg-4 col-md-5">
+    <div class="sidebar-categories">
+        <div class="head">Options</div>
+        <ul class="main-categories">
+            <li class="main-nav-list">
+                <a asp-area="Identity" asp-page="/Account/Manage/Index"><span class="lnr lnr-arrow-right"></span>@this.User.Identity.Name</a>
+            </li>
+            <li class="main-nav-list">
+                <a asp-area="Identity" asp-page="/Account/Manage/ChangePassword"><span class="lnr lnr-arrow-right"></span>Password Change</a>
+            </li>
+            <li class="main-nav-list">
+                <a asp-area="Identity" asp-page="/Account/Manage/PersonalData"><span class="lnr lnr-arrow-right"></span>Personal Data</a>
+            </li>
+            <li class="main-nav-list">
+                <a asp-area="Identity" asp-page="/Account/Manage/ExternalLogins"><span class="lnr lnr-arrow-right"></span>External Logins</a>
+            </li>
+
+        </ul>
+    </div>
+</div>

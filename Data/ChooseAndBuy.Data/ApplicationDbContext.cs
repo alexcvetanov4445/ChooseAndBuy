@@ -48,6 +48,8 @@
 
         public DbSet<ShoppingCartProduct> ShoppingCartProducts { get; set; }
 
+        public DbSet<UserFavoriteProduct> UsersFavoriteProducts { get; set; }
+
         public override int SaveChanges() => this.SaveChanges(true);
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
@@ -104,6 +106,8 @@
             builder.Entity<OrderProduct>().HasKey(x => new { x.OrderId, x.ProductId });
 
             builder.Entity<CategoryProduct>().HasKey(x => new { x.ProductId, x.SubCategoryId });
+
+            builder.Entity<UserFavoriteProduct>().HasKey(x => new { x.ApplicationUserId, x.ProductId });
 
             // Tables
             builder.Entity<Product>()

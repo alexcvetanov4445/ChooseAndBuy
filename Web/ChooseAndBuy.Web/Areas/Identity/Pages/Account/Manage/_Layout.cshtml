@@ -1,18 +1,35 @@
-﻿@{ 
+﻿@{
     Layout = "/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Manage your account</h1>
-
-<div>
-    <h4>Change your account settings</h4>
-    <hr />
-    <div class="row">
-        <div class="col-md-3">
-            <partial name="_ManageNav" />
+<!-- Start Banner Area -->
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>User Pane</h1>
+            </div>
         </div>
-        <div class="col-md-9">
-            @RenderBody()
+    </div>
+</section>
+<!-- End Banner Area -->
+<div class="container">
+    <div class="row">
+        <partial name="_UserProfilePartial.cshtml" />
+        <div class="col-xl-9 col-lg-8 col-md-7">
+            <!-- Start Content Section -->
+            <section class="container mt-4 mb-4">
+                <div class="row login-form shadow justify-content-center">
+                    <div class="col-md-12">
+                        <h3 class="text-center">@ViewData["Title"]</h3>
+                    </div>
+                    <div class="row login_form mt-4 w-100 justify-content-center">
+                        <hr class="w-75 mt-0 mb-4" style="height: 4px" />
+                        @RenderBody()
+                    </div>
+                </div>
+            </section>
+            <!-- End Content Section -->
         </div>
     </div>
 </div>

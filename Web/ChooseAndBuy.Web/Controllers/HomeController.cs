@@ -5,10 +5,10 @@
     using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
-
+    using ChooseAndBuy.Web.Controllers;
     using Microsoft.AspNetCore.Mvc;
 
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         [HttpGet]
         [Route("/")]

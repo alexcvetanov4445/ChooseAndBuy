@@ -89,13 +89,14 @@
                         </select>
                     </div>
             </form>
-            @Html.PagedListPager((IPagedList)Model.Products, page => Url.Action("Index", new { PageNum = page }),
-           new PagedListRenderOptions { })
+            @Html.PagedListPager((IPagedList)Model.Products, page => Url.Action("Index", new { PageNum = page }), new PagedListRenderOptions {
+           ActiveLiElementClass = "page-link"
+       })
         </div>
         <!-- End Filter Bar -->
         <!-- Start Best Seller -->
         <section class="lattest-product-area pb-40 category-list">
-            <div class="row">
+            <div class="card-deck">
                 @foreach (var pr in Model.Products)
                 {
                     <div class="col-lg-4 col-md-6">
@@ -103,7 +104,7 @@
                             <a asp-action="details" asp-controller="products" asp-route-id="@pr.Id">
                                 <img class="img-fluid" src="~/img/product/@pr.ImageName" alt="">
                             </a>
-                            <div class="product-details">
+                            <div class="product-details align-baseline bottom">
                                 <h6>
                                     @pr.Name
                                 </h6>

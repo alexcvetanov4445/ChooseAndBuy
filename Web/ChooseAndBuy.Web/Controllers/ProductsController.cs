@@ -13,7 +13,7 @@
     using Microsoft.AspNetCore.Routing;
     using X.PagedList;
 
-    public class ProductsController : Controller
+    public class ProductsController : BaseController
     {
         private readonly ICategoryService categoryService;
         private readonly IProductService productsService;
