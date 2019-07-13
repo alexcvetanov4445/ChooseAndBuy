@@ -4,14 +4,16 @@ using ChooseAndBuy.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ChooseAndBuy.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190712101545_FixAddressUserId")]
+    partial class FixAddressUserId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -190,15 +192,11 @@ namespace ChooseAndBuy.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AdditionalInfo");
-
                     b.Property<string>("ApplicationUserId");
 
                     b.Property<string>("DeliveryAddressId");
 
                     b.Property<DateTime?>("DeliveryDate");
-
-                    b.Property<int>("DeliveryType");
 
                     b.Property<DateTime?>("DispatchDate");
 

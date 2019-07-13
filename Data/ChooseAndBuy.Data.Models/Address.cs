@@ -25,7 +25,7 @@
 
         public City City { get; set; }
 
-        public string CnbUserId { get; set; }
+        public string ApplicationUserId { get; set; }
 
         public ApplicationUser ApplicationUser { get; set; }
 

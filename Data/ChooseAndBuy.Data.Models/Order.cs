@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-
+    using ChooseAndBuy.Data.Models.Enums;
     using ChooseAndBuy.Data.Models.Enums;
 
     public class Order
@@ -26,6 +26,10 @@
         public decimal TotalPrice { get; set; }
 
         public int Quantity { get; set; }
+
+        public string AdditionalInfo { get; set; }
+
+        public DeliveryType DeliveryType { get; set; }
 
         public PaymentType PaymentType { get; set; }
 

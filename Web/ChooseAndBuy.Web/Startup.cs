@@ -118,6 +118,9 @@
             services.AddTransient<IImageService, ImageService>();
             services.AddTransient<IReviewService, ReviewService>();
             services.AddTransient<IShoppingCartService, ShoppingCartService>();
+            services.AddTransient<ICityService, CityService>();
+            services.AddTransient<IAddressService, AddressService>();
+
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
         }
 

@@ -6,7 +6,8 @@
 
     public enum PaymentType
     {
-        Card = 1,
-        CashOnDelivery = 2,
+        PayPal = 1,
+        MasterCard = 2,
+        OnDelivery = 3,
     }
 }
