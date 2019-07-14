@@ -23,12 +23,15 @@
             this.CreateMap<Product, EditProductBindingModel>().ReverseMap();
             this.CreateMap<AddressCreateBindingModel, Address>();
             this.CreateMap<Address, AddressViewModel>();
+            this.CreateMap<OrderBindingModel, Order>();
+            this.CreateMap<OrderProductViewModel, OrderProduct>();
+
 
             this.CreateMap<ShoppingCartProduct, OrderProductViewModel>()
+                .ForMember(model => model.Id, opt => opt.MapFrom(src => src.ProductId))
                 .ForMember(model => model.Name, opt => opt.MapFrom(src => src.Product.Name))
                 .ForMember(model => model.Price, opt => opt.MapFrom(src => src.Product.Price))
                 .ForMember(model => model.TotalPrice, opt => opt.MapFrom(src => (double)(src.Quantity * src.Product.Price)));
-                
 
             this.CreateMap<ShoppingCartProduct, ShoppingCartProductViewModel>()
                 .ForMember(model => model.Id, opt => opt.MapFrom(src => src.Product.Id))

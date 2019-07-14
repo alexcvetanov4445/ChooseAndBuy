@@ -80,6 +80,21 @@
             return products;
         }
 
+        public bool RemoveAllCartProducts(string userId)
+        {
+            // gets the user's shopping cart id
+            // then gets the products of the cart and removes them
+            var shoppingCartId = this.GetOrCreateUserShoppingCart(userId);
+
+            var products = this.context.ShoppingCartProducts.Where(x => x.ShoppingCartId == shoppingCartId);
+
+            this.context.ShoppingCartProducts.RemoveRange(products);
+
+            this.context.SaveChanges();
+
+            return true;
+        }
+
         public bool RemoveProductFromCart(string productId, string userId)
         {
             string shoppingCartId = this.GetOrCreateUserShoppingCart(userId);

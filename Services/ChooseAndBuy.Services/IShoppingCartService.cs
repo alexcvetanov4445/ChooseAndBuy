@@ -1,8 +1,6 @@
 ﻿namespace ChooseAndBuy.Services
 {
-    using System;
     using System.Collections.Generic;
-    using System.Text;
 
     using ChooseAndBuy.Data.Models;
 
@@ -13,6 +11,8 @@
         bool UpdateProductCount(string productId, string userId, int quantity);
 
         bool RemoveProductFromCart(string productId, string userId);
+
+        bool RemoveAllCartProducts(string userId);
 
         IEnumerable<ShoppingCartProduct> GetCartProductsByUserId(string userId);
     }

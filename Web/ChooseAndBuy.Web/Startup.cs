@@ -120,6 +120,7 @@
             services.AddTransient<IShoppingCartService, ShoppingCartService>();
             services.AddTransient<ICityService, CityService>();
             services.AddTransient<IAddressService, AddressService>();
+            services.AddTransient<IOrderService, OrderService>();
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
         }

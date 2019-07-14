@@ -75,6 +75,18 @@
                 <div class="col-lg-8 order_box">
                     <h3>Order Details</h3>
                     <form class="row contact_form" asp-action="Create" asp-controller="Orders" method="post">
+                        <input asp-for="OrderCreate.ApplicationUserId" type="hidden" />
+                        @for (int i = 0; i < Model.OrderCreate.Products.Count(); i++)
+                        {
+
+                            <input asp-for="OrderCreate.Products[i].Id" type="hidden" />
+                            <input asp-for="OrderCreate.Products[i].Name" type="hidden" />
+                            <input asp-for="OrderCreate.Products[i].Price" type="hidden" />
+                            <input asp-for="OrderCreate.Products[i].Quantity" type="hidden" />
+                            <input asp-for="OrderCreate.Products[i].TotalPrice" type="hidden" />
+                        }
+                        <input asp-for="OrderCreate.TotalPrice" type="hidden" />
+                        <input asp-for="OrderCreate.DeliveryFee" type="hidden" />
                         <div class="col-lg-12">
                             <div class="row">
                                 <div class="col">
@@ -190,13 +202,5 @@
                 $("#crtWindow").modal('show');
             });
         });
-
-        function ValidateCheckBox(sender, args) {
-            if (document.getElementById("<%=CheckBox1.ClientID %>").checked == true) {
-                args.IsValid = true;
-            } else {
-                args.IsValid = false;
-            }
-        }
     </script>
 }

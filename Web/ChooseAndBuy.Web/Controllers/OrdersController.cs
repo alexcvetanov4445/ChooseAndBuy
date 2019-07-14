@@ -6,7 +6,9 @@
     using System.Threading.Tasks;
 
     using AutoMapper;
+    using System.Linq;
     using ChooseAndBuy.Data.Models;
+    using ChooseAndBuy.Data.Models.Enums;
     using ChooseAndBuy.Services;
     using ChooseAndBuy.Web.ViewModels.Addresses;
     using ChooseAndBuy.Web.ViewModels.Orders;
@@ -22,6 +24,7 @@
         private readonly ICityService cityService;
         private readonly IShoppingCartService shoppingCartService;
         private readonly IAddressService addressService;
+        private readonly IOrderService orderService;
         private readonly IMapper mapper;
 
         public OrdersController(
@@ -29,12 +32,14 @@
             ICityService cityService,
             IShoppingCartService shoppingCartService,
             IAddressService addressService,
+            IOrderService orderService,
             IMapper mapper)
         {
             this.userManager = userManager;
             this.cityService = cityService;
             this.shoppingCartService = shoppingCartService;
             this.addressService = addressService;
+            this.orderService = orderService;
             this.mapper = mapper;
         }
 
@@ -76,9 +81,35 @@
             return this.View(model);
         }
 
-        //public IActionResult Create (OrderBindingModel orderBindingModel)
-        //{
+        [HttpPost]
+        public IActionResult Create(OrderBindingModel orderCreate)
+        {
+            // maps the order and sets its remaining values manually
+            // after that the shoppingCart is deleted
+            var order = this.mapper.Map<Order>(orderCreate);
 
-        //}
+            order.OrderDate = DateTime.UtcNow;
+            order.Status = OrderStatus.Pending;
+            order.Quantity = orderCreate.Products.Sum(op => op.Quantity);
+
+            order.DispatchDate = order.DeliveryType == DeliveryType.Express ?
+                DateTime.UtcNow.AddDays(2) : DateTime.UtcNow.AddDays(5);
+
+            // creates the order
+            this.orderService.CreateOrder(order);
+
+            // add the order products to the order
+            this.orderService.AddProductsToOrder(order.Id, orderCreate.Products);
+
+            // remove the products from the shopping cart after the order is added
+            this.shoppingCartService.RemoveAllCartProducts(order.ApplicationUserId);
+
+            return this.RedirectToAction("Confirmation", new { orderId = order.Id });
+        }
+
+        public IActionResult Confirmation(string orderId)
+        {
+            return this.View();
+        }
     }
 }
