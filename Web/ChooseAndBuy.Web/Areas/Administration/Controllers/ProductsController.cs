@@ -78,17 +78,12 @@
             return this.View(model);
         }
 
-        [HttpDelete]
-        public IActionResult Delete([FromBody]string productId)
+        [HttpPost]
+        public IActionResult Delete(string productId)
         {
             var isSuccessfull = this.productService.DeleteProduct(productId);
 
-            if (isSuccessfull)
-            {
-                return this.Json(true);
-            }
-
-            return this.Json(false);
+            return this.Json(isSuccessfull);
         }
 
         public IActionResult Edit(string productId)

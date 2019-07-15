@@ -85,10 +85,9 @@
             };
 
             $.ajax({
-                type: "DELETE",
+                type: "POST",
                 url: "@Url.Action("Delete", "Products", new { area = "Administration" })",
-                data: JSON.stringify(JSONObject),
-                contentType: "application/json; charset=utf-8",
+                data: JSONObject,
                 dataType: "json",
                 success: function () {
                     $("#" + prdId).fadeOut();

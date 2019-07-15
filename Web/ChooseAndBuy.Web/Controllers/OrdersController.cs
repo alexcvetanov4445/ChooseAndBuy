@@ -109,7 +109,37 @@
 
         public IActionResult Confirmation(string orderId)
         {
-            return this.View();
+            var order = this.orderService.GetOrderById(orderId);
+
+            ConfirmationViewModel model = new ConfirmationViewModel
+            {
+                ExpectedDelivery = order.DispatchDate.Value.ToShortDateString(),
+                PaymentMethod = order.PaymentType.ToString(),
+                QuantityProducts = order.Quantity,
+                TotalPrice = order.TotalPrice,
+                PhoneNumber = order.DeliveryAddress.PhoneNumber,
+                ClientName = order.DeliveryAddress.FirstName + " " + order.DeliveryAddress.LastName,
+                Address = order.DeliveryAddress.AddressText,
+                City = order.DeliveryAddress.City.Name,
+            };
+
+            return this.View(model);
+        }
+
+        public IActionResult UserOrders()
+        {
+            string userId = this.userManager.GetUserId(this.HttpContext.User);
+
+            var orders = this.orderService.GetAllUserOrders(userId);
+
+            var mappedOrders = this.mapper.Map<List<OrderViewModel>>(orders);
+
+            UserOrdersViewModel model = new UserOrdersViewModel
+            {
+                Orders = mappedOrders,
+            };
+
+            return this.View(model);
         }
     }
 }

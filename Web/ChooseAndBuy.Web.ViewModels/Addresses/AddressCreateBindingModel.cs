@@ -22,6 +22,7 @@
         [Required]
         [Display(Name = "Phone Number")]
         [DataType(DataType.PhoneNumber)]
+        [MaxLength(10)]
         public string PhoneNumber { get; set; }
 
         [Required]

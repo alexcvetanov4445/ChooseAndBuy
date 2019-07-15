@@ -17,16 +17,16 @@
 
         public Address DeliveryAddress { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "This field is required")]
         [Display(Name = "Payment Option")]
         public PaymentType PaymentType { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "This field is required")]
         [Display(Name = "Delivery Type")]
         public DeliveryType DeliveryType { get; set; }
 
         [Display(Name = "Additional Info - not necessary")]
-        [StringLength(200, MinimumLength = 10, ErrorMessage = "The field \"{0}\" must be a text with minimum length of {2} and maximum length of {1}.")]
+        [StringLength(200, MinimumLength = 10, ErrorMessage = "The field Additional info must be a text with minimum length of {2} and maximum length of {1}.")]
         public string AdditionalInfo { get; set; }
         
         public List<OrderProductViewModel> Products { get; set; }

@@ -8,6 +8,7 @@
     {
         Pending = 1,
         DeliveryInProgress = 2,
-        Arrived = 3,
+        Delivered = 3,
+        Canceled = 4,
     }
 }

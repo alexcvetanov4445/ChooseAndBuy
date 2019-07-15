@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using ChooseAndBuy.Data.Models.Enums;
+
     using ChooseAndBuy.Data.Models.Enums;
 
     public class Order

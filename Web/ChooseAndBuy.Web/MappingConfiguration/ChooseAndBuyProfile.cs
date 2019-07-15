@@ -5,6 +5,7 @@
     using AutoMapper;
     using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Web.Areas.Administration.ViewModels.Categories;
+    using ChooseAndBuy.Web.Areas.Administration.ViewModels.Orders;
     using ChooseAndBuy.Web.Areas.Administration.ViewModels.Products;
     using ChooseAndBuy.Web.ViewModels.Addresses;
     using ChooseAndBuy.Web.ViewModels.Orders;
@@ -26,6 +27,20 @@
             this.CreateMap<OrderBindingModel, Order>();
             this.CreateMap<OrderProductViewModel, OrderProduct>();
 
+            this.CreateMap<Order, AdminPaneOrderViewModel>()
+                .ForMember(model => model.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(model => model.OrderDate, opt => opt.MapFrom(src => src.OrderDate))
+                .ForMember(model => model.Address, opt => opt.MapFrom(src => src.DeliveryAddress.AddressText))
+                .ForMember(model => model.Username, opt => opt.MapFrom(src => src.ApplicationUser.UserName))
+                .ForMember(model => model.Status, opt => opt.MapFrom(src => src.Status.ToString()));
+
+            this.CreateMap<Order, OrderViewModel>()
+                .ForMember(model => model.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(model => model.ExpectedDelivery, opt => opt.MapFrom(src => src.DispatchDate.Value.ToShortDateString()))
+                .ForMember(model => model.Address, opt => opt.MapFrom(src => src.DeliveryAddress.AddressText))
+                .ForMember(model => model.Price, opt => opt.MapFrom(src => src.TotalPrice))
+                .ForMember(model => model.Quantity, opt => opt.MapFrom(src => src.Quantity))
+                .ForMember(model => model.Status, opt => opt.MapFrom(src => src.Status.ToString()));
 
             this.CreateMap<ShoppingCartProduct, OrderProductViewModel>()
                 .ForMember(model => model.Id, opt => opt.MapFrom(src => src.ProductId))

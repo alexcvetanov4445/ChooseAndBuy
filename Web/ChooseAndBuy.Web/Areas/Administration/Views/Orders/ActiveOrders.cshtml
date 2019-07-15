@@ -1,0 +1,122 @@
+﻿@using ChooseAndBuy.Web.Areas.Administration.ViewModels.Orders
+
+@model AdminPaneOrdersViewModel
+
+@{
+    ViewData["Title"] = "ActiveOrders";
+}
+
+<!-- Start Banner Area -->
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Admin Pane</h1>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Banner Area -->
+<div class="container">
+    <div class="row">
+        <partial name="~/Areas/Administration/_AdminPanePartial.cshtml" />
+        <div class="col-xl-9 col-lg-8 col-md-7">
+            <!-- Start Content Section -->
+            <section class="container mt-4 mb-4">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Address</th>
+                            <th scope="col">Order Date</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Username</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model.Orders)
+                        {
+                            <tr id="@order.Id">
+                                <td hidden><button id="ordId" value="@order.Id"></button></td>
+                                <td>
+                                    <strong>
+                                        @order.Address
+                                    </strong>
+                                </td>
+                                <td>@order.OrderDate</td>
+                                <td class="statusText-@order.Id">@order.Status</td>
+                                <td>@order.Username</td>
+                                @if (order.Status == "Delivered" || order.Status == "Canceled")
+                                {
+                                    <td><a class="deliverAction genric-btn danger radius text-dark disable" id="@order.Id">Delivered</a></td>
+                                    <td><a class="cancelAction genric-btn danger radius text-dark disable" id="@order.Id">Cancel</a></td>
+                                }
+                                else
+                                {
+                                    <td><a class="deliverAction genric-btn danger radius text-dark" id="deliverAction-@order.Id">Delivered</a></td>
+                                    <td><a class="cancelAction genric-btn danger radius text-dark" id="cancelAction-@order.Id">Cancel</a></td>
+                                }
+                                <td>
+                                    <a asp-action="details" asp-controller="orders" asp-area="administration" asp-route-id="@order.Id"
+                                       class="genric-btn success radius text-dark">Details</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </section>
+            <!-- End Content Section -->
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(".deliverAction").click(function () {
+
+            var ordId = $(this).attr("id");
+
+            var JSONObject = {
+                "orderId" : ordId
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Deliver", "Orders", new { area = "Administration" })",
+                data: JSONObject,
+                dataType: "json",
+                success: function () {
+                    $(".statusText-" + ordId.substring(14, ordId.length)).text("Delivered");
+                    $(this).addClass("disable");
+                    $("#cancelAction-" + ordId.substring(14, ordId.length)).addClass("disable");
+                    $("#deliverAction-" + ordId.substring(14, ordId.length)).addClass("disable");
+                    //hide first div and show second
+                },
+            });
+        });
+
+        $(".cancelAction").click(function () {
+
+            var ordId = $(this).attr("id");
+
+            var JSONObject = {
+                "orderId" : ordId
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Cancel", "Orders", new { area = "Administration" })",
+                data: JSONObject,
+                dataType: "json",
+                success: function () {
+                    $(".statusText-" + ordId.substring(13, ordId.length)).text("Canceled");
+                    $("#cancelAction-" + ordId.substring(13, ordId.length)).addClass("disable");
+                    $("#deliverAction-" + ordId.substring(13, ordId.length)).addClass("disable");
+                },
+                error: function () {
+
+                },
+            });
+        });
+    </script>
+}
+

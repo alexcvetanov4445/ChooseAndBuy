@@ -12,5 +12,19 @@
         bool CreateOrder(Order order);
 
         bool AddProductsToOrder(string orderId, List<OrderProductViewModel> products);
+
+        bool ApproveOrder(string orderId);
+
+        bool DeliverOrder(string orderId);
+
+        bool CancelOrder(string orderId);
+
+        Order GetOrderById(string orderId);
+
+        IEnumerable<Order> GetAllUserOrders(string userId);
+
+        IEnumerable<Order> GetPendingOrders();
+
+        IEnumerable<Order> GetActiveOrders();
     }
 }

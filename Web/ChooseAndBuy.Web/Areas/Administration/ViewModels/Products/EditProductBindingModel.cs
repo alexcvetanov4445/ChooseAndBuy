@@ -14,11 +14,13 @@
         public string Name { get; set; }
 
         [Display(Name = "Description")]
-        [MaxLength(300, ErrorMessage = "The \"{0}\" should be maximum of {1} characters long.")]
+        [Required(ErrorMessage = "The field \"{0}\" is required.")]
+        [StringLength(400, MinimumLength = 20, ErrorMessage = "The field \"{0}\" must be a text with minimum length of {2} and maximum length of {1}.")]
         public string Description { get; set; }
 
         [Display(Name = "Specification")]
-        [MaxLength(300, ErrorMessage = "The \"{0}\" should be maximum of {1} characters long.")]
+        [Required(ErrorMessage = "The field \"{0}\" is required.")]
+        [StringLength(400, MinimumLength = 20, ErrorMessage = "The field \"{0}\" must be a text with minimum length of {2} and maximum length of {1}.")]
         public string Specification { get; set; }
 
         [Display(Name = "Price")]

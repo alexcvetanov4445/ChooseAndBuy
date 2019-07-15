@@ -5,10 +5,10 @@
         <div class="head">Options</div>
         <ul class="main-categories">
             <li class="main-nav-list">
-                <a href="#"><span class="lnr lnr-arrow-right"></span>Pending Orders</a>
+                <a asp-action="pendingOrders" asp-controller="orders"><span class="lnr lnr-arrow-right"></span>Pending Orders</a>
             </li>
             <li class="main-nav-list">
-                <a asp-route="/Administration/Home/Index"><span class="lnr lnr-arrow-right"></span>Active Orders</a>
+                <a asp-action="activeOrders" asp-controller="orders"><span class="lnr lnr-arrow-right"></span>Active Orders</a>
             </li>
             <li class="main-nav-list">
                 <a asp-action="create" asp-controller="categories"><span class="lnr lnr-arrow-right"></span>Add Category</a>

@@ -1,0 +1,63 @@
+﻿@using ChooseAndBuy.Web.ViewModels.Orders
+
+@model UserOrdersViewModel
+
+@{
+    ViewData["Title"] = "UserOrders";
+}
+
+<!-- Start Banner Area -->
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>My Orders</h1>
+                <nav class="d-flex align-items-center">
+                    <a asp-action="index" asp-controller="Home">Home<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="single-product.html">My Orders</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Banner Area -->
+<!-- Start Table Area -->
+<section class="cart_area">
+    <div class="container">
+        <div class="cart_inner">
+            <div class="login-form">
+                <table class="table">
+                    <h3 class="text-center">My Orders</h3>
+                    <hr style="height: 3px"/>
+                    <thead>
+                        <tr>
+                            <th scope="col">Address</th>
+                            <th scope="col">Expected Delivery</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model.Orders)
+                        {
+                            <tr>
+                                <td class="text-primary">@order.Address</td>
+                                <td>@order.ExpectedDelivery.ToShortDateString()</td>
+                                <td>@order.Status</td>
+                                <td>@order.Quantity</td>
+                                <td>$@order.Price</td>
+                                <td>
+                                    <a asp-action="OrderDetails" asp-controller="Orders" asp-route-productId="@order.Id" class="genric-btn primary radius text-dark">
+                                        View Details
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+<!--================End Table Area =================-->

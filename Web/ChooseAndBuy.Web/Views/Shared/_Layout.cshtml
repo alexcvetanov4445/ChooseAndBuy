@@ -66,7 +66,7 @@
                                        aria-expanded="false">@User.Identity.Name</a>
                                     <ul class="dropdown-menu">
                                         <li class="nav-item"><a asp-area="Identity" asp-page="/Account/Manage/Index" class="nav-link">Account</a></li>
-                                        <li class="nav-item"><a class="nav-link">My Orders</a></li>
+                                        <li class="nav-item"><a asp-action="UserOrders" asp-controller="Orders" class="nav-link">My Orders</a></li>
                                         <li class="nav-item">
                                             <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@(this.Url.Action("Index", "Home", new { area = string.Empty }))">
                                                 <button type="submit" class="nav-link btn btn-link btn-block text-left rounded-0">Logout</button>
@@ -74,7 +74,7 @@
                                         </li>
                                         @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
                                         {
-                                            <li class="nav-item"><a asp-action="index" asp-controller="home" asp-area="Administration" class="nav-link">Admin Pane</a></li>
+                                            <li class="nav-item"><a asp-action="pendingOrders" asp-controller="orders" asp-area="Administration" class="nav-link">Admin Pane</a></li>
                                         }
                                     </ul>
                                 </li>

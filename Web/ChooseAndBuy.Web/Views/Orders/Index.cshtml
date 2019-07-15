@@ -13,7 +13,7 @@
             <div class="col-first">
                 <h1>Checkout</h1>
                 <nav class="d-flex align-items-center">
-                    <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+                    <a asp-action="index" asp-controller="Home">Home<span class="lnr lnr-arrow-right"></span></a>
                     <a href="single-product.html">Checkout</a>
                 </nav>
             </div>
@@ -196,6 +196,8 @@
 <!--================End Checkout Area =================-->
 
 @section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+
     <script>
         $(document).ready(function () {
             $("#crtAddress").click(function () {
