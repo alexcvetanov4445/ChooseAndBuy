@@ -56,6 +56,8 @@
         public Product GetById(string id)
         {
             var product = this.context.Products
+                .Include(x => x.ShoppingCartProducts)
+                .ThenInclude(x => x.Product)
                 .Include(r => r.Reviews)
                 .Include(c => c.SubCategory)
                 .SingleOrDefault(pr => pr.Id == id);

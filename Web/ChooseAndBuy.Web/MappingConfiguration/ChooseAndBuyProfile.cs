@@ -27,12 +27,18 @@
             this.CreateMap<OrderBindingModel, Order>();
             this.CreateMap<OrderProductViewModel, OrderProduct>();
 
+            this.CreateMap<OrderProduct, AdminPaneOrderProductModel>()
+                .ForMember(model => model.ImageName, opt => opt.MapFrom(src => src.Product.ImageName))
+                .ForMember(model => model.Name, opt => opt.MapFrom(src => src.Product.Name))
+                .ForMember(model => model.Quantity, opt => opt.MapFrom(src => src.Quantity));
+
             this.CreateMap<Order, AdminPaneOrderViewModel>()
                 .ForMember(model => model.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(model => model.OrderDate, opt => opt.MapFrom(src => src.OrderDate))
                 .ForMember(model => model.Address, opt => opt.MapFrom(src => src.DeliveryAddress.AddressText))
                 .ForMember(model => model.Username, opt => opt.MapFrom(src => src.ApplicationUser.UserName))
-                .ForMember(model => model.Status, opt => opt.MapFrom(src => src.Status.ToString()));
+                .ForMember(model => model.Status, opt => opt.MapFrom(src => src.Status.ToString()))
+                .ForMember(model => model.Products, opt => opt.MapFrom(src => src.OrderProducts));
 
             this.CreateMap<Order, OrderViewModel>()
                 .ForMember(model => model.Id, opt => opt.MapFrom(src => src.Id))

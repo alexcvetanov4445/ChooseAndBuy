@@ -71,6 +71,8 @@
             var orders = this.context.Orders
                 .Include(o => o.ApplicationUser)
                 .Include(o => o.DeliveryAddress)
+                .Include(o => o.OrderProducts)
+                .ThenInclude(o => o.Product)
                 .Where(o => o.Status == OrderStatus.Pending);
 
             return orders;
@@ -81,6 +83,8 @@
             var orders = this.context.Orders
                 .Include(o => o.ApplicationUser)
                 .Include(o => o.DeliveryAddress)
+                .Include(o => o.OrderProducts)
+                .ThenInclude(o => o.Product)
                 .Where(o => o.Status != OrderStatus.Pending);
 
             return orders;
