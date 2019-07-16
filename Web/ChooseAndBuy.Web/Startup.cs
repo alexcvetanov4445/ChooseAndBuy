@@ -16,7 +16,7 @@
     using ChooseAndBuy.Services.Messaging;
     using ChooseAndBuy.Web.MappingConfiguration;
     using ChooseAndBuy.Web.ViewModels;
-
+    using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -86,6 +86,19 @@
                     options.LoginPath = "/Identity/Account/Login";
                     options.LogoutPath = "/Identity/Account/Logout";
                     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+                });
+
+            services
+                .AddAuthentication()
+                .AddFacebook(facebookOptions =>
+                {
+                    facebookOptions.AppId = "2194929610628287";
+                    facebookOptions.AppSecret = "49fba84953cc44c364aca16f05a2cfef";
+                })
+                .AddGoogle(googleOptions =>
+                {
+                    googleOptions.ClientId = "623032695281-vj9s7alsula6aq1a665b405ddn37pchh.apps.googleusercontent.com";
+                    googleOptions.ClientSecret = "ni7NoGQxUiYR7ayvANnxZ4b8";
                 });
 
             services

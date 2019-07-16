@@ -62,6 +62,30 @@
                             <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
                         </div>
                     </form>
+                    @if ((Model.ExternalLogins?.Count ?? 0) > 0)
+                    {
+                        <form asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal d-flex justify-content-center">
+                            <div class="col-md-9">
+                            <div class="d-flex justify-content-around mb-2">
+
+                                @foreach (var provider in Model.ExternalLogins)
+                                {
+                                    <div>
+                                        @if (provider.Name == "Facebook")
+                                        {
+                                            <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account"><i class="fa fa-facebook"></i> @provider.DisplayName</button>
+                                        }
+                                        else if (provider.Name == "Google")
+                                        {
+                                            <button type="submit" class="btn btn-danger" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account"><i class="fa fa-google-plus"></i> @provider.DisplayName</button>
+                                        }
+                                    </div>
+
+                                }
+                            </div>
+                            </div>
+                        </form>
+                    }
                 </div>
             </div>
         </div>
