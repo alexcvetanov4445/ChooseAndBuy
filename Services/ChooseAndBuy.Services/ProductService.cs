@@ -25,7 +25,7 @@
             this.context.SaveChanges();
         }
 
-        public bool DeleteProduct(string id)
+        public bool HideProduct(string id)
         {
             var product = this.context.Products.SingleOrDefault(x => x.Id == id);
 
@@ -34,7 +34,38 @@
                 return false;
             }
 
-            this.context.Products.Remove(product);
+            if (product.IsHidden)
+            {
+                product.IsHidden = false;
+                this.context.SaveChanges();
+                return true;
+            }
+
+            product.IsHidden = true;
+
+            this.context.SaveChanges();
+
+            return true;
+        }
+
+        public bool RecommendProduct(string id)
+        {
+            var product = this.context.Products.SingleOrDefault(x => x.Id == id);
+
+            if (product == null)
+            {
+                return false;
+            }
+
+            if (product.IsRecommended)
+            {
+                product.IsRecommended = false;
+                this.context.SaveChanges();
+                return true;
+            }
+
+            product.IsRecommended = true;
+
             this.context.SaveChanges();
 
             return true;
@@ -81,16 +112,14 @@
                 // get searched products
             }
 
-
             if (subCategoryId != null)
             {
                 products = this.GetProductsByCategory(subCategoryId).ToList();
             }
             else
             {
-                products = this.context.Products.Where(pr => pr.IsRecommended == true).ToList();
+                products = this.context.Products.Where(pr => pr.IsRecommended == true && pr.IsHidden == false).ToList();
             }
-
 
             switch (sortBy)
             {
@@ -121,7 +150,7 @@
 
         private IEnumerable<Product> GetProductsByCategory(string id)
         {
-            var products = this.context.Products.Where(sc => sc.SubCategoryId == id);
+            var products = this.context.Products.Where(sc => sc.SubCategoryId == id && sc.IsHidden == false);
 
             return products;
         }

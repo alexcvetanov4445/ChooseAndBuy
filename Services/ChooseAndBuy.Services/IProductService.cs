@@ -11,7 +11,9 @@
 
         void AddProduct(Product product);
 
-        bool DeleteProduct(string id);
+        bool HideProduct(string id);
+
+        bool RecommendProduct(string íd);
 
         bool EditProduct(Product product);
 

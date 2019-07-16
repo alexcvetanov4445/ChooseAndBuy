@@ -79,11 +79,19 @@
         }
 
         [HttpPost]
-        public IActionResult Delete(string productId)
+        public IActionResult Hide(string productId)
         {
-            var isSuccessfull = this.productService.DeleteProduct(productId);
+            var result = this.productService.HideProduct(productId);
 
-            return this.Json(isSuccessfull);
+            return this.Json(result);
+        }
+
+        [HttpPost]
+        public IActionResult Recommend(string productId)
+        {
+            var result = this.productService.RecommendProduct(productId);
+
+            return this.Json(result);
         }
 
         public IActionResult Edit(string productId)

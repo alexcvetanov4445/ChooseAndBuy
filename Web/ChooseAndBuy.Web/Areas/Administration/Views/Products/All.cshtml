@@ -50,18 +50,26 @@
                                 <td>@product.SubCategoryName</td>
                                 @if (product.IsRecommended)
                                 {
-                                    <td>Yes</td>
+                                    <td id="rcm-@product.Id">Yes</td>
                                 }
                                 else
                                 {
-                                    <td>No</td>
+                                    <td id="rcm-@product.Id">No</td>
                                 }
                                 <td>
                                     <a asp-action="edit" asp-controller="products" asp-area="administration" asp-route-productId="@product.Id" class="genric-btn primary radius text-dark">
                                         Edit
                                     </a>
                                 </td>
-                                <td><a class="deleteAction genric-btn danger radius text-dark" id="@product.Id">Delete</a></td>
+                                <td><a class="recommendAction genric-btn danger radius text-dark" id="@product.Id">Recommended</a></td>
+                                @if (product.IsHidden)
+                                {
+                                    <td><a class="deleteAction deleteAction-@product.Id genric-btn success radius text-dark" id="@product.Id">Show</a></td>
+                                }
+                                else
+                                {
+                                    <td><a class="deleteAction deleteAction-@product.Id genric-btn danger radius text-dark" id="@product.Id">Hide</a></td>
+                                }
                             </tr>
                         }
                     </tbody>
@@ -76,6 +84,29 @@
 <!-- Delete product ajax -->
 @section Scripts{
     <script>
+        $(".recommendAction").click(function () {
+
+            var prdId = $(this).attr("id");
+
+            var JSONObject = {
+                "productId" : prdId
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Recommend", "Products", new { area = "Administration" })",
+                data: JSONObject,
+                dataType: "json",
+                success: function () {
+                    if ($("#rcm-" + prdId).text() == "Yes") {
+                        $("#rcm-" + prdId).text("No");
+                    } else {
+                        $("#rcm-" + prdId).text("Yes");
+                    }
+                }
+            });
+        });
+
         $(".deleteAction").click(function () {
 
             var prdId = $(this).attr("id");
@@ -86,11 +117,17 @@
 
             $.ajax({
                 type: "POST",
-                url: "@Url.Action("Delete", "Products", new { area = "Administration" })",
+                url: "@Url.Action("Hide", "Products", new { area = "Administration" })",
                 data: JSONObject,
                 dataType: "json",
                 success: function () {
-                    $("#" + prdId).fadeOut();
+                    var state = $(".deleteAction-" + prdId).text();
+
+                    if (state == "Hide") {
+                        $(".deleteAction-" + prdId).text("Show").removeClass("danger").addClass("success");
+                    } else {
+                        $(".deleteAction-" + prdId).text("Hide").removeClass("success").addClass("danger");
+                    }
                 }
             });
         });

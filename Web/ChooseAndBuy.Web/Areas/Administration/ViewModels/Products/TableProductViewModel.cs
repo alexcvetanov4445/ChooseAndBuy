@@ -13,6 +13,8 @@
 
         public bool IsRecommended { get; set; }
 
+        public bool IsHidden { get; set; }
+
         public string Description { get; set; }
 
         public string Specification { get; set; }

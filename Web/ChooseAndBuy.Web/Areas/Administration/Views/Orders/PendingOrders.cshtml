@@ -41,7 +41,7 @@
                                 <td>@order.Username</td>
                                 <td><a class="approveAction genric-btn warning radius text-dark" id="@order.Id">Approve</a></td>
                                 <td>
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-@order.Id">
+                                    <button type="button" class="genric-btn success radius text-dark" data-toggle="modal" data-target="#modal-@order.Id">
                                         Details
                                     </button>
                                 </td>
@@ -68,7 +68,7 @@
                                                         <dt class="col-sm-4">Products Quantity</dt>
                                                         <dd class="col-sm-8">x@(order.Quantity)</dd>
                                                         <dt class="col-sm-4">Total Price</dt>
-                                                        <dd class="col-sm-8">@order.TotalPrice</dd>
+                                                        <dd class="col-sm-8">$@order.TotalPrice</dd>
                                                         <dt class="col-sm-4">Payment Method</dt>
                                                         <dd class="col-sm-8">@order.PaymentType</dd>
                                                         <dt class="col-sm-4">Delivery Option</dt>

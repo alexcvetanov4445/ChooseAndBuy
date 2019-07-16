@@ -52,14 +52,79 @@
                                 }
                                 else
                                 {
-                                    <td><a class="deliverAction genric-btn danger radius text-dark" id="deliverAction-@order.Id">Delivered</a></td>
+                                    <td><a class="deliverAction genric-btn warning radius text-dark" id="deliverAction-@order.Id">Delivered</a></td>
                                     <td><a class="cancelAction genric-btn danger radius text-dark" id="cancelAction-@order.Id">Cancel</a></td>
                                 }
                                 <td>
-                                    <a asp-action="details" asp-controller="orders" asp-area="administration" asp-route-id="@order.Id"
-                                       class="genric-btn success radius text-dark">Details</a>
+                                    <button type="button" class="genric-btn success radius text-dark" data-toggle="modal" data-target="#modal-@order.Id">
+                                        Details
+                                    </button>
                                 </td>
                             </tr>
+                            <div class="modal fade bd-example-modal-lg" id="modal-@order.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Order Details</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-sm-7">
+                                                    <h5>Details</h5>
+                                                    <hr style="height: 3px" />
+                                                    <dl class="row">
+                                                        <dt class="col-sm-4">Recipient Name</dt>
+                                                        <dd class="col-sm-8">@order.Username</dd>
+                                                        <dt class="col-sm-4">Order Status</dt>
+                                                        <dd class="col-sm-8">@order.Status</dd>
+                                                        <dt class="col-sm-4">Products Quantity</dt>
+                                                        <dd class="col-sm-8">x@(order.Quantity)</dd>
+                                                        <dt class="col-sm-4">Total Price</dt>
+                                                        <dd class="col-sm-8">$@order.TotalPrice</dd>
+                                                        <dt class="col-sm-4">Payment Method</dt>
+                                                        <dd class="col-sm-8">@order.PaymentType</dd>
+                                                        <dt class="col-sm-4">Delivery Option</dt>
+                                                        <dd class="col-sm-8">@order.DeliveryType</dd>
+                                                        <dt class="col-sm-4">Order Date</dt>
+                                                        <dd class="col-sm-8">@order.OrderDate</dd>
+                                                        <dt class="col-sm-4">Delivery Date</dt>
+                                                        @if (order.Status == "Delivered")
+                                                        {
+                                                            <dd class="col-sm-8">@order.DeliveryDate.Value.ToShortDateString()</dd>
+                                                        }
+                                                        else if (order.Status == "Canceled")
+                                                        {
+                                                            <dd class="col-sm-8">Canceled</dd>
+                                                        }
+                                                        else
+                                                        {
+                                                            <dd class="col-sm-8" id="deliveryDate-@order.Id">In proccess</dd>
+                                                        }
+                                                    </dl>
+                                                </div>
+                                                <div class="col-sm-5">
+                                                    <h5>Products</h5>
+                                                    <hr style="height: 3px" />
+                                                    <dl class="row">
+                                                        @foreach (var product in order.Products)
+                                                        {
+                                                            <dt class="col-9">@product.Name</dt>
+                                                            <dd class="col-3">x@(product.Quantity)</dd>
+                                                        }
+                                                    </dl>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         }
                     </tbody>
                 </table>
@@ -89,7 +154,14 @@
                     $(this).addClass("disable");
                     $("#cancelAction-" + ordId.substring(14, ordId.length)).addClass("disable");
                     $("#deliverAction-" + ordId.substring(14, ordId.length)).addClass("disable");
-                    //hide first div and show second
+
+                    var d = new Date();
+
+                    var dateString = d.getUTCDate().toString()
+                        + '.' + (d.getUTCMonth() + 1).toString() 
+                        + '.' + d.getFullYear().toString();
+
+                    $("#deliveryDate-" + ordId.substring(14, ordId.length)).text(dateString);
                 },
             });
         });
@@ -111,6 +183,7 @@
                     $(".statusText-" + ordId.substring(13, ordId.length)).text("Canceled");
                     $("#cancelAction-" + ordId.substring(13, ordId.length)).addClass("disable");
                     $("#deliverAction-" + ordId.substring(13, ordId.length)).addClass("disable");
+                    $("#deliveryDate-" + ordId.substring(13, ordId.length)).text("Canceled");
                 },
                 error: function () {
 
