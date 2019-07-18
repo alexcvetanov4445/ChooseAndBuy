@@ -1,12 +1,12 @@
 ﻿namespace ChooseAndBuy.Services
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
+    using System.Threading.Tasks;
 
     using ChooseAndBuy.Data;
     using ChooseAndBuy.Data.Models;
+    using ChooseAndBuy.Web.ViewModels.Products;
 
     public class ReviewService : IReviewService
     {
@@ -17,19 +17,23 @@
             this.context = context;
         }
 
-        public bool AddReview(Review review)
+        public async Task<bool> AddReview(ReviewBindingModel productModel)
         {
-            this.context.Reviews.Add(review);
-            this.context.SaveChanges();
+            var review = AutoMapper.Mapper.Map<Review>(productModel);
 
-            return true;
+            await this.context.Reviews.AddAsync(review);
+            var result = await this.context.SaveChangesAsync();
+
+            return result > 0;
         }
 
-        public IEnumerable<Review> GetReviewsForProduct(string productId)
+        public async Task<ICollection<ProductReviewViewModel>> GetReviewsForProduct(string productId)
         {
             var reviews = this.context.Reviews.Where(pr => pr.ProductId == productId);
 
-            return reviews;
+            var result = AutoMapper.Mapper.Map<List<ProductReviewViewModel>>(reviews);
+
+            return result;
         }
     }
 }

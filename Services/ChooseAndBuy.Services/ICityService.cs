@@ -1,11 +1,11 @@
 ﻿namespace ChooseAndBuy.Services
 {
     using System.Collections.Generic;
-
+    using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
     public interface ICityService
     {
-        IEnumerable<SelectListItem> GetAllCities();
+        Task<IEnumerable<SelectListItem>> GetAllCities();
     }
 }

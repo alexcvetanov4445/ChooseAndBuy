@@ -1,15 +1,14 @@
 ﻿namespace ChooseAndBuy.Web.Areas.Administration.ViewModels.SubCategories
 {
-    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using System.Threading.Tasks;
 
+    using ChooseAndBuy.Data.Models;
+    using ChooseAndBuy.Services.Mapping;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
-    public class SubCategoryBindingModel
+    public class SubCategoryBindingModel : IMapTo<SubCategory>
     {
         [Required]
         [StringLength(25, MinimumLength = 3, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.")]

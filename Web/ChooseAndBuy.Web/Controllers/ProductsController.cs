@@ -18,45 +18,39 @@
         private readonly ICategoryService categoryService;
         private readonly IProductService productsService;
         private readonly IReviewService reviewService;
-        private readonly IMapper mapper;
 
         public ProductsController(
             ICategoryService categoryService,
             IProductService productsService,
-            IReviewService reviewService,
-            IMapper mapper)
+            IReviewService reviewService)
         {
             this.categoryService = categoryService;
             this.productsService = productsService;
             this.reviewService = reviewService;
-            this.mapper = mapper;
         }
 
-        public IActionResult Index(ProductsViewModel model)
+        public async Task<IActionResult> Index(ProductsViewModel model)
         {
             // TODO: make the default values contstants
             var page = model.PageNum ?? 1;
             var show = model.ShowNum ?? 6;
             var sortBy = model.SortBy ?? 1;
 
-            var products = this.productsService.GetProducts(model.Search, model.SubCategoryId, sortBy);
-            var mappedProducts = this.mapper.Map<IList<ProductViewModel>>(products);
-            var pagedProducts = mappedProducts.ToPagedList(page, show);
+            var products = await this.productsService.GetProducts(model.Search, model.SubCategoryId, sortBy);
 
-            model.Categories = this.categoryService.GetCategoriesWithSubCategories();
+            var pagedProducts = products.ToPagedList(page, show);
+
+            model.Categories = await this.categoryService.GetCategoriesWithSubCategories();
             model.Products = pagedProducts;
 
-            // TODO: Fix the size of the images in products page
             return this.View(model);
         }
 
-        public IActionResult Details(string id)
+        public async Task<IActionResult> Details(string id)
         {
-            var product = this.productsService.GetById(id);
-            var reviews = this.reviewService.GetReviewsForProduct(id).ToList();
+            var detailsInfo = await this.productsService.GetById(id);
 
-            var detailsInfo = this.mapper.Map<ProductDetailsViewModel>(product);
-            detailsInfo.Reviews = this.mapper.Map<List<ProductReviewViewModel>>(reviews);
+            detailsInfo.Reviews = await this.reviewService.GetReviewsForProduct(id);
 
             AllDetailsViewModel productModel = new AllDetailsViewModel
             {
@@ -68,12 +62,9 @@
         }
 
         [HttpPost]
-        public IActionResult Details(ReviewBindingModel productModel)
+        public async Task<IActionResult> Details(ReviewBindingModel productModel)
         {
-
-            Review review = this.mapper.Map<Review>(productModel);
-
-            this.reviewService.AddReview(review);
+            await this.reviewService.AddReview(productModel);
 
             return this.RedirectToAction("Details", new { id = productModel.ProductId });
         }

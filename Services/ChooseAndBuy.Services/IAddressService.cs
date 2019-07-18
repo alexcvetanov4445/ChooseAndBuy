@@ -1,14 +1,14 @@
 ﻿namespace ChooseAndBuy.Services
 {
-    using ChooseAndBuy.Data.Models;
-    using System;
     using System.Collections.Generic;
-    using System.Text;
+    using System.Threading.Tasks;
+
+    using ChooseAndBuy.Web.ViewModels.Addresses;
 
     public interface IAddressService
     {
-        bool CreateAddress(Address address);
+        Task<bool> CreateAddress(AddressCreateBindingModel addressCreate, string userId);
 
-        IEnumerable<Address> GetAllUserAddresses(string userId);
+        Task<IEnumerable<AddressViewModel>> GetAllUserAddresses(string userId);
     }
 }

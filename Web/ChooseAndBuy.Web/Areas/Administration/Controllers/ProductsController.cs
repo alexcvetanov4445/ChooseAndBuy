@@ -21,35 +21,29 @@
         private readonly IProductService productService;
         private readonly IImageService imageService;
 
-        private readonly IMapper mapper;
-
         public ProductsController(
             ISubCategoryService subCategoryService,
-            IMapper mapper,
             IProductService productService,
             IImageService imageService)
         {
             this.subCategoryService = subCategoryService;
-            this.mapper = mapper;
             this.productService = productService;
             this.imageService = imageService;
         }
 
-        public IActionResult All()
+        public async Task<IActionResult> All()
         {
-            var products = this.productService.GetAllProducts().ToList();
-            var mappedProducts = this.mapper.Map<List<TableProductViewModel>>(products);
+            var products = await this.productService.GetAllProducts();
 
-            AllProductsViewModel model = new AllProductsViewModel { Products = mappedProducts };
+            AllProductsViewModel model = new AllProductsViewModel { Products = products.ToList() };
             return this.View(model);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var categories = await this.subCategoryService.GetSubCategories();
 
-            var categories = this.subCategoryService.GetSubCategories().ToList();
-
-            var model = new CreateProductBindingModel { SubCategories = categories };
+            var model = new CreateProductBindingModel { SubCategories = categories.ToList() };
 
             return this.View(model);
         }
@@ -57,72 +51,65 @@
         [HttpPost]
         public async Task<IActionResult> Create(CreateProductBindingModel model)
         {
-            model.SubCategories = this.subCategoryService.GetSubCategories().ToList();
+            var subCategories = await this.subCategoryService.GetSubCategories();
+            model.SubCategories = subCategories.ToList();
 
             if (!this.ModelState.IsValid)
             {
                 return this.View(model);
             }
 
-            Product product = this.mapper.Map<Product>(model);
+            await this.productService.AddProduct(model);
 
-            string uniqueFileName = this.imageService.CreateImage(model.FormImage);
-            product.ImageName = uniqueFileName;
+            string productId = await this.productService.GetIdByName(model.Name);
 
-            this.productService.AddProduct(product);
-
-            string productId = this.productService.GetIdByName(product.Name);
-
-            this.TempData["Success"] = $"Successully created {product.Name}";
+            this.TempData["Success"] = $"Successully created {model.Name}";
 
             return this.View(model);
         }
 
         [HttpPost]
-        public IActionResult Hide(string productId)
+        public async Task<IActionResult> Hide(string productId)
         {
-            var result = this.productService.HideProduct(productId);
+            var result = await this.productService.HideProduct(productId);
 
             return this.Json(result);
         }
 
         [HttpPost]
-        public IActionResult Recommend(string productId)
+        public async Task<IActionResult> Recommend(string productId)
         {
-            var result = this.productService.RecommendProduct(productId);
+            var result = await this.productService.RecommendProduct(productId);
 
             return this.Json(result);
         }
 
-        public IActionResult Edit(string productId)
+        public async Task<IActionResult> Edit(string productId)
         {
-            var product = this.productService.GetById(productId);
-            var model = this.mapper.Map<EditProductBindingModel>(product);
+            var model = await this.productService.GetEditProductInfoById(productId);
 
             model.Id = productId;
-            model.SubCategories = this.subCategoryService.GetSubCategories().ToList();
+
+            var subCategories = await this.subCategoryService.GetSubCategories();
+            model.SubCategories = subCategories.ToList();
 
             return this.View(model);
         }
 
         [HttpPost]
-        public IActionResult Edit(EditProductBindingModel model)
+        public async Task<IActionResult> Edit(EditProductBindingModel model)
         {
-            var product = this.productService.GetById(model.Id);
+            await this.productService.EditProduct(model);
 
-            this.mapper.Map(model, product);
-
-            this.productService.EditProduct(product);
-
-            this.TempData["Success"] = $"Successully edited {product.Name}";
+            this.TempData["Success"] = $"Successully edited {model.Name}";
 
             return this.RedirectToAction("All");
         }
 
         [AcceptVerbs("Get", "Post")]
-        public IActionResult ValidateProductName([Bind(Prefix = "Name")]string productName)
+        public async Task<IActionResult> ValidateProductName([Bind(Prefix = "Name")]string productName)
         {
-            bool productExists = this.productService.ProductExists(productName);
+            bool productExists = await this.productService.ProductExists(productName);
 
             if (productExists == true)
             {

@@ -3,28 +3,30 @@
     using System;
     using System.Collections.Generic;
     using System.Text;
+    using System.Threading.Tasks;
 
     using ChooseAndBuy.Data.Models;
+    using ChooseAndBuy.Web.Areas.Administration.ViewModels.Orders;
     using ChooseAndBuy.Web.ViewModels.Orders;
 
     public interface IOrderService
     {
-        bool CreateOrder(Order order);
+        Task<string> CreateOrder(OrderBindingModel order);
 
-        bool AddProductsToOrder(string orderId, List<OrderProductViewModel> products);
+        Task<bool> AddProductsToOrder(string orderId, List<OrderProductViewModel> products);
 
-        bool ApproveOrder(string orderId);
+        Task<bool> ApproveOrder(string orderId);
 
-        bool DeliverOrder(string orderId);
+        Task<bool> DeliverOrder(string orderId);
 
-        bool CancelOrder(string orderId);
+        Task<bool> CancelOrder(string orderId);
 
-        Order GetOrderById(string orderId);
+        Task<ConfirmationViewModel> GetConfirmationInfo(string orderId);
 
-        IEnumerable<Order> GetAllUserOrders(string userId);
+        Task<IEnumerable<OrderViewModel>> GetAllUserOrders(string userId);
 
-        IEnumerable<Order> GetPendingOrders();
+        Task<IEnumerable<AdminPaneOrderViewModel>> GetPendingOrders();
 
-        IEnumerable<Order> GetActiveOrders();
+        Task<IEnumerable<AdminPaneOrderViewModel>> GetActiveOrders();
     }
 }

@@ -4,9 +4,10 @@
     using System.ComponentModel.DataAnnotations;
 
     using ChooseAndBuy.Data.Models;
+    using ChooseAndBuy.Services.Mapping;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
-    public class AddressCreateBindingModel
+    public class AddressCreateBindingModel : IMapTo<Address>
     {
         [Required]
         [Display(Name = "First Name")]

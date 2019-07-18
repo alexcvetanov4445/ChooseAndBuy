@@ -4,10 +4,14 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using System.Threading.Tasks;
 
+    using ChooseAndBuy.Common;
     using ChooseAndBuy.Data;
     using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Data.Models.Enums;
+    using ChooseAndBuy.Services.Mapping;
+    using ChooseAndBuy.Web.Areas.Administration.ViewModels.Orders;
     using ChooseAndBuy.Web.ViewModels.Orders;
     using Microsoft.EntityFrameworkCore;
 
@@ -20,89 +24,110 @@
             this.context = context;
         }
 
-        public bool CreateOrder(Order order)
+        public async Task<string> CreateOrder(OrderBindingModel orderBindingModel)
         {
-            this.context.Orders.Add(order);
+            var order = AutoMapper.Mapper.Map<Order>(orderBindingModel);
 
-            this.context.SaveChanges();
+            order.OrderDate = DateTime.UtcNow;
+            order.Status = OrderStatus.Pending;
+            order.Quantity = orderBindingModel.Products.Sum(op => op.Quantity);
 
-            return true;
+            order.DispatchDate = order.DeliveryType == DeliveryType.Express ?
+                DateTime.UtcNow.AddDays(GlobalConstants.ExpressDeliveryDays) :
+                DateTime.UtcNow.AddDays(GlobalConstants.NormalDeliveryDays);
+
+            await this.context.Orders.AddAsync(order);
+
+            await this.context.SaveChangesAsync();
+
+            return order.Id;
         }
 
-        public bool AddProductsToOrder(string orderId, List<OrderProductViewModel> products)
+        public async Task<bool> AddProductsToOrder(string orderId, List<OrderProductViewModel> products)
         {
             foreach (var product in products)
             {
-                OrderProduct orderProduct = new OrderProduct
-                {
-                    OrderId = orderId,
-                    Quantity = product.Quantity,
-                    ProductId = product.Id,
-                    Price = product.TotalPrice,
-                };
+                var orderProduct = AutoMapper.Mapper.Map<OrderProduct>(product);
 
-                this.context.OrderProducts.Add(orderProduct);
+                orderProduct.OrderId = orderId;
+
+                await this.context.OrderProducts.AddAsync(orderProduct);
             }
 
-            this.context.SaveChanges();
+            var result = await this.context.SaveChangesAsync();
 
-            return true;
+            return result > 0;
         }
 
-        public Order GetOrderById(string orderId)
+        public async Task<ConfirmationViewModel> GetConfirmationInfo(string orderId)
         {
-            var order = this.context.Orders
+            var order = await this.context.Orders
                 .Include(o => o.DeliveryAddress)
                 .ThenInclude(da => da.City)
-                .SingleOrDefault(o => o.Id == orderId);
+                .SingleOrDefaultAsync(o => o.Id == orderId);
 
-            return order;
+            var confirmationViewModel = AutoMapper.Mapper.Map<ConfirmationViewModel>(order);
+
+            return confirmationViewModel;
         }
 
-        public IEnumerable<Order> GetAllUserOrders(string userId)
+        public async Task<IEnumerable<OrderViewModel>> GetAllUserOrders(string userId)
         {
-            var orders = this.context.Orders.Include(o => o.DeliveryAddress).Where(o => o.ApplicationUserId == userId);
+            var orders = await this.context
+                .Orders
+                .Include(o => o.DeliveryAddress)
+                .Where(o => o.ApplicationUserId == userId)
+                .ToListAsync();
 
-            return orders;
+            var ordersViewModel = AutoMapper.Mapper.Map<List<OrderViewModel>>(orders);
+
+            return ordersViewModel;
         }
 
-        public IEnumerable<Order> GetPendingOrders()
+        public async Task<IEnumerable<AdminPaneOrderViewModel>> GetPendingOrders()
         {
-            var orders = this.context.Orders
+            var orders = await this.context.Orders
                 .Include(o => o.ApplicationUser)
                 .Include(o => o.DeliveryAddress)
                 .Include(o => o.OrderProducts)
                 .ThenInclude(o => o.Product)
-                .Where(o => o.Status == OrderStatus.Pending);
+                .Where(o => o.Status == OrderStatus.Pending)
+                .ToListAsync();
 
-            return orders;
+            var ordersViewModel = AutoMapper.Mapper.Map<List<AdminPaneOrderViewModel>>(orders);
+
+            return ordersViewModel;
         }
 
-        public IEnumerable<Order> GetActiveOrders()
+        public async Task<IEnumerable<AdminPaneOrderViewModel>> GetActiveOrders()
         {
-            var orders = this.context.Orders
+            var orders = await this.context.Orders
                 .Include(o => o.ApplicationUser)
                 .Include(o => o.DeliveryAddress)
                 .Include(o => o.OrderProducts)
                 .ThenInclude(o => o.Product)
-                .Where(o => o.Status != OrderStatus.Pending);
+                .Where(o => o.Status != OrderStatus.Pending)
+                .ToListAsync();
 
-            return orders;
+            var ordersViewModel = AutoMapper.Mapper.Map<List<AdminPaneOrderViewModel>>(orders);
+
+            return ordersViewModel;
         }
 
-        public bool ApproveOrder(string orderId)
+        public async Task<bool> ApproveOrder(string orderId)
         {
-            var order = this.context.Orders.SingleOrDefault(o => o.Id == orderId);
+            var order = await this.context.Orders.SingleOrDefaultAsync(o => o.Id == orderId);
 
             order.Status = OrderStatus.DeliveryInProgress;
-            this.context.SaveChanges();
 
-            return true;
+            var result = await this.context.SaveChangesAsync();
+
+            return result > 0;
         }
 
-        public bool DeliverOrder(string orderId)
+        public async Task<bool> DeliverOrder(string orderId)
         {
-            var order = this.context.Orders.SingleOrDefault(o => o.Id == orderId);
+            var order = await this.context.Orders.SingleOrDefaultAsync(o => o.Id == orderId);
 
             if (order.Status == OrderStatus.Canceled)
             {
@@ -111,14 +136,15 @@
 
             order.Status = OrderStatus.Delivered;
             order.DeliveryDate = DateTime.UtcNow;
-            this.context.SaveChanges();
 
-            return true;
+            var result = await this.context.SaveChangesAsync();
+
+            return result > 0;
         }
 
-        public bool CancelOrder(string orderId)
+        public async Task<bool> CancelOrder(string orderId)
         {
-            var order = this.context.Orders.SingleOrDefault(o => o.Id == orderId);
+            var order = await this.context.Orders.SingleOrDefaultAsync(o => o.Id == orderId);
 
             if (order.Status == OrderStatus.Delivered)
             {
@@ -126,9 +152,10 @@
             }
 
             order.Status = OrderStatus.Canceled;
-            this.context.SaveChanges();
 
-            return true;
+            var result = await this.context.SaveChangesAsync();
+
+            return result > 0;
         }
     }
 }

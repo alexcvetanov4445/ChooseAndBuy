@@ -1,15 +1,18 @@
 ﻿namespace ChooseAndBuy.Services
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
+
     using ChooseAndBuy.Data.Models;
+    using ChooseAndBuy.Web.Areas.Administration.ViewModels.SubCategories;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
     public interface ISubCategoryService
     {
-        IEnumerable<SelectListItem> GetSubCategories();
+        Task<IEnumerable<SelectListItem>> GetSubCategories();
 
-        void AddSubCategory(SubCategory subCategory);
+        Task<bool> AddSubCategory(SubCategoryBindingModel model);
 
-        bool SubCategoryExists(string name);
+        Task<bool> SubCategoryExists(string name);
     }
 }

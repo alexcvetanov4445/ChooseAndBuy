@@ -3,7 +3,7 @@
     using System;
     using System.Reflection;
     using System.Threading.Tasks;
-    using AutoMapper;
+
     using ChooseAndBuy.Data;
     using ChooseAndBuy.Data.Common;
     using ChooseAndBuy.Data.Common.Repositories;
@@ -14,9 +14,7 @@
     using ChooseAndBuy.Services.Data;
     using ChooseAndBuy.Services.Mapping;
     using ChooseAndBuy.Services.Messaging;
-    using ChooseAndBuy.Web.MappingConfiguration;
     using ChooseAndBuy.Web.ViewModels;
-    using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -61,14 +59,6 @@
                 .AddRoleStore<ApplicationRoleStore>()
                 .AddDefaultTokenProviders()
                 .AddDefaultUI(UIFramework.Bootstrap4);
-
-            var mappingConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new ChooseAndBuyProfile());
-            });
-
-            IMapper mapper = mappingConfig.CreateMapper();
-            services.AddSingleton(mapper);
 
             services
                 .AddMvc()

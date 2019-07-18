@@ -14,12 +14,10 @@
     public class CategoriesController : AdministrationController
     {
         private readonly ICategoryService categoryService;
-        private readonly IMapper mapper;
 
-        public CategoriesController(ICategoryService categoryService, IMapper mapper)
+        public CategoriesController(ICategoryService categoryService)
         {
             this.categoryService = categoryService;
-            this.mapper = mapper;
         }
 
         public IActionResult Create()
@@ -35,9 +33,7 @@
                 return this.View(model);
             }
 
-            var category = this.mapper.Map<Category>(model);
-
-            this.categoryService.AddCategory(category);
+            await this.categoryService.AddCategory(model);
 
             this.TempData["Success"] = $"Successully created {model.Name} category.";
 
@@ -45,16 +41,11 @@
         }
 
         [AcceptVerbs("Get", "Post")]
-        public IActionResult CategoryNameExists(string name)
+        public async Task<IActionResult> CategoryNameExists(string name)
         {
-            var isAvailableName = this.categoryService.ValidateCategoryName(name);
+            var isAvailableName = await this.categoryService.ValidateCategoryName(name);
 
-            if (isAvailableName == false)
-            {
-                return this.Json(false);
-            }
-
-            return this.Json(true);
+            return this.Json(isAvailableName);
         }
     }
 }

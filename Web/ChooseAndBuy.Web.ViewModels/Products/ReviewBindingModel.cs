@@ -1,11 +1,11 @@
 ﻿namespace ChooseAndBuy.Web.ViewModels.Products
 {
-    using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Text;
 
-    public class ReviewBindingModel
+    using ChooseAndBuy.Data.Models;
+    using ChooseAndBuy.Services.Mapping;
+
+    public class ReviewBindingModel : IMapTo<Review>
     {
         public string ProductId { get; set; }
 

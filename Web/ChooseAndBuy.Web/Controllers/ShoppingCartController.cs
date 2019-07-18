@@ -2,9 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using System.Security.Claims;
-
-    using AutoMapper;
+    using System.Threading.Tasks;
     using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Services;
     using ChooseAndBuy.Web.ViewModels.ShoppingCart;
@@ -15,28 +13,26 @@
     public class ShoppingCartController : BaseController
     {
         private readonly IShoppingCartService shoppingCartService;
-        private readonly IMapper mapper;
         private readonly UserManager<ApplicationUser> userManager;
 
         public ShoppingCartController(
             IShoppingCartService shoppingCartService,
-            IMapper mapper,
             UserManager<ApplicationUser> userManager)
         {
             this.shoppingCartService = shoppingCartService;
-            this.mapper = mapper;
             this.userManager = userManager;
         }
 
         [Authorize]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             // TODO: think about using the cookie if the user is not logged in
             string userId = this.userManager.GetUserId(this.HttpContext.User);
 
-            var products = this.shoppingCartService.GetCartProductsByUserId(userId).ToList();
+            var products = await this.shoppingCartService.GetCartProductsByUserId(userId);
 
-            var mappedProducts = this.mapper.Map<List<ShoppingCartProductViewModel>>(products);
+            // TODO: might be a problem with mapping - not this model
+            var mappedProducts = AutoMapper.Mapper.Map<List<ShoppingCartProductViewModel>>(products);
 
             var model = new ShoppingCartViewModel
             {
@@ -48,31 +44,31 @@
         }
 
         [HttpPost]
-        public IActionResult Add([FromBody]ShoppingCartAddInputModel model)
+        public async Task<IActionResult> Add([FromBody]ShoppingCartAddInputModel model)
         {
             // TODO: think about using the cookie if the user is not logged in
             string userId = this.userManager.GetUserId(this.HttpContext.User);
 
-            var isProductAdded = this.shoppingCartService.AddProductToCart(model.ProductId, userId, model.Quantity);
+            var result = await this.shoppingCartService.AddProductToCart(model.ProductId, userId, model.Quantity);
 
-            return this.Json(isProductAdded);
+            return this.Json(result);
         }
 
         [HttpPost]
-        public IActionResult UpdateProductCount(ShoppingCartUpdateCountBindingModel model)
+        public async Task<IActionResult> UpdateProductCount(ShoppingCartUpdateCountBindingModel model)
         {
             string userId = this.userManager.GetUserId(this.HttpContext.User);
 
-            this.shoppingCartService.UpdateProductCount(model.ProductId, userId, model.Quantity);
+            await this.shoppingCartService.UpdateProductCount(model.ProductId, userId, model.Quantity);
 
             return this.RedirectToAction("Index");
         }
 
-        public IActionResult Remove(string productId)
+        public async Task<IActionResult> Remove(string productId)
         {
             string userId = this.userManager.GetUserId(this.HttpContext.User);
 
-            this.shoppingCartService.RemoveProductFromCart(productId, userId);
+            await this.shoppingCartService.RemoveProductFromCart(productId, userId);
 
             return this.RedirectToAction("Index");
         }

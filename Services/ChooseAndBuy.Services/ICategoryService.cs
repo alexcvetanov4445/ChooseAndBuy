@@ -1,18 +1,20 @@
 ﻿namespace ChooseAndBuy.Services
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     using ChooseAndBuy.Data.Models;
+    using ChooseAndBuy.Web.Areas.Administration.ViewModels.Categories;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
     public interface ICategoryService
     {
-        void AddCategory(Category category);
+        Task<bool> AddCategory(CreateCategoryBindingModel model);
 
-        IEnumerable<SelectListItem> GetCategories();
+        Task<IEnumerable<SelectListItem>> GetCategories();
 
-        Dictionary<string, ICollection<SelectListItem>> GetCategoriesWithSubCategories();
+        Task<Dictionary<string, ICollection<SelectListItem>>> GetCategoriesWithSubCategories();
 
-        bool ValidateCategoryName(string name);
+        Task<bool> ValidateCategoryName(string name);
     }
 }

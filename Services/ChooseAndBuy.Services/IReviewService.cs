@@ -1,15 +1,15 @@
 ﻿namespace ChooseAndBuy.Services
 {
-    using System;
     using System.Collections.Generic;
-    using System.Text;
+    using System.Threading.Tasks;
 
     using ChooseAndBuy.Data.Models;
+    using ChooseAndBuy.Web.ViewModels.Products;
 
     public interface IReviewService
     {
-        IEnumerable<Review> GetReviewsForProduct(string productId);
+        Task<ICollection<ProductReviewViewModel>> GetReviewsForProduct(string productId);
 
-        bool AddReview(Review review);
+        Task<bool> AddReview(ReviewBindingModel productModel);
     }
 }

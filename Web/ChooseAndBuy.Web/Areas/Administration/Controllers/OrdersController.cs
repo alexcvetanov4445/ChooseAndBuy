@@ -13,68 +13,61 @@
     public class OrdersController : AdministrationController
     {
         private readonly IOrderService orderService;
-        private readonly IMapper mapper;
 
         public OrdersController(
-            IOrderService orderService,
-            IMapper mapper)
+            IOrderService orderService)
         {
             this.orderService = orderService;
-            this.mapper = mapper;
         }
 
-        public IActionResult PendingOrders()
+        public async Task<IActionResult> PendingOrders()
         {
-            var orders = this.orderService.GetPendingOrders();
-
-            var mappedOrders = this.mapper.Map<List<AdminPaneOrderViewModel>>(orders);
+            var orders = await this.orderService.GetPendingOrders();
 
             AdminPaneOrdersViewModel model = new AdminPaneOrdersViewModel
             {
-                Orders = mappedOrders,
+                Orders = orders.ToList(),
             };
 
             return this.View(model);
         }
 
-        public IActionResult ActiveOrders()
+        public async Task<IActionResult> ActiveOrders()
         {
-            var orders = this.orderService.GetActiveOrders();
-
-            var mappedOrders = this.mapper.Map<List<AdminPaneOrderViewModel>>(orders);
+            var orders = await this.orderService.GetActiveOrders();
 
             AdminPaneOrdersViewModel model = new AdminPaneOrdersViewModel
             {
-                Orders = mappedOrders,
+                Orders = orders.ToList(),
             };
 
             return this.View(model);
         }
 
         [HttpPost]
-        public IActionResult Approve(string orderId)
+        public async Task<IActionResult> Approve(string orderId)
         {
-            var result = this.orderService.ApproveOrder(orderId);
+            var result = await this.orderService.ApproveOrder(orderId);
 
             return this.Json(result);
         }
 
         [HttpPost]
-        public IActionResult Deliver(string orderId)
+        public async Task<IActionResult> Deliver(string orderId)
         {
             var orderIdCut = orderId.Remove(0, 14);
 
-            var result = this.orderService.DeliverOrder(orderIdCut);
+            var result = await this.orderService.DeliverOrder(orderIdCut);
 
             return this.Json(result);
         }
 
         [HttpPost]
-        public IActionResult Cancel(string orderId)
+        public async Task<IActionResult> Cancel(string orderId)
         {
             var orderIdCut = orderId.Remove(0, 13);
 
-            var result = this.orderService.CancelOrder(orderIdCut);
+            var result = await this.orderService.CancelOrder(orderIdCut);
 
             return this.Json(result);
         }

@@ -3,16 +3,16 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
-    using Microsoft.AspNetCore.Http;
+    using ChooseAndBuy.Data.Models;
+    using ChooseAndBuy.Services.Mapping;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
-    public class CreateProductBindingModel
+    public class EditProductBindingModel : IMapTo<Product>, IMapFrom<Product>
     {
+        public string Id { get; set; }
+
         [Display(Name = "Name")]
-        [Required(ErrorMessage = "The field \"{0}\" is required.")]
-        [StringLength(50, MinimumLength = 5, ErrorMessage = "The field \"{0}\" must be a text with minimum length of {2} and maximum length of {1}.")]
-        [Remote(action: "ValidateProductName", controller: "Products", ErrorMessage = "Product name already exists!")]
         public string Name { get; set; }
 
         [Display(Name = "Description")]
@@ -35,9 +35,5 @@
         public string SubCategoryId { get; set; }
 
         public ICollection<SelectListItem> SubCategories { get; set; }
-
-        [Display(Name = "Image")]
-        [Required(ErrorMessage = "The field \"{0}\" is required.")]
-        public IFormFile FormImage { get; set; }
     }
 }

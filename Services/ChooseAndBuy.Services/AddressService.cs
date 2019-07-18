@@ -4,9 +4,11 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-
+    using System.Threading.Tasks;
     using ChooseAndBuy.Data;
     using ChooseAndBuy.Data.Models;
+    using ChooseAndBuy.Web.ViewModels.Addresses;
+    using Microsoft.EntityFrameworkCore;
 
     public class AddressService : IAddressService
     {
@@ -17,22 +19,27 @@
             this.context = context;
         }
 
-        public bool CreateAddress(Address address)
+        public async Task<bool> CreateAddress(AddressCreateBindingModel addressCreate, string userId)
         {
-            this.context.Addresses.Add(address);
+            var address = AutoMapper.Mapper.Map<Address>(addressCreate);
+            address.ApplicationUserId = userId;
 
-            this.context.SaveChanges();
+            await this.context.Addresses.AddAsync(address);
 
-            return true;
+            var result = await this.context.SaveChangesAsync();
+
+            return result > 0;
         }
 
-        public IEnumerable<Address> GetAllUserAddresses(string userId)
+        public async Task<IEnumerable<AddressViewModel>> GetAllUserAddresses(string userId)
         {
-            var addresses = this.context.Addresses
+            var addresses = await this.context.Addresses
                 .Where(a => a.ApplicationUserId == userId)
-                .ToList();
+                .ToListAsync();
 
-            return addresses;
+            var addressesViewModel = AutoMapper.Mapper.Map<List<AddressViewModel>>(addresses);
+
+            return addressesViewModel;
         }
     }
 }

@@ -1,19 +1,20 @@
 ﻿namespace ChooseAndBuy.Services
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
 
-    using ChooseAndBuy.Data.Models;
+    using ChooseAndBuy.Web.ViewModels.Orders;
 
     public interface IShoppingCartService
     {
-        bool AddProductToCart(string productId, string userId, int quantity);
+        Task<bool> AddProductToCart(string productId, string userId, int quantity);
 
-        bool UpdateProductCount(string productId, string userId, int quantity);
+        Task<bool> UpdateProductCount(string productId, string userId, int quantity);
 
-        bool RemoveProductFromCart(string productId, string userId);
+        Task<bool> RemoveProductFromCart(string productId, string userId);
 
-        bool RemoveAllCartProducts(string userId);
+        Task<bool> RemoveAllCartProducts(string userId);
 
-        IEnumerable<ShoppingCartProduct> GetCartProductsByUserId(string userId);
+        Task<IEnumerable<OrderProductViewModel>> GetCartProductsByUserId(string userId);
     }
 }

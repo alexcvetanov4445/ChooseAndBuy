@@ -5,8 +5,9 @@
 
     using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Data.Models.Enums;
+    using ChooseAndBuy.Services.Mapping;
 
-    public class OrderBindingModel
+    public class OrderBindingModel : IMapTo<Order>
     {
         public string ApplicationUserId { get; set; }
 
@@ -28,7 +29,7 @@
         [Display(Name = "Additional Info - not necessary")]
         [StringLength(200, MinimumLength = 10, ErrorMessage = "The field Additional info must be a text with minimum length of {2} and maximum length of {1}.")]
         public string AdditionalInfo { get; set; }
-        
+
         public List<OrderProductViewModel> Products { get; set; }
 
         public decimal TotalPrice { get; set; }

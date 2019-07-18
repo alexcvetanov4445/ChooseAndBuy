@@ -1,14 +1,12 @@
 ﻿namespace ChooseAndBuy.Web.Areas.Administration.ViewModels.Categories
 {
-    using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using System.Threading.Tasks;
 
+    using ChooseAndBuy.Data.Models;
+    using ChooseAndBuy.Services.Mapping;
     using Microsoft.AspNetCore.Mvc;
 
-    public class CreateCategoryBindingModel
+    public class CreateCategoryBindingModel : IMapTo<Category>
     {
         [Required]
         [StringLength(20, ErrorMessage = "The Category name must be at least {2} and at max {1} characters long.", MinimumLength = 3)]

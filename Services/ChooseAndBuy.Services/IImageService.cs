@@ -1,9 +1,11 @@
 ﻿namespace ChooseAndBuy.Services
 {
+    using System.Threading.Tasks;
+
     using Microsoft.AspNetCore.Http;
 
     public interface IImageService
     {
-        string CreateImage(IFormFile formImage);
+        Task<string> CreateImage(IFormFile formImage);
     }
 }

@@ -1,8 +1,8 @@
 ﻿namespace ChooseAndBuy.Services
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using ChooseAndBuy.Data;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -15,7 +15,7 @@
             this.context = context;
         }
 
-        public IEnumerable<SelectListItem> GetAllCities()
+        public async Task<IEnumerable<SelectListItem>> GetAllCities()
         {
             var cities = this.context.Cities.Select(c => new SelectListItem
                     {

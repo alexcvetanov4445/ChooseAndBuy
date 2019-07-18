@@ -1,61 +1,49 @@
 ﻿namespace ChooseAndBuy.Web.Controllers
 {
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
-    using AutoMapper;
-    using System.Linq;
+    using ChooseAndBuy.Common;
     using ChooseAndBuy.Data.Models;
-    using ChooseAndBuy.Data.Models.Enums;
     using ChooseAndBuy.Services;
     using ChooseAndBuy.Web.ViewModels.Addresses;
     using ChooseAndBuy.Web.ViewModels.Orders;
-    using ChooseNBuy.Controllers;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
     public class OrdersController : BaseController
     {
-        private const decimal DeliveryFee = 3.90m;
-
         private readonly UserManager<ApplicationUser> userManager;
         private readonly ICityService cityService;
         private readonly IShoppingCartService shoppingCartService;
         private readonly IAddressService addressService;
         private readonly IOrderService orderService;
-        private readonly IMapper mapper;
 
         public OrdersController(
             UserManager<ApplicationUser> userManager,
             ICityService cityService,
             IShoppingCartService shoppingCartService,
             IAddressService addressService,
-            IOrderService orderService,
-            IMapper mapper)
+            IOrderService orderService)
         {
             this.userManager = userManager;
             this.cityService = cityService;
             this.shoppingCartService = shoppingCartService;
             this.addressService = addressService;
             this.orderService = orderService;
-            this.mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
         {
             var user = await this.userManager.GetUserAsync(this.User);
 
-            var cities = this.cityService.GetAllCities();
+            var cities = await this.cityService.GetAllCities();
 
-            var userAddresses = this.addressService.GetAllUserAddresses(user.Id);
-            var userAddressesViewModels = this.mapper.Map<List<AddressViewModel>>(userAddresses);
+            var userAddresses = await this.addressService.GetAllUserAddresses(user.Id);
 
-            var cartProducts = this.shoppingCartService.GetCartProductsByUserId(user.Id);
-            var mappedCartProducts = this.mapper.Map<List<OrderProductViewModel>>(cartProducts);
+            var cartProducts = await this.shoppingCartService.GetCartProductsByUserId(user.Id);
 
-            var totalPrice = mappedCartProducts.Sum(p => p.TotalPrice) + DeliveryFee;
+            var totalPrice = cartProducts.Sum(p => p.TotalPrice) + GlobalConstants.DeliveryFee;
 
             AddressCreateBindingModel addressBindingModel = new AddressCreateBindingModel
             {
@@ -65,16 +53,16 @@
 
             OrderBindingModel orderBindingModel = new OrderBindingModel
             {
-                Products = mappedCartProducts,
+                Products = cartProducts.ToList(),
                 ApplicationUserId = user.Id,
                 TotalPrice = totalPrice,
-                DeliveryFee = DeliveryFee,
+                DeliveryFee = GlobalConstants.DeliveryFee,
             };
 
             CheckoutViewModel model = new CheckoutViewModel
             {
                 AddressCreate = addressBindingModel,
-                UserAddresses = userAddressesViewModels,
+                UserAddresses = userAddresses.ToList(),
                 OrderCreate = orderBindingModel,
             };
 
@@ -82,61 +70,39 @@
         }
 
         [HttpPost]
-        public IActionResult Create(OrderBindingModel orderCreate)
+        public async Task<IActionResult> Create(OrderBindingModel orderCreate)
         {
             // maps the order and sets its remaining values manually
             // after that the shoppingCart is deleted
-            var order = this.mapper.Map<Order>(orderCreate);
 
-            order.OrderDate = DateTime.UtcNow;
-            order.Status = OrderStatus.Pending;
-            order.Quantity = orderCreate.Products.Sum(op => op.Quantity);
-
-            order.DispatchDate = order.DeliveryType == DeliveryType.Express ?
-                DateTime.UtcNow.AddDays(2) : DateTime.UtcNow.AddDays(5);
-
-            // creates the order
-            this.orderService.CreateOrder(order);
+            // creates the order and recieves it's id
+            var orderId = await this.orderService.CreateOrder(orderCreate);
 
             // add the order products to the order
-            this.orderService.AddProductsToOrder(order.Id, orderCreate.Products);
+            await this.orderService.AddProductsToOrder(orderId, orderCreate.Products);
 
             // remove the products from the shopping cart after the order is added
-            this.shoppingCartService.RemoveAllCartProducts(order.ApplicationUserId);
+            await this.shoppingCartService.RemoveAllCartProducts(orderCreate.ApplicationUserId);
 
-            return this.RedirectToAction("Confirmation", new { orderId = order.Id });
+            return this.RedirectToAction("Confirmation", new { orderId = orderId });
         }
 
-        public IActionResult Confirmation(string orderId)
+        public async Task<IActionResult> Confirmation(string orderId)
         {
-            var order = this.orderService.GetOrderById(orderId);
-
-            ConfirmationViewModel model = new ConfirmationViewModel
-            {
-                ExpectedDelivery = order.DispatchDate.Value.ToShortDateString(),
-                PaymentMethod = order.PaymentType.ToString(),
-                QuantityProducts = order.Quantity,
-                TotalPrice = order.TotalPrice,
-                PhoneNumber = order.DeliveryAddress.PhoneNumber,
-                ClientName = order.DeliveryAddress.FirstName + " " + order.DeliveryAddress.LastName,
-                Address = order.DeliveryAddress.AddressText,
-                City = order.DeliveryAddress.City.Name,
-            };
+            var model = await this.orderService.GetConfirmationInfo(orderId);
 
             return this.View(model);
         }
 
-        public IActionResult UserOrders()
+        public async Task<IActionResult> UserOrders()
         {
             string userId = this.userManager.GetUserId(this.HttpContext.User);
 
-            var orders = this.orderService.GetAllUserOrders(userId);
-
-            var mappedOrders = this.mapper.Map<List<OrderViewModel>>(orders);
+            var ordersViewModel = await this.orderService.GetAllUserOrders(userId);
 
             UserOrdersViewModel model = new UserOrdersViewModel
             {
-                Orders = mappedOrders,
+                Orders = ordersViewModel.ToList(),
             };
 
             return this.View(model);

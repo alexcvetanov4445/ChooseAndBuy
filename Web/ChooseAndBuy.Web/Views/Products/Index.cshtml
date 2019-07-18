@@ -104,12 +104,21 @@
                         <div class="single-product">
                             <a asp-action="details" asp-controller="products" asp-route-id="@pr.Id">
                                 <div style="width: 240px; height: 240px;">
-                                    <img src="~/img/product/@pr.ImageName" style="width: auto;max-height: 100%;" alt="">
+                                    <img src="~/img/product/@pr.ImageName" 
+                                         style="display: block; max-width: 240px; max-height: 240px; width:auto; height: auto;
+                                                margin-top: auto; margin-bottom:auto" alt="">
                                 </div>
                             </a>
                             <div class="product-details align-baseline bottom mt-3">
                                 <h6>
-                                    @pr.Name
+                                    @if (pr.Name.Length > 20)
+                                    {
+                                        @(pr.Name.Substring(0, 20) + "...")
+                                    }
+                                    else
+                                    {
+                                        @pr.Name
+                                    }
                                 </h6>
                                 <div class="price">
                                     <h6>$@pr.Price</h6>

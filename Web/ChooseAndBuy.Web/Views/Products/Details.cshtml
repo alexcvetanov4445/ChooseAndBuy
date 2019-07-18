@@ -33,7 +33,9 @@
             <div class="col-lg-6 offset-lg-1">
                 <div class="s_product_inner">
                     <div style="width: 500px; height: 500px; text-align: center">
-                        <img src="~/img/product/@Model.DetailsInfo.ImageName" style="width: auto;max-height: 100%;"/>
+                        <img src="~/img/product/@Model.DetailsInfo.ImageName" 
+                             style="display: block; max-width: 500px; max-height: 500px; width:auto; height: auto;
+                                    margin: 0 auto"/>
                     </div>
                 </div>
             </div>
@@ -72,7 +74,7 @@
                         <input class="addCart primary-btn" id="addCart" type="button" value="Add to Cart" />
                         <a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a>
                     </div>
-                    <div><h4 class="successP text-success mt-3" hidden>Product added to cart!</h4></div>
+                    <div><h4 class="successP text-success mt-3" style="display: none;">Product added to cart!</h4></div>
                 </div>
             </div>
         </div>
@@ -280,7 +282,7 @@
                 url: "@Url.Action("Add", "ShoppingCart")",
                 data: JSON.stringify(JSONObject),
                 success: function () {
-                    $(".successP").removeAttr("hidden").delay(2000).fadeOut();
+                    $(".successP").show().delay(2000).fadeOut();
                 },
                 contentType: "application/json; charset=utf-8",
                 dataType: "json"

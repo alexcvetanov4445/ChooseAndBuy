@@ -4,9 +4,10 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-
+    using System.Threading.Tasks;
     using ChooseAndBuy.Data;
     using ChooseAndBuy.Data.Models;
+    using ChooseAndBuy.Web.Areas.Administration.ViewModels.Categories;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.EntityFrameworkCore;
 
@@ -19,30 +20,37 @@
             this.context = context;
         }
 
-        public void AddCategory(Category category)
+        public async Task<bool> AddCategory(CreateCategoryBindingModel model)
         {
-            this.context.Categories.Add(category);
+            var category = AutoMapper.Mapper.Map<Category>(model);
 
-            this.context.SaveChanges();
+            await this.context.Categories.AddAsync(category);
+
+            var result = await this.context.SaveChangesAsync();
+
+            return result > 0;
         }
 
-        public IEnumerable<SelectListItem> GetCategories()
+        public async Task<IEnumerable<SelectListItem>> GetCategories()
         {
-            var result = this.context.Categories.Select(c => new SelectListItem
+            var result = await this.context.Categories.Select(c => new SelectListItem
             {
                 Value = c.Id,
                 Text = c.Name,
             })
-            .ToList();
+            .ToListAsync();
 
             return result;
         }
 
-        public Dictionary<string, ICollection<SelectListItem>> GetCategoriesWithSubCategories()
+        public async Task<Dictionary<string, ICollection<SelectListItem>>> GetCategoriesWithSubCategories()
         {
             var dict = new Dictionary<string, ICollection<SelectListItem>>();
 
-            var categories = this.context.Categories.Include(x => x.SubCategories).ToList();
+            var categories = await this.context
+                .Categories
+                .Include(x => x.SubCategories)
+                .ToListAsync();
 
             foreach (var ctg in categories)
             {
@@ -61,9 +69,9 @@
             return dict;
         }
 
-        public bool ValidateCategoryName(string name)
+        public async Task<bool> ValidateCategoryName(string name)
         {
-            var result = this.context.Categories.FirstOrDefault(n => n.Name == name);
+            var result = await this.context.Categories.FirstOrDefaultAsync(n => n.Name == name);
 
             if (result != null)
             {

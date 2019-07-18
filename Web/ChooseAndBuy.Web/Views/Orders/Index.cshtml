@@ -79,7 +79,7 @@
                         @for (int i = 0; i < Model.OrderCreate.Products.Count(); i++)
                         {
 
-                            <input asp-for="OrderCreate.Products[i].Id" type="hidden" />
+                            <input asp-for="OrderCreate.Products[i].ProductId" type="hidden" />
                             <input asp-for="OrderCreate.Products[i].Name" type="hidden" />
                             <input asp-for="OrderCreate.Products[i].Price" type="hidden" />
                             <input asp-for="OrderCreate.Products[i].Quantity" type="hidden" />

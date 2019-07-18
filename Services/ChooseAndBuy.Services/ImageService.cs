@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -15,7 +16,7 @@
             this.hostingEnvironment = hostingEnvironment;
         }
 
-        public string CreateImage(IFormFile formImage)
+        public async Task<string> CreateImage(IFormFile formImage)
         {
             string uniqueFileName = string.Empty;
 
@@ -25,7 +26,7 @@
                 uniqueFileName = Guid.NewGuid().ToString() + "_" + formImage.FileName;
                 string filePath = Path.Combine(uploadFolder, uniqueFileName);
 
-                // creating the file to wwwroot/img folder
+                // creating the file to /wwwroot/img folder
                 formImage.CopyTo(new FileStream(filePath, FileMode.Create));
             }
 

@@ -1,11 +1,10 @@
 ﻿namespace ChooseAndBuy.Web.Areas.Administration.ViewModels.Products
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
+    using AutoMapper;
+    using ChooseAndBuy.Data.Models;
+    using ChooseAndBuy.Services.Mapping;
 
-    public class TableProductViewModel
+    public class TableProductViewModel : IMapFrom<Product>, IHaveCustomMappings
     {
         public string Id { get; set; }
 
@@ -22,5 +21,11 @@
         public decimal Price { get; set; }
 
         public string SubCategoryName { get; set; }
+
+        public void CreateMappings(IProfileExpression configuration)
+        {
+            configuration.CreateMap<Product, TableProductViewModel>()
+                .ForMember(model => model.SubCategoryName, opt => opt.MapFrom(src => src.SubCategory.Name));
+        }
     }
 }

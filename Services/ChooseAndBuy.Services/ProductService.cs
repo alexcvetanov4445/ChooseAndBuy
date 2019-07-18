@@ -1,115 +1,163 @@
 ﻿namespace ChooseAndBuy.Services
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
 
     using ChooseAndBuy.Data;
     using ChooseAndBuy.Data.Models;
+    using ChooseAndBuy.Web.Areas.Administration.ViewModels.Products;
     using ChooseAndBuy.Web.ViewModels.Products;
     using Microsoft.EntityFrameworkCore;
 
     public class ProductService : IProductService
     {
         private readonly ApplicationDbContext context;
+        private readonly IImageService imageService;
 
-        public ProductService(ApplicationDbContext context)
+        public ProductService(
+            ApplicationDbContext context,
+            IImageService imageService)
         {
             this.context = context;
+            this.imageService = imageService;
         }
 
-        public void AddProduct(Product product)
+        public async Task<bool> AddProduct(CreateProductBindingModel model)
         {
-            this.context.Products.Add(product);
+            var product = AutoMapper.Mapper.Map<Product>(model);
 
-            this.context.SaveChanges();
+            string uniqueFileName = await this.imageService.CreateImage(model.FormImage);
+            product.ImageName = uniqueFileName;
+
+            await this.context.Products.AddAsync(product);
+
+            var result = await this.context.SaveChangesAsync();
+
+            return result > 0;
         }
 
-        public bool HideProduct(string id)
+        public async Task<bool> HideProduct(string id)
         {
-            var product = this.context.Products.SingleOrDefault(x => x.Id == id);
+            var product = await this.context.Products.SingleOrDefaultAsync(x => x.Id == id);
 
             if (product == null)
             {
                 return false;
             }
+
+            var result = 0;
 
             if (product.IsHidden)
             {
                 product.IsHidden = false;
-                this.context.SaveChanges();
-                return true;
+                result = await this.context.SaveChangesAsync();
+                return result > 0;
             }
 
             product.IsHidden = true;
 
-            this.context.SaveChanges();
+            result = await this.context.SaveChangesAsync();
 
-            return true;
+            return result > 0;
         }
 
-        public bool RecommendProduct(string id)
+        public async Task<bool> RecommendProduct(string id)
         {
-            var product = this.context.Products.SingleOrDefault(x => x.Id == id);
+            var product = await this.context.Products.SingleOrDefaultAsync(x => x.Id == id);
 
             if (product == null)
             {
                 return false;
             }
 
+            var result = 0;
+
             if (product.IsRecommended)
             {
                 product.IsRecommended = false;
-                this.context.SaveChanges();
-                return true;
+                result = await this.context.SaveChangesAsync();
+                return result > 0;
             }
 
             product.IsRecommended = true;
 
-            this.context.SaveChanges();
+            result = await this.context.SaveChangesAsync();
 
-            return true;
+            return result > 0;
         }
 
-        public bool EditProduct(Product product)
+        public async Task<bool> EditProduct(EditProductBindingModel model)
         {
+            var product = await this.context.Products.SingleOrDefaultAsync(p => p.Id == model.Id);
+
+            AutoMapper.Mapper.Map(model, product);
+
             this.context.Products.Update(product);
-            this.context.SaveChanges();
 
-            return true;
+            var result = await this.context.SaveChangesAsync();
+
+            return result > 0;
         }
 
-        public IEnumerable<Product> GetAllProducts()
+        public async Task<IEnumerable<TableProductViewModel>> GetAllProducts()
         {
-            return this.context.Products.Include(p => p.SubCategory);
+            var products = await this.context
+                .Products
+                .Include(p => p.SubCategory)
+                .ToListAsync();
+
+            var result = AutoMapper.Mapper.Map<List<TableProductViewModel>>(products);
+
+            return result;
         }
 
-        public Product GetById(string id)
+        public async Task<ProductDetailsViewModel> GetById(string id)
         {
-            var product = this.context.Products
+            var product = await this.context.Products
                 .Include(x => x.ShoppingCartProducts)
                 .ThenInclude(x => x.Product)
                 .Include(r => r.Reviews)
                 .Include(c => c.SubCategory)
-                .SingleOrDefault(pr => pr.Id == id);
+                .SingleOrDefaultAsync(pr => pr.Id == id);
 
-            return product;
+            var result = AutoMapper.Mapper.Map<ProductDetailsViewModel>(product);
+
+            return result;
         }
 
-        public string GetIdByName(string productName)
+        public async Task<EditProductBindingModel> GetEditProductInfoById(string productId)
         {
-            var name = this.context.Products.SingleOrDefault(x => x.Name == productName).Name;
+            var product = await this.context.Products
+                .Include(x => x.ShoppingCartProducts)
+                .ThenInclude(x => x.Product)
+                .Include(r => r.Reviews)
+                .Include(c => c.SubCategory)
+                .SingleOrDefaultAsync(pr => pr.Id == productId);
+
+            var result = AutoMapper.Mapper.Map<EditProductBindingModel>(product);
+
+            return result;
+        }
+
+        public async Task<string> GetIdByName(string productName)
+        {
+            var name = this.context
+                .Products
+                .SingleOrDefault(x => x.Name == productName)
+                .Name;
 
             return name;
         }
 
-        public IEnumerable<Product> GetProducts(string search, string subCategoryId, int sortBy)
+        public async Task<IEnumerable<ProductViewModel>> GetProducts(string search, string subCategoryId, int sortBy)
         {
             var products = new List<Product>();
+            var result = new List<ProductViewModel>();
 
             if (search != null)
             {
-                // get searched products
+                // TODO: get searched products
             }
 
             if (subCategoryId != null)
@@ -121,24 +169,26 @@
                 products = this.context.Products.Where(pr => pr.IsRecommended == true && pr.IsHidden == false).ToList();
             }
 
+            result = AutoMapper.Mapper.Map<List<ProductViewModel>>(products);
+
             switch (sortBy)
             {
                 case 1: // price ascending
-                    return products.OrderBy(p => p.Price).ToList();
+                    return result.OrderBy(p => p.Price).ToList();
                 case 2: // price descending
-                    return products.OrderByDescending(p => p.Price).ToList();
+                    return result.OrderByDescending(p => p.Price).ToList();
                 case 3: // name ascending
-                    return products.OrderBy(p => p.Name).ToList();
+                    return result.OrderBy(p => p.Name).ToList();
                 case 4: // name descending
-                    return products.OrderByDescending(p => p.Name).ToList();
+                    return result.OrderByDescending(p => p.Name).ToList();
             }
 
-            return products;
+            return result;
         }
 
-        public bool ProductExists(string name)
+        public async Task<bool> ProductExists(string name)
         {
-            var result = this.context.Products.SingleOrDefault(n => n.Name == name);
+            var result = await this.context.Products.SingleOrDefaultAsync(n => n.Name == name);
 
             if (result == null)
             {
@@ -150,10 +200,11 @@
 
         private IEnumerable<Product> GetProductsByCategory(string id)
         {
-            var products = this.context.Products.Where(sc => sc.SubCategoryId == id && sc.IsHidden == false);
+            var products = this.context
+                .Products
+                .Where(sc => sc.SubCategoryId == id && sc.IsHidden == false);
 
             return products;
         }
-
     }
 }

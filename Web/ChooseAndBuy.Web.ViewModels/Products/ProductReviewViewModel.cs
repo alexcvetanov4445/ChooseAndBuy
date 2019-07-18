@@ -1,10 +1,9 @@
 ﻿namespace ChooseAndBuy.Web.ViewModels.Products
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
+    using ChooseAndBuy.Data.Models;
+    using ChooseAndBuy.Services.Mapping;
 
-    public class ProductReviewViewModel
+    public class ProductReviewViewModel : IMapFrom<Review>, IMapTo<Review>
     {
         public string ClientFullName { get; set; }
 

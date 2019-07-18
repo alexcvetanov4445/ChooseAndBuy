@@ -1,28 +1,32 @@
 ﻿namespace ChooseAndBuy.Services
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     using ChooseAndBuy.Data.Models;
+    using ChooseAndBuy.Web.Areas.Administration.ViewModels.Products;
     using ChooseAndBuy.Web.ViewModels.Products;
 
     public interface IProductService
     {
-        bool ProductExists(string name);
+        Task<bool> ProductExists(string name);
 
-        void AddProduct(Product product);
+        Task<bool> AddProduct(CreateProductBindingModel model);
 
-        bool HideProduct(string id);
+        Task<bool> HideProduct(string id);
 
-        bool RecommendProduct(string íd);
+        Task<bool> RecommendProduct(string íd);
 
-        bool EditProduct(Product product);
+        Task<bool> EditProduct(EditProductBindingModel model);
 
-        string GetIdByName(string productName);
+        Task<EditProductBindingModel> GetEditProductInfoById(string productId);
 
-        IEnumerable<Product> GetProducts(string search, string subCategoryId, int sortBy);
+        Task<string> GetIdByName(string productName);
 
-        IEnumerable<Product> GetAllProducts();
+        Task<IEnumerable<ProductViewModel>> GetProducts(string search, string subCategoryId, int sortBy);
 
-        Product GetById(string id);
+        Task<IEnumerable<TableProductViewModel>> GetAllProducts();
+
+        Task<ProductDetailsViewModel> GetById(string id);
     }
 }

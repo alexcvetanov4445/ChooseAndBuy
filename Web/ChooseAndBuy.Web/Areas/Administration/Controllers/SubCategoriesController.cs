@@ -24,11 +24,11 @@
             this.subCategoryService = subCategoryService;
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var categories = this.categoryService.GetCategories().ToList();
+            var categories = await this.categoryService.GetCategories();
 
-            var model = new SubCategoryBindingModel { Categories = categories };
+            var model = new SubCategoryBindingModel { Categories = categories.ToList() };
 
             return this.View(model);
         }
@@ -36,29 +36,24 @@
         [HttpPost]
         public async Task<IActionResult> Create(SubCategoryBindingModel model)
         {
-            model.Categories = this.categoryService.GetCategories().ToList();
+            var categories = await this.categoryService.GetCategories();
+            model.Categories = categories.ToList();
 
             if (!this.ModelState.IsValid)
             {
                 return this.View(model);
             }
 
-            SubCategory subCategory = new SubCategory
-            {
-                Name = model.Name,
-                CategoryId = model.CategoryId,
-            };
-
-            this.subCategoryService.AddSubCategory(subCategory);
+            await this.subCategoryService.AddSubCategory(model);
 
             this.TempData["Success"] = $"Successully created {model.Name} sub-category.";
 
             return this.View(model);
         }
 
-        public IActionResult ValidateSubCategoryName (string name)
+        public async Task<IActionResult> ValidateSubCategoryName (string name)
         {
-            var subCategoryExists = this.subCategoryService.SubCategoryExists(name);
+            var subCategoryExists = await this.subCategoryService.SubCategoryExists(name);
 
             if (subCategoryExists)
             {

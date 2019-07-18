@@ -1,10 +1,9 @@
 ﻿namespace ChooseAndBuy.Web.ViewModels.Products
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
+    using ChooseAndBuy.Data.Models;
+    using ChooseAndBuy.Services.Mapping;
 
-    public class ProductViewModel
+    public class ProductViewModel : IMapFrom<Product>
     {
         // Model for a single product
         public string Id { get; set; }

@@ -18,16 +18,13 @@
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IAddressService addressService;
-        private readonly IMapper mapper;
 
         public AddressesController(
             UserManager<ApplicationUser> userManager,
-            IAddressService addressService,
-            IMapper mapper)
+            IAddressService addressService)
         {
             this.userManager = userManager;
             this.addressService = addressService;
-            this.mapper = mapper;
         }
 
         [HttpPost]
@@ -35,10 +32,7 @@
         {
             string userId = this.userManager.GetUserId(this.HttpContext.User);
 
-            var address = this.mapper.Map<Address>(addressCreate);
-            address.ApplicationUserId = userId;
-
-            this.addressService.CreateAddress(address);
+            await this.addressService.CreateAddress(addressCreate, userId);
 
             return this.RedirectToAction("Index", "Orders");
         }

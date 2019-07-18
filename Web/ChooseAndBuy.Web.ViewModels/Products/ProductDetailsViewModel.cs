@@ -1,10 +1,11 @@
 ﻿namespace ChooseAndBuy.Web.ViewModels.Products
 {
-    using System;
     using System.Collections.Generic;
-    using System.Text;
+    using AutoMapper;
+    using ChooseAndBuy.Data.Models;
+    using ChooseAndBuy.Services.Mapping;
 
-    public class ProductDetailsViewModel
+    public class ProductDetailsViewModel : IMapFrom<Product>, IHaveCustomMappings
     {
         public string Name { get; set; }
 
@@ -20,5 +21,10 @@
 
         public ICollection<ProductReviewViewModel> Reviews { get; set; }
 
+        public void CreateMappings(IProfileExpression configuration)
+        {
+            configuration.CreateMap<Product, ProductDetailsViewModel>()
+                .ForMember(model => model.Category, opt => opt.MapFrom(src => src.SubCategory.Name));
+        }
     }
 }
