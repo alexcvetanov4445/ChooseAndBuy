@@ -44,6 +44,8 @@
 
         public DbSet<Review> Reviews { get; set; }
 
+        public DbSet<ContactMessage> ContactMessages { get; set; }
+
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }
 
         public DbSet<ShoppingCartProduct> ShoppingCartProducts { get; set; }

@@ -124,6 +124,7 @@
             services.AddTransient<ICityService, CityService>();
             services.AddTransient<IAddressService, AddressService>();
             services.AddTransient<IOrderService, OrderService>();
+            services.AddTransient<IContactService, ContactService>();
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
         }
