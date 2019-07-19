@@ -125,6 +125,7 @@
             services.AddTransient<IAddressService, AddressService>();
             services.AddTransient<IOrderService, OrderService>();
             services.AddTransient<IContactService, ContactService>();
+            services.AddTransient<IFavoritesService, FavoritesService>();
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
         }

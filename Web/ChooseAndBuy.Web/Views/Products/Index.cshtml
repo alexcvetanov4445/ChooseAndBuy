@@ -104,7 +104,7 @@
                         <div class="single-product">
                             <a asp-action="details" asp-controller="products" asp-route-id="@pr.Id">
                                 <div style="width: 240px; height: 240px;">
-                                    <img src="~/img/product/@pr.ImageName" 
+                                    <img src="~/img/product/@pr.ImageName"
                                          style="display: block; max-width: 240px; max-height: 240px; width:auto; height: auto;
                                                 margin-top: auto; margin-bottom:auto" alt="">
                                 </div>
@@ -124,19 +124,23 @@
                                     <h6>$@pr.Price</h6>
                                     <!--<h6 class="l-through">$210.00</h6>  (discount)-->
                                 </div>
+                                <div id="successCart-@pr.Id" style="display: none;">
+                                    <h6 class="text-success">Added to Cart!</h6>
+                                </div>
+                                <div id="successFav-@pr.Id" style="display: none;">
+                                    <h6 class="text-success">Added to Favorites!</h6>
+                                </div>
+                                <div id="errorFav-@pr.Id" style="display: none;">
+                                    <h6 class="text-success">Product already added!</h6>
+                                </div>
                                 <div class="prd-bottom">
-
-                                    <a href="" class="social-info">
+                                    <a id="@pr.Id" class="addCart social-info">
                                         <span class="ti-bag"></span>
                                         <p class="hover-text">add to bag</p>
                                     </a>
-                                    <a href="" class="social-info">
+                                    <a id="@pr.Id" class="addFav social-info">
                                         <span class="lnr lnr-heart"></span>
-                                        <p class="hover-text">Wishlist</p>
-                                    </a>
-                                    <a href="" class="social-info">
-                                        <span class="lnr lnr-sync"></span>
-                                        <p class="hover-text">compare</p>
+                                        <p class="hover-text">favorites</p>
                                     </a>
                                     <a asp-action="details" asp-controller="products" asp-route-id="@pr.Id" class="social-info">
                                         <span class="lnr lnr-move"></span>
@@ -234,3 +238,53 @@
         </div>
     </div>
 </div>
+
+@section Scripts{
+    <script>
+
+    $(".addCart").click(function () {
+        var property1 = $(this).attr("id");
+        var property2 = 1;
+
+        var JSONObject = {
+            "ProductId" : property1,
+            "Quantity" : property2
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Add", "ShoppingCart")",
+            data: JSON.stringify(JSONObject),
+            success: function () {
+                $("#successCart-" + property1).show().delay(2000).fadeOut();
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
+        });
+    });
+
+    $(".addFav").click(function () {
+        var property1 = $(this).attr("id");
+
+        var JSONObject = {
+            "productId" : property1
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Add", "Favorites")",
+            data: JSONObject,
+            success: function (result) {
+                if (result.success) {
+                    $("#successFav-" + property1).show().delay(2000).fadeOut();
+                } else {
+                    $("#errorFav-" + property1).show().delay(2000).fadeOut();
+                } 
+            },
+            dataType: "json"
+        });
+    });
+    </script>
+
+    <partial name="_ValidationScriptsPartial" />
+}

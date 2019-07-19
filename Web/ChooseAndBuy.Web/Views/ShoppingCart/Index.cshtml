@@ -42,16 +42,14 @@
                     <tbody>
                         @foreach (var product in Model.Products)
                         {
-                            <tr>
+                            <tr id="@product.Id">
                                 <td>
                                     <div class="media">
-                                        <div class="d-flex">
-                                            <div class="col-md-4 px-0">
-                                                <img src="~/img/product/@product.ImageName" class="img-fluid" alt="">
-                                            </div>
+                                        <div style="height: 130px; width: 130px;">
+                                            <img src="~/img/product/@product.ImageName" style="max-height: 130px; max-width: 130px;" alt="">
                                         </div>
                                         <div class="media-body">
-                                            <h4 class="text-primary float-right mr-5">
+                                            <h4 class="text-primary ml-5">
                                                 <a asp-action="details" asp-controller="products" asp-route-id="@product.Id" asp-area="">
                                                     @product.Name
                                                 </a>
@@ -85,8 +83,7 @@
                                     <h5>$@product.TotalPrice</h5>
                                 </td>
                                 <td>
-                                    <a asp-action="Remove" asp-controller="ShoppingCart" asp-route-productId="@product.Id"
-                                       class="genric-btn danger radius text-dark">
+                                    <a id="@product.Id" accesskey="@product.Price" class="removeProduct genric-btn danger radius text-dark">
                                         Remove
                                     </a>
                                 </td>
@@ -99,7 +96,7 @@
                                 <h5>Subtotal</h5>
                             </td>
                             <td>
-                                <h5>$@Model.TotalPrice</h5>
+                                <h5 class="totalP" id="@Model.TotalPrice">$@Model.TotalPrice</h5>
                             </td>
                         </tr>
                         <tr class="out_button_area">
@@ -120,7 +117,33 @@
     </div>
 </section>
 <!--================End Cart Area =================-->
-
 @section Scripts {
+    <script>
+        $(".removeProduct").click(function () {
+
+            var prdId = $(this).attr("id");
+            var prdPrice = $(this).attr("accesskey");
+            var totalPrice = $(".totalP").text().substr(1);
+
+            var JSONObject = {
+                "productId" : prdId
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Remove", "ShoppingCart")",
+                data: JSONObject,
+                dataType: "json",
+                success: function () {
+                    $("#" + prdId).fadeOut();
+
+                    var newPrice = parseFloat(totalPrice) - parseFloat(prdPrice);
+
+                    $(".totalP").text("$" + newPrice.toFixed(2));
+                }
+            });
+        });
+    </script>
+
     <partial name="_ValidationScriptsPartial" />
 }

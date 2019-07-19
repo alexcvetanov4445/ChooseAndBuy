@@ -28,5 +28,7 @@
         Task<IEnumerable<TableProductViewModel>> GetAllProducts();
 
         Task<ProductDetailsViewModel> GetById(string id);
+
+        Task<IEnumerable<RecommendedProductViewModel>> GetRecommendationProducts();
     }
 }

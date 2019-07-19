@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ChooseAndBuy.Data.Models
+﻿namespace ChooseAndBuy.Data.Models
 {
     public class UserFavoriteProduct
     {

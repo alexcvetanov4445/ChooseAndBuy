@@ -198,6 +198,18 @@
             return true;
         }
 
+        public async Task<IEnumerable<RecommendedProductViewModel>> GetRecommendationProducts()
+        {
+            var products = this.context
+                .Products
+                .Where(p => p.IsRecommended && p.IsHidden == false)
+                .Take(6);
+
+            var result = AutoMapper.Mapper.Map<List<RecommendedProductViewModel>>(products);
+
+            return result;
+        }
+
         private IEnumerable<Product> GetProductsByCategory(string id)
         {
             var products = this.context

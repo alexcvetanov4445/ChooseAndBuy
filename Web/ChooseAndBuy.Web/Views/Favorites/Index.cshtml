@@ -1,0 +1,89 @@
+﻿@using ChooseAndBuy.Web.ViewModels.Favorites
+
+@model IEnumerable<FavoriteProductViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<!-- Start Banner Area -->
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>My Favorites</h1>
+                <nav class="d-flex align-items-center">
+                    <a asp-action="index" asp-controller="Home">Home<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="single-product.html">My Orders</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Banner Area -->
+<!-- Start Table Area -->
+<section class="cart_area">
+    <div class="container">
+        <div class="cart_inner">
+            <div class="login-form">
+                <table class="table">
+                    <h3 class="text-center">My Favorite Products</h3>
+                    <hr style="height: 3px" />
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Price</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var product in Model)
+                        {
+                            <tr id="@product.Id">
+                                <td><img src="~/img/product/@product.ImageName" style="max-height: 100px;"></td>
+                                <td class="text-primary"><a asp-action="Details" asp-controller="Products" asp-route-id="@product.Id">@product.Name</a></td>
+                                <td>$@product.Price</td>
+                                <td>
+                                    <a class="genric-btn primary radius text-dark" asp-action="Details" asp-controller="Products" asp-route-id="@product.Id">
+                                        View
+                                    </a>
+                                </td>
+                                <td>
+                                    <a id="@product.Id" class="removeProduct genric-btn danger radius text-dark">
+                                        Remove
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+<!--================End Table Area =================-->
+
+@section Scripts{ 
+    <script>
+        $(".removeProduct").click(function () {
+
+            var prdId = $(this).attr("id");
+
+            var JSONObject = {
+                "productId" : prdId
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Remove", "Favorites")",
+                data: JSONObject,
+                dataType: "json",
+                success: function () {
+                    $("#" + prdId).fadeOut();
+                }
+            });
+        });
+    </script>
+}

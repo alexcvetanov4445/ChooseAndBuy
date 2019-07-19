@@ -6,6 +6,7 @@
 
     public class AllDetailsViewModel
     {
+        public ICollection<RecommendedProductViewModel> RecommendedProducts { get; set; }
 
         public ProductDetailsViewModel DetailsInfo { get; set; }
 

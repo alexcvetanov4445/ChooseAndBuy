@@ -64,13 +64,14 @@
             return this.RedirectToAction("Index");
         }
 
+        [HttpPost]
         public async Task<IActionResult> Remove(string productId)
         {
             string userId = this.userManager.GetUserId(this.HttpContext.User);
 
-            await this.shoppingCartService.RemoveProductFromCart(productId, userId);
+            var result = await this.shoppingCartService.RemoveProductFromCart(productId, userId);
 
-            return this.RedirectToAction("Index");
+            return this.Json(result);
         }
     }
 }

@@ -33,9 +33,9 @@
             <div class="col-lg-6 offset-lg-1">
                 <div class="s_product_inner">
                     <div style="width: 500px; height: 500px; text-align: center">
-                        <img src="~/img/product/@Model.DetailsInfo.ImageName" 
+                        <img src="~/img/product/@Model.DetailsInfo.ImageName"
                              style="display: block; max-width: 500px; max-height: 500px; width:auto; height: auto;
-                                    margin: 0 auto"/>
+                                    margin: 0 auto" />
                     </div>
                 </div>
             </div>
@@ -204,48 +204,33 @@
         <div class="row justify-content-center">
             <div class="col-lg-6 text-center">
                 <div class="section-title">
-                    <h1>Deals of the Week</h1>
+                    <h1>Some of our Recommendations</h1>
                     <p>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                        magna aliqua.
+                        Check out our weekly recommendations. We've picked the best for you!
                     </p>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-9">
+            <div class="col-lg-12">
                 <div class="row">
-                    <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-                        <div class="single-related-product d-flex">
-                            <a href="#"><img src="~/img/r1.jpg" alt=""></a>
-                            <div class="desc">
-                                <a href="#" class="title">Black lace Heels</a>
-                                <div class="price">
-                                    <h6>$189.00</h6>
-                                    <h6 class="l-through">$210.00</h6>
+                    @foreach (var product in Model.RecommendedProducts)
+                    {
+                        <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
+                            <div class="single-related-product d-flex">
+                                <div style="height:100px; width:100px">
+                                    <a asp-action="Details" asp-controller="Products" asp-route-id="@product.Id"><img src="~/img/product/@product.ImageName" 
+                                    style="display: block; max-width: 100px; max-height: 100px; width:auto; height: auto; margin: 0 auto"></a>
+                                </div>
+                                <div class="desc">
+                                    <a asp-action="Details" asp-controller="Products" asp-route-id="@product.Id" class="title">@product.Name</a>
+                                    <div class="price">
+                                        <h6>$@product.Price</h6>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-6">
-                        <div class="single-related-product d-flex">
-                            <a href="#"><img src="~/img/r11.jpg" alt=""></a>
-                            <div class="desc">
-                                <a href="#" class="title">Black lace Heels</a>
-                                <div class="price">
-                                    <h6>$189.00</h6>
-                                    <h6 class="l-through">$210.00</h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="ctg-right">
-                    <a href="#" target="_blank">
-                        <img class="img-fluid d-block mx-auto" src="~/img/category/c5.jpg" alt="">
-                    </a>
+                    }
                 </div>
             </div>
         </div>

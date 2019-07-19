@@ -52,10 +52,13 @@
 
             detailsInfo.Reviews = await this.reviewService.GetReviewsForProduct(id);
 
+            var recommendedProducts = await this.productsService.GetRecommendationProducts();
+
             AllDetailsViewModel productModel = new AllDetailsViewModel
             {
                 DetailsInfo = detailsInfo,
                 ReviewModel = new ReviewBindingModel { ProductId = id },
+                RecommendedProducts = recommendedProducts.ToList(),
             };
 
             return this.View(productModel);
