@@ -89,10 +89,12 @@
                         </select>
                     </div>
             </form>
-            @Html.PagedListPager((IPagedList)Model.Products, page => Url.Action("Index", new { PageNum = page }), new PagedListRenderOptions
-            {
-           ActiveLiElementClass = "page-link"
-       })
+            @Html.PagedListPager((IPagedList)Model.Products, page =>
+            Url.Action("Index", new { PageNum = page }), new PagedListRenderOptions
+                 {
+                    LiElementClasses = new string[] { "" },
+                    ActiveLiElementClass = "active removeSpan"
+                 })
         </div>
         <!-- End Filter Bar -->
         <!-- Start Best Seller -->
@@ -158,10 +160,12 @@
         <div class="filter-bar d-flex flex-wrap align-items-center">
             <div class="sorting mr-auto">
             </div>
-            <div class="pagination">
-                @Html.PagedListPager((IPagedList)Model.Products, page => Url.Action("Index", new { PageNum = page }),
-               new PagedListRenderOptions { })
-            </div>
+            @Html.PagedListPager((IPagedList)Model.Products, page =>
+            Url.Action("Index", new { PageNum = page }), new PagedListRenderOptions
+                {
+                   LiElementClasses = new string[] { "" },
+                   ActiveLiElementClass = "active removeSpan"
+                })
         </div>
         <!-- End Filter Bar -->
     </div>
@@ -279,10 +283,18 @@
                     $("#successFav-" + property1).show().delay(2000).fadeOut();
                 } else {
                     $("#errorFav-" + property1).show().delay(2000).fadeOut();
-                } 
+                }
             },
             dataType: "json"
         });
+    });
+
+    $(document).ready(function () {
+        var num = $(".removeSpan").text().substr(1);
+        console.log(num);
+        $(".removeSpan").find("span").remove();
+        $(".removeSpan").append("<a></a>");
+        $(".removeSpan").find("a").text(num).addClass("active");
     });
     </script>
 
