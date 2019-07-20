@@ -29,6 +29,8 @@
 
         public string AdditionalInfo { get; set; }
 
+        public string ReturnReason { get; set; }
+
         public DeliveryType DeliveryType { get; set; }
 
         public PaymentType PaymentType { get; set; }

@@ -157,5 +157,18 @@
 
             return result > 0;
         }
+
+        public async Task<bool> ReturnOrder(string orderId, string returnReason)
+        {
+            var order = await this.context.Orders.SingleOrDefaultAsync(o => o.Id == orderId);
+
+            order.Status = OrderStatus.Returned;
+
+            order.ReturnReason = returnReason;
+
+            var result = await this.context.SaveChangesAsync();
+
+            return result > 0;
+        }
     }
 }

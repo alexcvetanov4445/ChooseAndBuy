@@ -23,6 +23,8 @@
         public string Username { get; set; }
 
         // details additions
+        public string ReturnReason { get; set; }
+
         public ICollection<AdminPaneOrderProductModel> Products { get; set; }
 
         public DateTime? DeliveryDate { get; set; }

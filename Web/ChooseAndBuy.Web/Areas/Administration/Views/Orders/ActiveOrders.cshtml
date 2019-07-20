@@ -30,6 +30,9 @@
                             <th scope="col">Order Date</th>
                             <th scope="col">Status</th>
                             <th scope="col">Username</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -45,14 +48,77 @@
                                 <td>@order.OrderDate</td>
                                 <td class="statusText-@order.Id">@order.Status</td>
                                 <td>@order.Username</td>
-                                @if (order.Status == "Delivered" || order.Status == "Canceled")
+                                @if (order.Status == "Delivered" || order.Status == "Canceled" || order.Status == "Returned")
                                 {
-                                    <td><a class="deliverAction genric-btn danger radius text-dark disable" id="@order.Id">Delivered</a></td>
-                                    <td><a class="cancelAction genric-btn danger radius text-dark disable" id="@order.Id">Cancel</a></td>
+                            <td>
+                                <a class="genric-btn radius text-dark disable">Deliver</a>
+                                @if (order.Status == "Returned")
+                                {
+                                    <button type="button" class="genric-btn warning radius text-dark mt-3" data-toggle="modal" data-target="#reasonModal">
+                                        Reason
+                                    </button>
+                                    <!-- Modal Reason-->
+                                    <div id="reasonModal" class="modal fade" role="dialog">
+                                        <div class="modal-dialog">
+                                            <!-- That is for showing the already returned order reason, need one more for returning with textarea post action-->
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">Return Reason</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p><strong>Return reason:</strong></p>
+                                                    <p>@order.ReturnReason</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </td>
+                                    <td>
+                                        <a class="genric-btn radius text-dark disable">Cancel</a>
+                                    </td>
                                 }
                                 else
                                 {
-                                    <td><a class="deliverAction genric-btn warning radius text-dark" id="deliverAction-@order.Id">Delivered</a></td>
+                                    <td>
+                                        <a class="deliverAction genric-btn warning radius text-dark" id="deliverAction-@order.Id">Deliver</a>
+                                        <button type="button" id="return-@order.Id" class="genric-btn warning radius text-dark mt-3" data-toggle="modal" data-target="#returnModal">
+                                            Return
+                                        </button>
+                                        <!-- Modal Return-->
+                                        <div id="returnModal" class="modal fade" role="dialog">
+                                            <div class="modal-dialog">
+                                                <!--Need ReturnReasonBindingModel-->
+                                                <div class="modal-content">
+                                                    <div class="modal-header text-center">
+                                                        <h4 class="modal-title">Return Reason</h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form class="col-md-12" method="post" asp-action="Return" asp-controller="Orders">
+                                                            <div class="col-md-12">
+                                                                <p>Please enter a valid reason for the order's return.</p>
+                                                            </div>
+                                                            <input asp-for="ReasonModel.OrderId" hidden value="@order.Id" />
+                                                            <textarea class="col-md-12" style="height: 100px" asp-for="ReasonModel.ReturnReason"></textarea>
+                                                            <span asp-validation-for="ReasonModel.ReturnReason" class="text-danger"></span>
+                                                            <div class="row">
+                                                                <div class="col text-right">
+                                                                    <button type="submit" class="btn btn-primary" value="submit">Return Order</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+
                                     <td><a class="cancelAction genric-btn danger radius text-dark" id="cancelAction-@order.Id">Cancel</a></td>
                                 }
                                 <td>
@@ -61,6 +127,7 @@
                                     </button>
                                 </td>
                             </tr>
+                            <!-- Modal Details-->
                             <div class="modal fade bd-example-modal-lg" id="modal-@order.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-lg" role="document">
                                     <div class="modal-content">
@@ -95,9 +162,9 @@
                                                         {
                                                             <dd class="col-sm-8">@order.DeliveryDate.Value.ToShortDateString()</dd>
                                                         }
-                                                        else if (order.Status == "Canceled")
+                                                        else if (order.Status == "Canceled" || order.Status == "Returned")
                                                         {
-                                                            <dd class="col-sm-8">Canceled</dd>
+                                                            <dd class="col-sm-8">-</dd>
                                                         }
                                                         else
                                                         {
@@ -139,6 +206,7 @@
         $(".deliverAction").click(function () {
 
             var ordId = $(this).attr("id");
+            ordId = ordId.substring(14, ordId.length);
 
             var JSONObject = {
                 "orderId" : ordId
@@ -150,18 +218,19 @@
                 data: JSONObject,
                 dataType: "json",
                 success: function () {
-                    $(".statusText-" + ordId.substring(14, ordId.length)).text("Delivered");
+                    $(".statusText-" + ordId).text("Delivered");
                     $(this).addClass("disable");
-                    $("#cancelAction-" + ordId.substring(14, ordId.length)).addClass("disable");
-                    $("#deliverAction-" + ordId.substring(14, ordId.length)).addClass("disable");
+                    $("#cancelAction-" + ordId).addClass("disable");
+                    $("#deliverAction-" + ordId).addClass("disable");
+                    $("#return-" + ordId).fadeOut();
 
                     var d = new Date();
 
                     var dateString = d.getUTCDate().toString()
-                        + '.' + (d.getUTCMonth() + 1).toString() 
+                        + '.' + (d.getUTCMonth() + 1).toString()
                         + '.' + d.getFullYear().toString();
 
-                    $("#deliveryDate-" + ordId.substring(14, ordId.length)).text(dateString);
+                    $("#deliveryDate-" + ordId).text(dateString);
                 },
             });
         });
@@ -169,6 +238,7 @@
         $(".cancelAction").click(function () {
 
             var ordId = $(this).attr("id");
+            ordId = ordId.substring(13, ordId.length);
 
             var JSONObject = {
                 "orderId" : ordId
@@ -180,13 +250,11 @@
                 data: JSONObject,
                 dataType: "json",
                 success: function () {
-                    $(".statusText-" + ordId.substring(13, ordId.length)).text("Canceled");
-                    $("#cancelAction-" + ordId.substring(13, ordId.length)).addClass("disable");
-                    $("#deliverAction-" + ordId.substring(13, ordId.length)).addClass("disable");
-                    $("#deliveryDate-" + ordId.substring(13, ordId.length)).text("Canceled");
-                },
-                error: function () {
-
+                    $(".statusText-" + ordId).text("Canceled");
+                    $("#cancelAction-" + ordId).addClass("disable");
+                    $("#deliverAction-" + ordId).addClass("disable");
+                    $("#deliveryDate-" + ordId).text("Canceled");
+                    $("#return-" + ordId).fadeOut();
                 },
             });
         });

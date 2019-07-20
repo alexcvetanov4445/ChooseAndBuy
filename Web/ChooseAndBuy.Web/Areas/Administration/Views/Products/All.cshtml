@@ -37,40 +37,48 @@
                     <tbody>
                         @foreach (var product in Model.Products)
                         {
-                            <tr id="@product.Id">
-                                <td hidden><button id="prdId" value="@product.Id"></button></td>
-                                <td class="text-warning">
-                                    <strong>
-                                        <a asp-action="details" asp-controller="products" asp-route-id="@product.Id" asp-area="">
-                                            @product.Name
-                                        </a>
-                                    </strong>
-                                </td>
-                                <td>$@product.Price</td>
-                                <td>@product.SubCategoryName</td>
-                                @if (product.IsRecommended)
-                                {
-                                    <td id="rcm-@product.Id">Yes</td>
-                                }
-                                else
-                                {
-                                    <td id="rcm-@product.Id">No</td>
-                                }
-                                <td>
-                                    <a asp-action="edit" asp-controller="products" asp-area="administration" asp-route-productId="@product.Id" class="genric-btn primary radius text-dark">
-                                        Edit
+                        <tr id="@product.Id">
+                            <td hidden><button id="prdId" value="@product.Id"></button></td>
+                            <td class="text-warning">
+                                <strong>
+                                    <a asp-action="details" asp-controller="products" asp-route-id="@product.Id" asp-area="">
+                                        @product.Name
                                     </a>
-                                </td>
-                                <td><a class="recommendAction genric-btn danger radius text-dark" id="@product.Id">Recommended</a></td>
-                                @if (product.IsHidden)
-                                {
-                                    <td><a class="deleteAction deleteAction-@product.Id genric-btn success radius text-dark" id="@product.Id">Show</a></td>
-                                }
-                                else
-                                {
-                                    <td><a class="deleteAction deleteAction-@product.Id genric-btn danger radius text-dark" id="@product.Id">Hide</a></td>
-                                }
-                            </tr>
+                                </strong>
+                            </td>
+                            <td>$@product.Price</td>
+                            <td>@product.SubCategoryName</td>
+                            @if (product.IsRecommended)
+                            {
+                                <td id="rcm-@product.Id">Yes</td>
+                            }
+                            else
+                            {
+                                <td id="rcm-@product.Id">No</td>
+                            }
+                            <td>
+                                <a asp-action="edit" asp-controller="products" asp-area="administration" asp-route-productId="@product.Id" class="genric-btn primary radius text-dark">
+                                    Edit
+                                </a>
+                            </td>
+                            @if (product.IsRecommended)
+                            {
+                                <td><a class="recommendAction recommendAction-@product.Id genric-btn success radius text-dark" id="@product.Id">Recommended</a></td>
+
+                            }
+                            else
+                            {
+                                <td><a class="recommendAction recommendAction-@product.Id genric-btn danger radius text-dark" id="@product.Id">Recommended</a></td>
+                            }
+                            @if (product.IsHidden)
+                            {
+                                <td><a class="deleteAction deleteAction-@product.Id genric-btn success radius text-dark" id="@product.Id">Show</a></td>
+                            }
+                            else
+                            {
+                                <td><a class="deleteAction deleteAction-@product.Id genric-btn danger radius text-dark" id="@product.Id">Hide</a></td>
+                            }
+                        </tr>
                         }
                     </tbody>
                 </table>
@@ -100,8 +108,10 @@
                 success: function () {
                     if ($("#rcm-" + prdId).text() == "Yes") {
                         $("#rcm-" + prdId).text("No");
+                        $(".recommendAction-" + prdId).removeClass("success").addClass("danger");
                     } else {
                         $("#rcm-" + prdId).text("Yes");
+                        $(".recommendAction-" + prdId).removeClass("danger").addClass("success");
                     }
                 }
             });

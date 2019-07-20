@@ -19,6 +19,8 @@
 
         Task<bool> DeliverOrder(string orderId);
 
+        Task<bool> ReturnOrder(string orderId, string returnReason);
+
         Task<bool> CancelOrder(string orderId);
 
         Task<ConfirmationViewModel> GetConfirmationInfo(string orderId);

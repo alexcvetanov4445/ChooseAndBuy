@@ -83,7 +83,7 @@
                                     <h5>$@product.TotalPrice</h5>
                                 </td>
                                 <td>
-                                    <a id="@product.Id" accesskey="@product.Price" class="removeProduct genric-btn danger radius text-dark">
+                                    <a id="@product.Id" accesskey="@product.TotalPrice" class="removeProduct genric-btn danger radius text-dark">
                                         Remove
                                     </a>
                                 </td>
@@ -106,7 +106,7 @@
                             <td>
                                 <div class="checkout_btn_inner d-flex align-items-center">
                                     <a asp-action="Index" asp-controller="Products" class="gray_btn">Continue Shopping</a>
-                                    <a class="primary-btn" asp-action="Index" asp-controller="Orders">Proceed to checkout</a>
+                                    <a class="primary-btn" id="checkoutBtn" asp-action="Index" asp-controller="Orders">Proceed to checkout</a>
                                 </div>
                             </td>
                         </tr>
@@ -140,6 +140,10 @@
                     var newPrice = parseFloat(totalPrice) - parseFloat(prdPrice);
 
                     $(".totalP").text("$" + newPrice.toFixed(2));
+
+                    if (newPrice == 0) {
+                        $("#checkoutBtn").hide();
+                    }
                 }
             });
         });

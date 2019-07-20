@@ -8,6 +8,7 @@
     using AutoMapper;
     using ChooseAndBuy.Services;
     using ChooseAndBuy.Web.Areas.Administration.ViewModels.Orders;
+    using ChooseAndBuy.Web.ViewModels.Orders;
     using Microsoft.AspNetCore.Mvc;
 
     public class OrdersController : AdministrationController
@@ -39,9 +40,18 @@
             AdminPaneOrdersViewModel model = new AdminPaneOrdersViewModel
             {
                 Orders = orders.ToList(),
+                ReasonModel = new ReturnReasonBindingModel(),
             };
 
             return this.View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Return(ReturnReasonBindingModel reasonModel)
+        {
+            var result = await this.orderService.ReturnOrder(reasonModel.OrderId, reasonModel.ReturnReason);
+
+            return this.RedirectToAction("ActiveOrders");
         }
 
         [HttpPost]
@@ -55,7 +65,7 @@
         [HttpPost]
         public async Task<IActionResult> Deliver(string orderId)
         {
-            var orderIdCut = orderId.Remove(0, 14);
+            var orderIdCut = orderId;
 
             var result = await this.orderService.DeliverOrder(orderIdCut);
 
@@ -65,7 +75,7 @@
         [HttpPost]
         public async Task<IActionResult> Cancel(string orderId)
         {
-            var orderIdCut = orderId.Remove(0, 13);
+            var orderIdCut = orderId;
 
             var result = await this.orderService.CancelOrder(orderIdCut);
 
