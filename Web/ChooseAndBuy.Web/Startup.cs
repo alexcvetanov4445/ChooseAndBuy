@@ -15,6 +15,7 @@
     using ChooseAndBuy.Services.Mapping;
     using ChooseAndBuy.Services.Messaging;
     using ChooseAndBuy.Web.ViewModels;
+    using CloudinaryDotNet;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -59,6 +60,15 @@
                 .AddDefaultTokenProviders()
                 .AddDefaultUI(UIFramework.Bootstrap4);
 
+            Account cloudinaryCredentials = new Account(
+                this.configuration["Cloudinary:CloudName"],
+                this.configuration["Cloudinary:ApiKey"],
+                this.configuration["Cloudinary:ApiSecret"]);
+
+            Cloudinary cloudinaryUtility = new Cloudinary(cloudinaryCredentials);
+
+            services.AddSingleton(cloudinaryUtility);
+
             services
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
@@ -82,13 +92,13 @@
                 .AddAuthentication()
                 .AddFacebook(facebookOptions =>
                 {
-                    facebookOptions.AppId = "2194929610628287";
-                    facebookOptions.AppSecret = "49fba84953cc44c364aca16f05a2cfef";
+                    facebookOptions.AppId = "Facebook:AppId";
+                    facebookOptions.AppSecret = "Facebook:AppSecret";
                 })
                 .AddGoogle(googleOptions =>
                 {
-                    googleOptions.ClientId = "623032695281-vj9s7alsula6aq1a665b405ddn37pchh.apps.googleusercontent.com";
-                    googleOptions.ClientSecret = "ni7NoGQxUiYR7ayvANnxZ4b8";
+                    googleOptions.ClientId = "Google:ClientId";
+                    googleOptions.ClientSecret = "Google:ClientSecret";
                 });
 
             services
@@ -112,13 +122,14 @@
             services.AddScoped<IDbQueryRunner, DbQueryRunner>();
 
             // Application services
+            services.AddTransient<ICloudinaryService, CloudinaryService>();
             services.AddTransient<IEmailSender, NullMessageSender>();
             services.AddTransient<ISmsSender, NullMessageSender>();
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<ISubCategoryService, SubCategoryService>();
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IProductService, ProductService>();
-            services.AddTransient<IImageService, ImageService>();
+            services.AddTransient<ICloudinaryService, CloudinaryService>();
             services.AddTransient<IReviewService, ReviewService>();
             services.AddTransient<IShoppingCartService, ShoppingCartService>();
             services.AddTransient<ICityService, CityService>();

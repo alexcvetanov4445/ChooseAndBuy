@@ -4,8 +4,8 @@
 
     using Microsoft.AspNetCore.Http;
 
-    public interface IImageService
+    public interface ICloudinaryService
     {
-        Task<string> CreateImage(IFormFile formImage);
+        Task<string> CreateImage(IFormFile formImage, string fileName);
     }
 }

@@ -13,11 +13,11 @@
     public class ProductService : IProductService
     {
         private readonly ApplicationDbContext context;
-        private readonly IImageService imageService;
+        private readonly ICloudinaryService imageService;
 
         public ProductService(
             ApplicationDbContext context,
-            IImageService imageService)
+            ICloudinaryService imageService)
         {
             this.context = context;
             this.imageService = imageService;
@@ -27,7 +27,7 @@
         {
             var product = AutoMapper.Mapper.Map<Product>(model);
 
-            string uniqueFileName = await this.imageService.CreateImage(model.FormImage);
+            string uniqueFileName = await this.imageService.CreateImage(model.FormImage, model.Name);
             product.ImageName = uniqueFileName;
 
             await this.context.Products.AddAsync(product);

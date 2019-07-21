@@ -42,7 +42,7 @@
                         @foreach (var product in Model)
                         {
                             <tr id="@product.Id">
-                                <td><img src="~/img/product/@product.ImageName" style="max-height: 100px;"></td>
+                                <td><img src="@product.ImageName" style="max-height: 100px;"></td>
                                 <td class="text-primary"><a asp-action="Details" asp-controller="Products" asp-route-id="@product.Id">@product.Name</a></td>
                                 <td>$@product.Price</td>
                                 <td>

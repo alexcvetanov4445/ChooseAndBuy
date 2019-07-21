@@ -19,12 +19,12 @@
     {
         private readonly ISubCategoryService subCategoryService;
         private readonly IProductService productService;
-        private readonly IImageService imageService;
+        private readonly ICloudinaryService imageService;
 
         public ProductsController(
             ISubCategoryService subCategoryService,
             IProductService productService,
-            IImageService imageService)
+            ICloudinaryService imageService)
         {
             this.subCategoryService = subCategoryService;
             this.productService = productService;

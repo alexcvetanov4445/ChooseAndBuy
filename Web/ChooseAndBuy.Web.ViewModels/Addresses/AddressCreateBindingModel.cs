@@ -35,6 +35,7 @@
         [Display(Name = "Choose a city")]
         public string CityId { get; set; }
 
+        [Required]
         public IEnumerable<SelectListItem> Cities { get; set; }
 
 
