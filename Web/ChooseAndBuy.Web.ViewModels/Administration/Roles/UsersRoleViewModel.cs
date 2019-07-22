@@ -1,0 +1,11 @@
+﻿namespace ChooseAndBuy.Web.ViewModels.Administration.Roles
+{
+    public class UsersRoleViewModel
+    {
+        public string Username { get; set; }
+
+        public string Role { get; set; }
+
+        public string Email { get; set; }
+    }
+}

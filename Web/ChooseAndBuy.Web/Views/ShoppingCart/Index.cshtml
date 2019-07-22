@@ -93,7 +93,14 @@
                             <td></td>
                             <td></td>
                             <td>
-                                <h5>Subtotal</h5>
+                                @if (Model.TotalPrice == 0)
+                                {
+                                    <h5>Your cart is empty</h5>
+                                }
+                                else
+                                {
+                                    <h5>Subtotal</h5>
+                                }
                             </td>
                             <td>
                                 <h5 class="totalP" id="@Model.TotalPrice">$@Model.TotalPrice</h5>
@@ -105,8 +112,15 @@
                             <td></td>
                             <td>
                                 <div class="checkout_btn_inner d-flex align-items-center">
-                                    <a asp-action="Index" asp-controller="Products" class="gray_btn">Continue Shopping</a>
-                                    <a class="primary-btn" id="checkoutBtn" asp-action="Index" asp-controller="Orders">Proceed to checkout</a>
+                                    @if (Model.TotalPrice == 0)
+                                    {
+                                        <a asp-action="Index" asp-controller="Products" class="gray_btn">Continue Shopping</a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-action="Index" asp-controller="Products" class="gray_btn">Continue Shopping</a>
+                                        <a class="primary-btn" id="checkoutBtn" asp-action="Index" asp-controller="Orders">Proceed to checkout</a>
+                                    }
                                 </div>
                             </td>
                         </tr>

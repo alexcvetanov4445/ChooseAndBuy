@@ -1,0 +1,148 @@
+﻿@using ChooseAndBuy.Web.ViewModels.Administration.Roles
+
+@model RolesViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<!-- Start Banner Area -->
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Admin Pane</h1>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Banner Area -->
+<div class="container">
+    @if (this.ViewData["message"] != null)
+    {
+        <div class="alert alert-primary" role="alert">
+            @this.ViewData["message"].ToString()
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+    <div class="row">
+        <partial name="~/Areas/Administration/_AdminPanePartial.cshtml" />
+        <div class="col-xl-9 col-lg-8 col-md-7">
+            <!-- Start Content Section -->
+            <section class="container mt-4 mb-4">
+                <div class="row mt-3 mb-3">
+                    <div class="col">
+
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".modalRemove">Remove Role</button>
+                        <!-- Remove Role Modal -->
+                        <div class="modal fade modalRemove" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="text-center">Remove Role</h4>
+                                    </div>
+                                    <form method="post" asp-action="RemoveRole" asp-controller="Roles">
+                                        <div class="row mt-3 mb-4">
+                                            <div class="col-6 d-flex justify-content-center default-select" id="default-select">
+                                                <select asp-for="RemoveModel.RoleName" class="default-select" asp-items="@Model.Roles"></select>
+                                                <span asp-validation-for="RemoveModel.RoleName" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-6 d-flex justify-content-center">
+                                                <button class=" btn btn-primary" type="submit" value="submit">Remove Role</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".modalAdd">New Role</button>
+                        <!-- Add Role Modal -->
+                        <div class="modal fade modalAdd" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="text-center">Remove Role</h4>
+                                    </div>
+                                    <form method="post" asp-action="AddRole" asp-controller="Roles">
+                                        <div class="row mt-3 mb-4">
+                                            <div class="col-6 d-flex justify-content-center default-select" id="default-select">
+                                                <input asp-for="AddModel.RoleName" class="form-control ml-3" placeholder="Role Name"/>
+                                                <span asp-validation-for="AddModel.RoleName" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-6 d-flex justify-content-center">
+                                                <button class=" btn btn-primary" type="submit" value="submit">Add Role</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Make unable to remove User and Admin role. If Role is removed make all users with that role to user. -->
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Username</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Current Role</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model.UsersInfo)
+                        {
+                            if (this.User.Identity.Name == user.Username)
+                            {
+                                continue;
+                            }
+                            <tr>
+                                <td>
+                                    @user.Username
+                                </td>
+                                <td>
+                                    @user.Email
+                                </td>
+                                <td>
+                                    @user.Role
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".modal-@user.Username">Change Role</button>
+                                    <!-- Change User Role Modal -->
+                                    <div class="modal fade modal-@user.Username" tabindex="-1" role="dialog" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="text-center">Change Role - @user.Username</h4>
+                                                </div>
+                                                <form method="post" asp-action="ChangeRole" asp-controller="Roles">
+                                                    <input type="hidden" asp-for="RolesModel.Username" value="@user.Username" />
+                                                    <div class="row mt-3 mb-4">
+                                                        <div class="col-6 d-flex justify-content-center default-select" id="default-select">
+                                                            <select asp-for="RolesModel.Role" class="default-select" asp-items="@Model.Roles"></select>
+                                                        </div>
+                                                        <div class="col-6 d-flex justify-content-center">
+                                                            <button class=" btn btn-primary" type="submit" value="submit">Change Role</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        }
+                    </tbody>
+                </table>
+            </section>
+            <!-- End Content Section -->
+        </div>
+    </div>
+</div>
