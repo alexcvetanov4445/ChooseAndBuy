@@ -3,29 +3,13 @@
 @model AllDetailsViewModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Product Details";
 }
 
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
 
-<!-- Start Banner Area -->
-<section class="banner-area organic-breadcrumb">
-    <div class="container">
-        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
-            <div class="col-first">
-                <h1>Product Details</h1>
-                <nav class="d-flex align-items-center">
-                    <a asp-action="index" asp-controller="home">Home<span class="lnr lnr-arrow-right"></span></a>
-                    <a asp-action="index" asp-controller="products">Products<span class="lnr lnr-arrow-right"></span></a>
-                    <a>Product-Details</a>
-                </nav>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- End Banner Area -->
 <!--================Single Product Area =================-->
 <div class="product_image_area">
     <div class="container">

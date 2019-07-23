@@ -3,28 +3,13 @@
 @model ShoppingCartViewModel
 
 @{
-    ViewData["Title"] = "Cart";
+    ViewData["Title"] = "Shopping Cart";
 }
 
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script src="~/lib/jquery-validation/jquery.validate.js"></script>
 <script src="~/lib/jquery-validate-unobtrusive/jquery.validate.unobtrusive.js"></script>
 
-<!-- Start Banner Area -->
-<section class="banner-area organic-breadcrumb">
-    <div class="container">
-        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
-            <div class="col-first">
-                <h1>Shopping Cart</h1>
-                <nav class="d-flex align-items-center">
-                    <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
-                    <a href="category.html">Cart</a>
-                </nav>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- End Banner Area -->
 <!--================Cart Area =================-->
 <section class="cart_area">
     <div class="container">
@@ -43,7 +28,7 @@
                         @foreach (var product in Model.Products)
                         {
                             <tr id="@product.Id">
-                                <td>
+                                <td class="">
                                     <div class="media">
                                         <div style="height: 130px; width: 130px;">
                                             <img src="@product.ImageName" style="max-height: 130px; max-width: 130px;" alt="">
@@ -57,10 +42,10 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="">
                                     <h5>$@product.Price</h5>
                                 </td>
-                                <td>
+                                <td class="">
                                     <div class="product_count">
                                         <a>
 
@@ -79,10 +64,10 @@
                                         </form>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="">
                                     <h5>$@product.TotalPrice</h5>
                                 </td>
-                                <td>
+                                <td class="">
                                     <a id="@product.Id" accesskey="@product.TotalPrice" class="removeProduct genric-btn danger radius text-dark">
                                         Remove
                                     </a>
@@ -105,6 +90,7 @@
                             <td>
                                 <h5 class="totalP" id="@Model.TotalPrice">$@Model.TotalPrice</h5>
                             </td>
+                            <td></td>
                         </tr>
                         <tr class="out_button_area">
                             <td></td>
@@ -123,6 +109,7 @@
                                     }
                                 </div>
                             </td>
+                            <td></td>
                         </tr>
                     </tbody>
                 </table>

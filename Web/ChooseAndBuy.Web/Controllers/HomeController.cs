@@ -35,6 +35,12 @@
             return this.View(model);
         }
 
+        [Route("Privacy")]
+        public async Task<IActionResult> Privacy()
+        {
+            return this.View();
+        }
+
         [HttpPost]
         [Route("Contact")]
         public async Task<IActionResult> Contact(ContactBindingModel model)

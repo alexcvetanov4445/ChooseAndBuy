@@ -7,20 +7,9 @@
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Product";
 }
 
-<!-- Start Banner Area -->
-<section class="banner-area organic-breadcrumb">
-    <div class="container">
-        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
-            <div class="col-first">
-                <h1>Admin Pane</h1>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- End Banner Area -->
 <div class="container">
     @if (TempData["Success"] != null)
     {
@@ -32,7 +21,7 @@
         </div>
     }
     <div class="row">
-        <partial name="~/Areas/Administration/_AdminPanePartial.cshtml" />
+        <partial name="~/Views/Shared/_AdminPanePartial.cshtml" />
         <div class="col-xl-9 col-lg-8 col-md-7">
             <!-- Start Content Section -->
             <section class="container mt-4 mb-4">

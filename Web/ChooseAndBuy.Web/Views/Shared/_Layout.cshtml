@@ -41,6 +41,23 @@
 </head>
 
 <body>
+    <!-- Start Banner Area -->
+    @if (this.ViewData["Title"].ToString() != "Home")
+    {
+        <section class="banner-area organic-breadcrumb">
+            <div class="container">
+                <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+                    <div class="col-first">
+                        <h1>@ViewData["Title"].ToString()</h1>
+                        <nav class="d-flex align-items-center">
+                            <a asp-action="Index" asp-controller="Home"><span class="lnr lnr-arrow-right"></span>Back to Home</a>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+    <!-- End Banner Area -->
     <!-- Start Header Area -->
     <header class="header_area sticky-header">
         <div class="main_menu">
@@ -101,16 +118,25 @@
     <!-- start footer Area -->
     <footer class="footer-area section_gap">
         <div class="container">
-            <div class="row">
+            <div class="row d-flex justify-content-center">
                 <div class="col-lg-3  col-md-6 col-sm-6">
                     <div class="single-footer-widget">
                         <h6>About Us</h6>
                         <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore dolore
-                            magna aliqua.
+                            Welcome to Choose And Buy. Here you will find almost anything you can think of. We offer a wide variety of products
+                            for your lifestyle. Browse through our catalog and see for yourself. Greetings - Choose And Buy Team!
                         </p>
                     </div>
                 </div>
+            <div class="col-lg-3  col-md-6 col-sm-6">
+                <div class="single-footer-widget">
+                    <h6>Privacy Policy</h6>
+                    <p>
+                        By accessing this website we assume you accept these terms and conditions in full. Do not continue to use Choose And Buy's website
+                        if you do not accept all of the terms and conditions stated on this page. See more <a asp-action="Privacy" asp-controller="Home">here.</a>
+                    </p>
+                </div>
+            </div>
             </div>
         </div>
         <div class="footer-bottom d-flex justify-content-center align-items-center flex-wrap">
