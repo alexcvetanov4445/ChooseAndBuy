@@ -25,6 +25,8 @@
 
         Task<IEnumerable<ProductViewModel>> GetProducts(string search, string subCategoryId, int sortBy);
 
+        IEnumerable<Product> GetSearchedProducts(string search);
+
         Task<IEnumerable<TableProductViewModel>> GetAllProducts();
 
         Task<ProductDetailsViewModel> GetById(string id);

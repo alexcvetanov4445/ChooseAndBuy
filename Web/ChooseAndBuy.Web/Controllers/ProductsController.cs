@@ -46,6 +46,31 @@
             return this.View(model);
         }
 
+        public async Task<IActionResult> Search(string term)
+        {
+            var products = this.productsService.GetSearchedProducts(term);
+
+            if (products.Count() == 0)
+            {
+                return this.Json(new List<SearchViewModel>
+                {
+                    new SearchViewModel
+                    {
+                        Value = "No results were found",
+                        Url = string.Empty,
+                    },
+                });
+            }
+
+            var result = products.Select(x => new SearchViewModel
+            {
+                Value = x.Name,
+                Url = "https://localhost:44319/Products/Details/" + x.Id,
+            });
+
+            return this.Json(result);
+        }
+
         public async Task<IActionResult> Details(string id)
         {
             var detailsInfo = await this.productsService.GetById(id);

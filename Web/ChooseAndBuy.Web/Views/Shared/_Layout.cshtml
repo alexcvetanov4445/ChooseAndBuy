@@ -37,6 +37,7 @@
     <link rel="stylesheet" href="~/css/ion.rangeSlider.skinFlat.css" />
     <link rel="stylesheet" href="~/css/magnific-popup.css">
     <link rel="stylesheet" href="~/css/main.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 </head>
 
 <body>
@@ -87,24 +88,12 @@
                             }
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
-                            <li class="nav-item"><a asp-action="index" asp-controller="ShoppingCart" class="cart"><span class="ti-bag"></span></a></li>
-                            <li class="nav-item"><a asp-action="index" asp-controller="Favorites" class="cart"><span class="ti-heart"></span></a></li>
-                            <li class="nav-item">
-                                <button class="search"><span class="lnr lnr-magnifier" id="search"></span></button>
-                            </li>
+                            <li class="nav-item"><a asp-action="index" asp-controller="Favorites" class="search"><span class="ti-heart"></span></a></li>
+                            <li class="nav-item"><a asp-action="index" asp-controller="ShoppingCart" class="search"><span class="ti-bag"></span></a></li>
                         </ul>
                     </div>
                 </div>
             </nav>
-        </div>
-        <div class="search_input" id="search_input_box">
-            <div class="container">
-                <form class="d-flex justify-content-between">
-                    <input type="text" class="form-control" id="search_input" placeholder="Search Here">
-                    <button type="submit" class="btn"></button>
-                    <span class="lnr lnr-cross" id="close_search" title="Close Search"></span>
-                </form>
-            </div>
         </div>
     </header>
     <!-- End Header Area -->
@@ -149,6 +138,7 @@
     <script src="~/js/owl.carousel.min.js"></script>
     <script src="~/js/imageUploadVisualizer.js"></script>
     <script src="~/js/main.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     @RenderSection("scripts", required: false)
 </body>

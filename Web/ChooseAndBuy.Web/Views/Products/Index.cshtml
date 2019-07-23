@@ -70,7 +70,6 @@
             <!-- Start Filter Bar -->
             <form method="post" asp-controller="products" asp-action="index">
                 <div class="filter-bar d-flex flex-wrap align-items-center">
-                    <input type="hidden" name="Search" value="@Model.Search">
                     <input type="hidden" name="SubCategoryId" value="@Model.SubCategoryId">
                     <input type="hidden" name="PageNum" value="@Model.PageNum">
                     <div class="sorting">
@@ -81,12 +80,16 @@
                             <option value="4" selected="@(Model.SortBy == 4 ? true : false)">Name Descending</option>
                         </select>
                     </div>
-                    <div class="sorting mr-auto">
+                    <div class="sorting">
                         <select name="ShowNum" id="ShowNum" onchange="this.form.submit();">
                             <option value="6" selected="@(Model.ShowNum == 6 ? true : false)">Show 6</option>
                             <option value="9" selected="@(Model.ShowNum == 9 ? true : false)">Show 9</option>
                             <option value="12" selected="@(Model.ShowNum == 12 ? true : false)">Show 12</option>
                         </select>
+                    </div>
+                    <div class="sorting mr-auto">
+                        <input asp-for="Search" class="form-control" style="border-radius: 0; height: 42px;"
+                               id="Search" name="Search" type="text" placeholder="Search" aria-label="Search" value="@Model.Search">
                     </div>
             </form>
             @Html.PagedListPager((IPagedList)Model.Products, page =>
@@ -296,6 +299,16 @@
         $(".removeSpan").append("<a></a>");
         $(".removeSpan").find("a").text(num).addClass("active");
     });
+
+    $("#Search").autocomplete({
+        source: "/Products/Search",
+        minLength: 1,
+
+        select: function (event, ui) {
+            window.location.href = ui.item.url;
+        }
+    });
+
     </script>
 
     <partial name="_ValidationScriptsPartial" />

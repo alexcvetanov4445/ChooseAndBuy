@@ -1,5 +1,6 @@
 ﻿namespace ChooseAndBuy.Services
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -157,10 +158,9 @@
 
             if (search != null)
             {
-                // TODO: get searched products
+                products = this.GetSearchedProducts(search).ToList();
             }
-
-            if (subCategoryId != null)
+            else if (subCategoryId != null)
             {
                 products = this.GetProductsByCategory(subCategoryId).ToList();
             }
@@ -184,6 +184,17 @@
             }
 
             return result;
+        }
+
+        public IEnumerable<Product> GetSearchedProducts(string search)
+        {
+            var searchNormalized = search.Split(new string[] { ".", ",", " " }, StringSplitOptions.RemoveEmptyEntries);
+
+            var products = this.context
+                .Products
+                .Where(p => !p.IsHidden && searchNormalized.All(s => p.Name.ToLower().Contains(s.ToLower())));
+
+            return products;
         }
 
         public async Task<bool> ProductExists(string name)
