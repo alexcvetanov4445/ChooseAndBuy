@@ -53,6 +53,7 @@
                     options.Password.RequireUppercase = true;
                     options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequiredLength = 6;
+                    options.SignIn.RequireConfirmedEmail = true;
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddUserStore<ApplicationUserStore>()
@@ -122,9 +123,9 @@
             services.AddScoped<IDbQueryRunner, DbQueryRunner>();
 
             // Application services
+            services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<ICloudinaryService, CloudinaryService>();
-            services.AddTransient<IEmailSender, NullMessageSender>();
-            services.AddTransient<ISmsSender, NullMessageSender>();
+            services.AddTransient<ISmsSender, EmailSender>();
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<ISubCategoryService, SubCategoryService>();
             services.AddTransient<ICategoryService, CategoryService>();
@@ -138,8 +139,9 @@
             services.AddTransient<IContactService, ContactService>();
             services.AddTransient<IFavoritesService, FavoritesService>();
             services.AddTransient<IRoleService, RoleService>();
-
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+            services.Configure<AuthMessageSenderOptions>(this.configuration.GetSection("SendGrid"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
