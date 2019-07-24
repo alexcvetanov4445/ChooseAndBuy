@@ -102,7 +102,7 @@
 
         private static void ConfigureUserIdentityRelations(ModelBuilder builder)
         {
-            // Mapping Tables
+            // Mapping Entities
             builder.Entity<ShoppingCartProduct>().HasKey(x => new { x.ShoppingCartId, x.ProductId });
 
             builder.Entity<OrderProduct>().HasKey(x => new { x.OrderId, x.ProductId });
@@ -111,7 +111,7 @@
 
             builder.Entity<UserFavoriteProduct>().HasKey(x => new { x.ApplicationUserId, x.ProductId });
 
-            // Tables
+            // Entities
             builder.Entity<Product>()
                 .HasOne(sc => sc.SubCategory)
                 .WithMany(pr => pr.Products)
@@ -122,7 +122,7 @@
                 .WithOne(sc => sc.ShoppingCart)
                 .HasForeignKey<ApplicationUser>(fk => fk.ShoppingCartId);
 
-            // User Tables
+            // User Entity
             builder.Entity<ApplicationUser>()
                 .HasMany(e => e.Claims)
                 .WithOne()
@@ -142,6 +142,10 @@
                 .WithOne()
                 .HasForeignKey(e => e.UserId)
                 .IsRequired();
+
+            builder.Entity<ApplicationUser>()
+                .HasIndex(e => e.Email)
+                .IsUnique();
         }
 
         private static void SetIsDeletedQueryFilter<T>(ModelBuilder builder)

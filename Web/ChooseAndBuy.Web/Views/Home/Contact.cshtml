@@ -22,52 +22,52 @@
                 </button>
             </div>
         }
-        <div class="row">
-            <div class="col-lg-3">
-                <div class="contact_info">
-                    <div class="info_item">
-                        <i class="lnr lnr-phone-handset"></i>
-                        <h6><a href="#">02/876 7656</a></h6>
-                        <p>24/7 Service</p>
-                    </div>
-                    <div class="info_item">
-                        <i class="lnr lnr-envelope"></i>
-                        <h6><a href="#">ChooseAndBuy@gmail.com</a></h6>
-                        <p>Send us your query anytime!</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-9">
-                <form class="row contact_form" method="post">
+    <div class="row">
+        <div class="col-lg-9">
+            <form class="row contact_form" method="post">
                     <div class="col-md-12">
                         <h5>If you have any questions or advice for our company, please contact us by writing a message or just call us.</h5>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <input asp-for="Name" type="text" class="form-control" placeholder="Enter your name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter your name'">
+                            <input asp-for="Name" type="text" class="form-control" style="outline-style: outset;" placeholder="Enter your name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter your name'">
                             <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <input asp-for="Email" type="email" class="form-control" placeholder="Enter email address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter email address'">
+                            <input asp-for="Email" type="email" class="form-control" style="outline-style: outset;" placeholder="Enter email address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter email address'">
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <input asp-for="Subject" type="text" class="form-control" placeholder="Enter Subject" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Subject'">
+                            <input asp-for="Subject" type="text" class="form-control" style="outline-style: outset;" placeholder="Enter Subject" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Subject'">
                             <span asp-validation-for="Subject" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <textarea asp-for="Message" class="form-control" placeholder="Enter Message" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Message'"></textarea>
+                            <textarea asp-for="Message" class="form-control" style="outline-style: outset;" placeholder="Enter Message" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Message'"></textarea>
                             <span asp-validation-for="Message" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-12 text-right">
                         <button type="submit" value="submit" class="primary-btn">Send Message</button>
                     </div>
-                </form>
+            </form>
+        </div>
+        <div class="col-lg-3">
+            <div class="contact_info">
+                <div class="info_item">
+                    <i class="lnr lnr-phone-handset"></i>
+                    <h6><a href="#">02/876 7656</a></h6>
+                    <p>24/7 Service</p>
+                </div>
+                <div class="info_item">
+                    <i class="lnr lnr-envelope"></i>
+                    <h6><a href="#">ChooseAndBuy@gmail.com</a></h6>
+                    <p>Send us your query anytime!</p>
+                </div>
             </div>
         </div>
+    </div>
     </div>
 </section>
 <!--================Contact Area =================-->

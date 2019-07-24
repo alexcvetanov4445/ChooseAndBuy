@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
 
     public class Address
     {
@@ -13,14 +14,19 @@
 
         public string Id { get; set; }
 
+        [Required]
         public string FirstName { get; set; }
 
+        [Required]
         public string LastName { get; set; }
 
+        [Required]
         public string PhoneNumber { get; set; }
 
+        [Required]
         public string AddressText { get; set; }
 
+        [Required]
         public string CityId { get; set; }
 
         public City City { get; set; }

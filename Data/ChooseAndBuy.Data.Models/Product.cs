@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
 
     public class Product
     {
@@ -14,16 +15,20 @@
 
         public string Id { get; set; }
 
+        [Required]
         public string Name { get; set; }
 
         public bool IsRecommended { get; set; }
 
         public bool IsHidden { get; set; }
 
+        [Required]
         public string Description { get; set; }
 
+        [Required]
         public string Specification { get; set; }
 
+        [Required]
         public decimal Price { get; set; }
 
         public string SubCategoryId { get; set; }

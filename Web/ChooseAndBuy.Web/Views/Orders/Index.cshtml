@@ -6,6 +6,10 @@
     ViewData["Title"] = "Checkout";
 }
 
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+
 <!--================Checkout Area =================-->
 <section class="checkout_area section_gap">
     <div class="container">
@@ -171,7 +175,7 @@
                             of a fixed duration, or any other means, for the express purpose of meeting the Client's needs in respect
                             of provision of the Company's stated services/products, in accordance with and subject to, prevailing law
                             of . Any use of the above terminology or other words in the singular, plural,
-                            capitalisation and/or he/she or they, are taken as interchangeable and therefore as referring to same.
+                            capitalisation and/or he/she or they, are taken as interchangeable and therefore as referring to same. Read more <a asp-action="Privacy" asp-controller="Home">here.</a>
                     </div>
                 </div>
             </div>
@@ -181,7 +185,6 @@
 <!--================End Checkout Area =================-->
 
 @section Scripts{
-    <partial name="_ValidationScriptsPartial" />
 
     <script>
         $(document).ready(function () {
@@ -190,4 +193,6 @@
             });
         });
     </script>
+    
+    <partial name="_ValidationScriptsPartial" />
 }

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
 
     public class City
     {
@@ -13,8 +14,10 @@
 
         public string Id { get; set; }
 
+        [Required]
         public string Name { get; set; }
 
+        [Required]
         public string Postcode { get; set; }
 
         public ICollection<Address> Addresses { get; set; }

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
 
     public class SubCategory
     {
@@ -13,9 +14,8 @@
 
         public string Id { get; set; }
 
+        [Required]
         public string Name { get; set; }
-
-        public string Description { get; set; }
 
         public string CategoryId { get; set; }
 
