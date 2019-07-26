@@ -6,6 +6,7 @@
     using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Web.Areas.Administration.ViewModels.Products;
     using ChooseAndBuy.Web.ViewModels.Products;
+    using ChooseAndBuy.Web.ViewModels.ShoppingCart;
 
     public interface IProductService
     {
@@ -28,6 +29,8 @@
         IEnumerable<Product> GetSearchedProducts(string search);
 
         Task<IEnumerable<TableProductViewModel>> GetAllProducts();
+
+        Task<ShoppingCartProductViewModel> GetProductForCart(string id);
 
         Task<ProductDetailsViewModel> GetById(string id);
 

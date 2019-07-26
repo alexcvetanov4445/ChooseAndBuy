@@ -9,6 +9,7 @@
     using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Web.Areas.Administration.ViewModels.Products;
     using ChooseAndBuy.Web.ViewModels.Products;
+    using ChooseAndBuy.Web.ViewModels.ShoppingCart;
     using Microsoft.EntityFrameworkCore;
 
     public class ProductService : IProductService
@@ -228,6 +229,20 @@
                 .Where(sc => sc.SubCategoryId == id && sc.IsHidden == false);
 
             return products;
+        }
+
+        public async Task<ShoppingCartProductViewModel> GetProductForCart(string id)
+        {
+            var product = this.context.Products.SingleOrDefault(p => p.Id == id);
+
+            var result = AutoMapper.Mapper.Map<ShoppingCartProductViewModel>(product);
+
+            // sets the quantity to 1, because that will be the first product of that type added to the cart
+            // sets the total price to the product price for the same reason above
+            result.Quantity = 1;
+            result.TotalPrice = (double)result.Price;
+
+            return result;
         }
     }
 }

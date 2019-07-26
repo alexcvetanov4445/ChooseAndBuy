@@ -5,7 +5,7 @@
     using ChooseAndBuy.Services.Mapping;
     using ChooseAndBuy.Web.ViewModels.Orders;
 
-    public class ShoppingCartProductViewModel : IMapFrom<OrderProductViewModel>, IHaveCustomMappings
+    public class ShoppingCartProductViewModel : IMapFrom<OrderProductViewModel>, IMapFrom<Product>,IHaveCustomMappings
     {
         public string Id { get; set; }
 

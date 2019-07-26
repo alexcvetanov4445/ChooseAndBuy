@@ -11,5 +11,7 @@
         public const int ExpressDeliveryDays = 2;
 
         public const decimal DeliveryFee = 3.90m;
+
+        public const string ShoppingCartSession = "shoppingCart";
     }
 }
