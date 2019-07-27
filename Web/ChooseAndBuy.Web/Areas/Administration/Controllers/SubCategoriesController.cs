@@ -1,15 +1,10 @@
 ﻿namespace ChooseAndBuy.Web.Areas.Administration.Controllers
 {
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-
-    using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Services;
-    using ChooseAndBuy.Web.Areas.Administration.ViewModels.SubCategories;
+    using ChooseAndBuy.Web.ViewModels.Administration.SubCategories;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Rendering;
 
     public class SubCategoriesController : AdministrationController
     {

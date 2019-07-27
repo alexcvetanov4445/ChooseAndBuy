@@ -4,7 +4,7 @@
     using System.Threading.Tasks;
 
     using ChooseAndBuy.Data.Models;
-    using ChooseAndBuy.Web.Areas.Administration.ViewModels.Categories;
+    using ChooseAndBuy.Web.ViewModels.Administration.Categories;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
     public interface ICategoryService

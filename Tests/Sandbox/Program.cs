@@ -89,8 +89,8 @@
             services.AddScoped<IDbQueryRunner, DbQueryRunner>();
 
             // Application services
-            services.AddTransient<IEmailSender, NullMessageSender>();
-            services.AddTransient<ISmsSender, NullMessageSender>();
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<ISmsSender, EmailSender>();
             services.AddTransient<ISettingsService, SettingsService>();
         }
     }

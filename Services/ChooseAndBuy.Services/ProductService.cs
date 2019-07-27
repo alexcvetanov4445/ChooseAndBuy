@@ -7,7 +7,7 @@
 
     using ChooseAndBuy.Data;
     using ChooseAndBuy.Data.Models;
-    using ChooseAndBuy.Web.Areas.Administration.ViewModels.Products;
+    using ChooseAndBuy.Web.ViewModels.Administration.Products;
     using ChooseAndBuy.Web.ViewModels.Products;
     using ChooseAndBuy.Web.ViewModels.ShoppingCart;
     using Microsoft.EntityFrameworkCore;

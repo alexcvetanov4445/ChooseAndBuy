@@ -1,11 +1,10 @@
-﻿namespace ChooseAndBuy.Web.Areas.Administration.ViewModels.Products
+﻿namespace ChooseAndBuy.Web.ViewModels.Administration.Products
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Services.Mapping;
-    using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
     public class EditProductBindingModel : IMapTo<Product>, IMapFrom<Product>

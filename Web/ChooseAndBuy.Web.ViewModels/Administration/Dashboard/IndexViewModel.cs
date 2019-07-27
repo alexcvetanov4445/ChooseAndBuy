@@ -1,4 +1,4 @@
-﻿namespace ChooseAndBuy.Web.Areas.Administration.ViewModels.Dashboard
+﻿namespace ChooseAndBuy.Web.ViewModels.Administration.Dashboard
 {
     public class IndexViewModel
     {

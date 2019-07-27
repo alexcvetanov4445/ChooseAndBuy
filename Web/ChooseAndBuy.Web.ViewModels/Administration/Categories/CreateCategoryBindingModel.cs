@@ -1,4 +1,4 @@
-﻿namespace ChooseAndBuy.Web.Areas.Administration.ViewModels.Categories
+﻿namespace ChooseAndBuy.Web.ViewModels.Administration.Categories
 {
     using System.ComponentModel.DataAnnotations;
 

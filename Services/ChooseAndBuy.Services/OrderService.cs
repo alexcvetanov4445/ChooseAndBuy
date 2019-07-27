@@ -3,15 +3,13 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
 
     using ChooseAndBuy.Common;
     using ChooseAndBuy.Data;
     using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Data.Models.Enums;
-    using ChooseAndBuy.Services.Mapping;
-    using ChooseAndBuy.Web.Areas.Administration.ViewModels.Orders;
+    using ChooseAndBuy.Web.ViewModels.Administration.Orders;
     using ChooseAndBuy.Web.ViewModels.Orders;
     using Microsoft.EntityFrameworkCore;
 

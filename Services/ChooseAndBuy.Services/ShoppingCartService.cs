@@ -177,6 +177,12 @@
             var sessionCart =
                 SessionExtensions.GetObjectFromJson<ShoppingCartViewModel>(session, GlobalConstants.ShoppingCartSession);
 
+            if (sessionCart == null)
+            {
+                // this happens if the cart is not being used as a session
+                return false;
+            }
+
             string shoppingCartId = await this.GetOrCreateUserShoppingCartByUsername(username);
 
             var products = AutoMapper.Mapper.Map<List<ShoppingCartProduct>>(sessionCart.Products);

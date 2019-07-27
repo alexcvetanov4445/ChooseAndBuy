@@ -1,19 +1,11 @@
 ﻿namespace ChooseAndBuy.Web.Areas.Administration.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
 
-    using AutoMapper;
-    using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Services;
-    using ChooseAndBuy.Web.Areas.Administration.ViewModels.Products;
-    using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Hosting;
+    using ChooseAndBuy.Web.ViewModels.Administration.Products;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Rendering;
 
     public class ProductsController : AdministrationController
     {

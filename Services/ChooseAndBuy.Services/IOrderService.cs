@@ -6,7 +6,7 @@
     using System.Threading.Tasks;
 
     using ChooseAndBuy.Data.Models;
-    using ChooseAndBuy.Web.Areas.Administration.ViewModels.Orders;
+    using ChooseAndBuy.Web.ViewModels.Administration.Orders;
     using ChooseAndBuy.Web.ViewModels.Orders;
 
     public interface IOrderService

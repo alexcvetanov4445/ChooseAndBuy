@@ -6,7 +6,7 @@
 
     using ChooseAndBuy.Data;
     using ChooseAndBuy.Data.Models;
-    using ChooseAndBuy.Web.Areas.Administration.ViewModels.SubCategories;
+    using ChooseAndBuy.Web.ViewModels.Administration.SubCategories;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.EntityFrameworkCore;
 

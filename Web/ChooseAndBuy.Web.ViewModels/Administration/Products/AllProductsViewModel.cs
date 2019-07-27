@@ -1,9 +1,6 @@
-﻿namespace ChooseAndBuy.Web.Areas.Administration.ViewModels.Products
+﻿namespace ChooseAndBuy.Web.ViewModels.Administration.Products
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     public class AllProductsViewModel
     {

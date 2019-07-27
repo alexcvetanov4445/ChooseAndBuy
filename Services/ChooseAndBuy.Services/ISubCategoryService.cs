@@ -4,7 +4,7 @@
     using System.Threading.Tasks;
 
     using ChooseAndBuy.Data.Models;
-    using ChooseAndBuy.Web.Areas.Administration.ViewModels.SubCategories;
+    using ChooseAndBuy.Web.ViewModels.Administration.SubCategories;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
     public interface ISubCategoryService

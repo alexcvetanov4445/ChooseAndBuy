@@ -7,7 +7,7 @@
 
     using AutoMapper;
     using ChooseAndBuy.Services;
-    using ChooseAndBuy.Web.Areas.Administration.ViewModels.Orders;
+    using ChooseAndBuy.Web.ViewModels.Administration.Orders;
     using ChooseAndBuy.Web.ViewModels.Orders;
     using Microsoft.AspNetCore.Mvc;
 

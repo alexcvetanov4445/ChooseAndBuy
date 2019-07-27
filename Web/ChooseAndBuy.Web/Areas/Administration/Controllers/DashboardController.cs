@@ -1,8 +1,7 @@
 ﻿namespace ChooseAndBuy.Web.Areas.Administration.Controllers
 {
     using ChooseAndBuy.Services.Data;
-    using ChooseAndBuy.Web.Areas.Administration.ViewModels.Dashboard;
-
+    using ChooseAndBuy.Web.ViewModels.Administration.Dashboard;
     using Microsoft.AspNetCore.Mvc;
 
     public class DashboardController : AdministrationController

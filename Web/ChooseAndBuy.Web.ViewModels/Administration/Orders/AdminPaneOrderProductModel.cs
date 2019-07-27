@@ -1,4 +1,4 @@
-﻿namespace ChooseAndBuy.Web.Areas.Administration.ViewModels.Orders
+﻿namespace ChooseAndBuy.Web.ViewModels.Administration.Orders
 {
     public class AdminPaneOrderProductModel
     {
