@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using ChooseAndBuy.Web.ViewModels.Orders;
+    using Microsoft.AspNetCore.Http;
 
     public interface IShoppingCartService
     {
@@ -16,5 +17,7 @@
         Task<bool> RemoveAllCartProducts(string userId);
 
         Task<IEnumerable<OrderProductViewModel>> GetCartProductsByUserId(string userId);
+
+        Task<bool> TransferSessionCartToAccountCart(string username, ISession session);
     }
 }

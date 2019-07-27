@@ -46,7 +46,7 @@
                 return this.View(model);
             }
 
-            var sessionCart = SessionExtensions.GetObjctFromJson<ShoppingCartViewModel>(this.HttpContext.Session, GlobalConstants.ShoppingCartSession);
+            var sessionCart = SessionExtensions.GetObjectFromJson<ShoppingCartViewModel>(this.HttpContext.Session, GlobalConstants.ShoppingCartSession);
 
             if (sessionCart == null || sessionCart.Products == null)
             {
@@ -73,7 +73,7 @@
             }
 
             var sessionCart =
-                SessionExtensions.GetObjctFromJson<ShoppingCartViewModel>(this.HttpContext.Session, GlobalConstants.ShoppingCartSession);
+                SessionExtensions.GetObjectFromJson<ShoppingCartViewModel>(this.HttpContext.Session, GlobalConstants.ShoppingCartSession);
 
             // if there isnt a cart, create one (make a service method for obtaining a session cart)
             if (sessionCart == null)
@@ -138,7 +138,7 @@
             }
 
             var sessionCart =
-                SessionExtensions.GetObjctFromJson<ShoppingCartViewModel>(this.HttpContext.Session, GlobalConstants.ShoppingCartSession);
+                SessionExtensions.GetObjectFromJson<ShoppingCartViewModel>(this.HttpContext.Session, GlobalConstants.ShoppingCartSession);
 
             var product = sessionCart.Products.SingleOrDefault(p => p.Id == model.ProductId);
             sessionCart.Products.Remove(product);
@@ -171,7 +171,7 @@
             }
 
             var sessionCart =
-                SessionExtensions.GetObjctFromJson<ShoppingCartViewModel>(this.HttpContext.Session, GlobalConstants.ShoppingCartSession);
+                SessionExtensions.GetObjectFromJson<ShoppingCartViewModel>(this.HttpContext.Session, GlobalConstants.ShoppingCartSession);
 
             var product = sessionCart.Products.SingleOrDefault(p => p.Id == productId);
 

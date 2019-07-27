@@ -1,22 +1,26 @@
 ﻿namespace ChooseAndBuy.Services
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
 
+    using ChooseAndBuy.Common;
     using ChooseAndBuy.Data;
     using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Web.ViewModels.Orders;
+    using ChooseAndBuy.Web.ViewModels.ShoppingCart;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
+
+    using SessionExtensions = ChooseAndBuy.Services.Extensions.SessionExtensions;
 
     public class ShoppingCartService : IShoppingCartService
     {
         private readonly ApplicationDbContext context;
 
-        public ShoppingCartService(ApplicationDbContext context)
+        public ShoppingCartService(
+            ApplicationDbContext context)
         {
             this.context = context;
         }
@@ -24,7 +28,7 @@
         public async Task<bool> AddProductToCart(string productId, string userId, int quantity)
         {
             // Calls a private method to do the job for getting the shopping cart id
-            string shoppingCartId = await this.GetOrCreateUserShoppingCart(userId);
+            string shoppingCartId = await this.GetOrCreateUserShoppingCartById(userId);
 
             // Checks if a product is added to the cart and if so, applies just the quantity
             // Otherwise shopping cart product is created with the data
@@ -90,7 +94,7 @@
         {
             // gets the user's shopping cart id
             // then gets the products of the cart and removes them
-            var shoppingCartId = await this.GetOrCreateUserShoppingCart(userId);
+            var shoppingCartId = await this.GetOrCreateUserShoppingCartById(userId);
 
             var products = this.context.ShoppingCartProducts.Where(x => x.ShoppingCartId == shoppingCartId);
 
@@ -103,7 +107,7 @@
 
         public async Task<bool> RemoveProductFromCart(string productId, string userId)
         {
-            string shoppingCartId = await this.GetOrCreateUserShoppingCart(userId);
+            string shoppingCartId = await this.GetOrCreateUserShoppingCartById(userId);
 
             var product = await this.context
                 .ShoppingCartProducts
@@ -117,6 +121,31 @@
             return result > 0;
         }
 
+        public async Task<bool> TransferSessionCartToAccountCart(string username, ISession session)
+        {
+            var sessionCart =
+                SessionExtensions.GetObjectFromJson<ShoppingCartViewModel>(session, GlobalConstants.ShoppingCartSession);
+
+            string shoppingCartId = await this.GetOrCreateUserShoppingCartByUsername(username);
+
+            var products = AutoMapper.Mapper.Map<List<ShoppingCartProduct>>(sessionCart.Products);
+            products.ForEach(p => p.ShoppingCartId = shoppingCartId);
+
+            // Remove the user previously added products to the cart and add the new session ones.
+            var productToRemove = await this.context
+                .ShoppingCartProducts
+                .Where(x => x.ShoppingCartId == shoppingCartId)
+                .ToArrayAsync();
+
+            this.context.ShoppingCartProducts.RemoveRange(productToRemove);
+
+            await this.context.ShoppingCartProducts.AddRangeAsync(products);
+
+            var result = await this.context.SaveChangesAsync();
+
+            return result > 0;
+        }
+
         public async Task<bool> UpdateProductCount(string productId, string userId, int quantity)
         {
             if (quantity <= 0)
@@ -124,7 +153,7 @@
                 return false;
             }
 
-            var shoppingCartId = await this.GetOrCreateUserShoppingCart(userId);
+            var shoppingCartId = await this.GetOrCreateUserShoppingCartById(userId);
 
             var shoppingCartProduct = await this.context
                  .ShoppingCartProducts
@@ -137,7 +166,7 @@
             return result > 0;
         }
 
-        private async Task<string> GetOrCreateUserShoppingCart(string userId)
+        private async Task<string> GetOrCreateUserShoppingCartById(string userId)
         {
             // Creates shopping cart if the user dont have one and returns it's Id
             bool doesHaveShoppingCart = await this.context
@@ -155,12 +184,40 @@
                 await this.context.SaveChangesAsync();
             }
 
-            var shoppingCart = this.context
+            var shoppingCartId = this.context
                 .ShoppingCarts
                 .SingleOrDefault(sc => sc.ApplicationUserId == userId)
                 .Id;
 
-            return shoppingCart;
+            return shoppingCartId;
+        }
+
+        private async Task<string> GetOrCreateUserShoppingCartByUsername(string username)
+        {
+            // Creates shopping cart if the user dont have one and returns it's Id
+            var user = await this.context.Users.SingleOrDefaultAsync(x => x.UserName == username);
+
+            bool doesHaveShoppingCart = await this.context
+                .ShoppingCarts
+                .AnyAsync(u => u.ApplicationUserId == user.Id);
+
+            if (!doesHaveShoppingCart)
+            {
+                ShoppingCart cart = new ShoppingCart
+                {
+                    ApplicationUserId = user.Id,
+                };
+
+                await this.context.ShoppingCarts.AddAsync(cart);
+                await this.context.SaveChangesAsync();
+            }
+
+            var shoppingCartId = this.context
+                .ShoppingCarts
+                .SingleOrDefault(sc => sc.ApplicationUserId == user.Id)
+                .Id;
+
+            return shoppingCartId;
         }
     }
 }

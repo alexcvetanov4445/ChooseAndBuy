@@ -5,7 +5,8 @@
     using ChooseAndBuy.Services.Mapping;
     using ChooseAndBuy.Web.ViewModels.Orders;
 
-    public class ShoppingCartProductViewModel : IMapFrom<OrderProductViewModel>, IMapFrom<Product>,IHaveCustomMappings
+    public class ShoppingCartProductViewModel :
+        IMapFrom<OrderProductViewModel>, IMapFrom<Product>, IMapTo<ShoppingCartProduct>,IHaveCustomMappings
     {
         public string Id { get; set; }
 
@@ -23,6 +24,10 @@
         {
             configuration.CreateMap<OrderProductViewModel, ShoppingCartProductViewModel>()
                 .ForMember(model => model.Id, opt => opt.MapFrom(src => src.ProductId));
+
+            configuration.CreateMap<ShoppingCartProductViewModel, ShoppingCartProduct>()
+                .ForMember(model => model.ProductId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(model => model.Quantity, opt => opt.MapFrom(src => src.Quantity));
         }
     }
 }

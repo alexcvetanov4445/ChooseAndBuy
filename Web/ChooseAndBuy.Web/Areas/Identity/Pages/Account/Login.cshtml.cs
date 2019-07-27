@@ -6,7 +6,7 @@
     using System.Threading.Tasks;
 
     using ChooseAndBuy.Data.Models;
-
+    using ChooseAndBuy.Services;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
@@ -20,11 +20,16 @@
 #pragma warning restore SA1649 // File name should match first type name
     {
         private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly IShoppingCartService shoppingCartService;
         private readonly ILogger<LoginModel> logger;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(
+            SignInManager<ApplicationUser> signInManager, 
+            ILogger<LoginModel> logger, 
+            IShoppingCartService shoppingCartService)
         {
             this.signInManager = signInManager;
+            this.shoppingCartService = shoppingCartService;
             this.logger = logger;
         }
 
@@ -64,8 +69,13 @@
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await this.signInManager.PasswordSignInAsync(this.Input.Username, this.Input.Password, this.Input.RememberMe, lockoutOnFailure: true);
+
+
                 if (result.Succeeded)
                 {
+                    // Transfer the shopping cart products to the users account
+                    await this.shoppingCartService.TransferSessionCartToAccountCart(this.Input.Username, this.HttpContext.Session);
+
                     this.logger.LogInformation("User logged in.");
                     return this.LocalRedirect(returnUrl);
                 }

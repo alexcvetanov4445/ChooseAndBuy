@@ -116,23 +116,36 @@
                                     <!--<h6 class="l-through">$210.00</h6>  (discount)-->
                                 </div>
                                 <div id="successCart-@pr.Id" style="display: none;">
-                                    <h6 class="text-success">Added to Cart!</h6>
+                                    <h6 class="text-success">Added to Cart.</h6>
                                 </div>
                                 <div id="successFav-@pr.Id" style="display: none;">
-                                    <h6 class="text-success">Added to Favorites!</h6>
+                                    <h6 class="text-success">Added to Favorites.</h6>
                                 </div>
                                 <div id="errorFav-@pr.Id" style="display: none;">
-                                    <h6 class="text-success">Product already added!</h6>
+                                    <h6 class="text-success">Product already added.</h6>
+                                </div>
+                                <div id="LoginFav-@pr.Id" style="display: none;">
+                                    <h6 class="text-success">Login to use this feature.</h6>
                                 </div>
                                 <div class="prd-bottom">
                                     <a id="@pr.Id" class="addCart social-info">
                                         <span class="ti-bag"></span>
                                         <p class="hover-text">add to bag</p>
                                     </a>
-                                    <a id="@pr.Id" class="addFav social-info">
-                                        <span class="lnr lnr-heart"></span>
-                                        <p class="hover-text">favorites</p>
-                                    </a>
+                                    @if (this.User.Identity.IsAuthenticated)
+                                    {
+                                        <a id="@pr.Id" class="addFav social-info">
+                                            <span class="lnr lnr-heart"></span>
+                                            <p class="hover-text">favorites</p>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a id="@pr.Id" class="FavDenied social-info">
+                                            <span class="lnr lnr-heart"></span>
+                                            <p class="hover-text">favorites</p>
+                                        </a>
+                                    }
                                     <a asp-action="details" asp-controller="products" asp-route-id="@pr.Id" class="social-info">
                                         <span class="lnr lnr-move"></span>
                                         <p class="hover-text">view more</p>
@@ -276,6 +289,16 @@
             },
             dataType: "json"
         });
+    });
+
+    $(".FavDenied").click(function () {
+        var property1 = $(this).attr("id");
+
+        var JSONObject = {
+            "productId" : property1
+        };
+
+        $("#LoginFav-" + property1).show().delay(2000).fadeOut();
     });
 
     $(document).ready(function () {

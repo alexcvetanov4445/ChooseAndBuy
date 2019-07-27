@@ -98,15 +98,23 @@
                             <td></td>
                             <td>
                                 <div class="checkout_btn_inner d-flex align-items-center">
-                                    @if (Model.TotalPrice == 0)
+                                    @if (this.User.Identity.IsAuthenticated)
                                     {
-                                        <a asp-action="Index" asp-controller="Products" class="gray_btn">Continue Shopping</a>
+                                        @if (Model.TotalPrice == 0)
+                                        {
+                                            <a asp-action="Index" asp-controller="Products" class="gray_btn">Continue Shopping</a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-action="Index" asp-controller="Products" class="gray_btn">Continue Shopping</a>
+                                            <a class="primary-btn" id="checkoutBtn" asp-action="Index" asp-controller="Orders">Proceed to checkout</a>
+                                        }
                                     }
                                     else
                                     {
-                                        <a asp-action="Index" asp-controller="Products" class="gray_btn">Continue Shopping</a>
-                                        <a class="primary-btn" id="checkoutBtn" asp-action="Index" asp-controller="Orders">Proceed to checkout</a>
+                                        <a asp-area="Identity" asp-page="/Account/Login" asp-route-returnUrl="/ShoppingCart/Index/" class="gray_btn">Login to Make Orders</a>
                                     }
+
                                 </div>
                             </td>
                             <td></td>

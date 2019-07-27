@@ -1,4 +1,4 @@
-﻿namespace ChooseAndBuy.Web.Extensions
+﻿namespace ChooseAndBuy.Services.Extensions
 {
     using System;
     using System.Collections.Generic;
@@ -19,7 +19,7 @@
         {
             var value = session.GetString(key);
 
-            return value == null ? default(T) : JsonConvert.DeserializeObject<T>(value);
+            return value == null ? default : JsonConvert.DeserializeObject<T>(value);
         }
     }
 }
