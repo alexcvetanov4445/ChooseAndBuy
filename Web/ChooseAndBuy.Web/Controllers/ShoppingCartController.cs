@@ -3,12 +3,10 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using ChooseAndBuy.Common;
+
     using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Services;
-    using ChooseAndBuy.Web.Extensions;
     using ChooseAndBuy.Web.ViewModels.ShoppingCart;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
@@ -46,15 +44,7 @@
                 return this.View(model);
             }
 
-            var sessionCart = SessionExtensions.GetObjectFromJson<ShoppingCartViewModel>(this.HttpContext.Session, GlobalConstants.ShoppingCartSession);
-
-            if (sessionCart == null || sessionCart.Products == null)
-            {
-                sessionCart = new ShoppingCartViewModel
-                {
-                    Products = new List<ShoppingCartProductViewModel>(),
-                };
-            }
+            var sessionCart = this.shoppingCartService.GetOrCreateSessionCart(this.HttpContext.Session);
 
             return this.View(sessionCart);
         }
@@ -72,49 +62,8 @@
                 return this.Json(result);
             }
 
-            var sessionCart =
-                SessionExtensions.GetObjectFromJson<ShoppingCartViewModel>(this.HttpContext.Session, GlobalConstants.ShoppingCartSession);
-
-            // if there isnt a cart, create one (make a service method for obtaining a session cart)
-            if (sessionCart == null)
-            {
-                sessionCart = new ShoppingCartViewModel();
-            }
-
-            if (sessionCart.Products == null)
-            {
-                sessionCart.Products = new List<ShoppingCartProductViewModel>();
-            }
-
-            // if there isnt already the same product added, create one and add it
-            if (!sessionCart.Products.Any(x => x.Id == model.ProductId))
-            {
-                var product = await this.productService.GetProductForCart(model.ProductId);
-
-                product.Quantity = model.Quantity;
-
-                product.TotalPrice = (double)(product.Price * product.Quantity);
-
-                sessionCart.Products.Add(product);
-
-                result = true;
-            }
-            else // if a product exists change its quantity and total price
-            {
-                var product = sessionCart.Products.SingleOrDefault(p => p.Id == model.ProductId);
-                sessionCart.Products.Remove(product);
-
-                product.Quantity += model.Quantity;
-                product.TotalPrice += (double)(product.Price * model.Quantity);
-
-                sessionCart.Products.Add(product);
-
-                result = true;
-            }
-
-            sessionCart.TotalPrice = sessionCart.Products.Sum(p => p.TotalPrice);
-
-            SessionExtensions.SetObjectAsJson(this.HttpContext.Session, GlobalConstants.ShoppingCartSession, sessionCart);
+            result = await this.shoppingCartService
+                .AddProductToSessionCart(this.HttpContext.Session, model.ProductId, model.Quantity);
 
             return this.Json(result);
         }
@@ -137,21 +86,8 @@
                 return this.RedirectToAction("Index");
             }
 
-            var sessionCart =
-                SessionExtensions.GetObjectFromJson<ShoppingCartViewModel>(this.HttpContext.Session, GlobalConstants.ShoppingCartSession);
-
-            var product = sessionCart.Products.SingleOrDefault(p => p.Id == model.ProductId);
-            sessionCart.Products.Remove(product);
-
-            product.Quantity = model.Quantity;
-
-            product.TotalPrice = (double)(product.Price * product.Quantity);
-
-            sessionCart.Products.Add(product);
-
-            sessionCart.TotalPrice = sessionCart.Products.Sum(p => p.TotalPrice);
-
-            SessionExtensions.SetObjectAsJson(this.HttpContext.Session, GlobalConstants.ShoppingCartSession, sessionCart);
+            await this.shoppingCartService
+                .UpdateSessionProductCount(this.HttpContext.Session, model.ProductId, model.Quantity);
 
             return this.RedirectToAction("Index");
         }
@@ -170,18 +106,7 @@
                 return this.Json(result);
             }
 
-            var sessionCart =
-                SessionExtensions.GetObjectFromJson<ShoppingCartViewModel>(this.HttpContext.Session, GlobalConstants.ShoppingCartSession);
-
-            var product = sessionCart.Products.SingleOrDefault(p => p.Id == productId);
-
-            sessionCart.Products.Remove(product);
-
-            sessionCart.TotalPrice = sessionCart.Products.Sum(p => p.TotalPrice);
-
-            SessionExtensions.SetObjectAsJson(this.HttpContext.Session, GlobalConstants.ShoppingCartSession, sessionCart);
-
-            result = true;
+            result = await this.shoppingCartService.RemoveProductFromSessionCart(this.HttpContext.Session, productId);
 
             return this.Json(result);
         }

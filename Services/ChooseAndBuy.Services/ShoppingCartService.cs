@@ -10,7 +10,6 @@
     using ChooseAndBuy.Web.ViewModels.Orders;
     using ChooseAndBuy.Web.ViewModels.ShoppingCart;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
 
     using SessionExtensions = ChooseAndBuy.Services.Extensions.SessionExtensions;
@@ -18,11 +17,14 @@
     public class ShoppingCartService : IShoppingCartService
     {
         private readonly ApplicationDbContext context;
+        private readonly IProductService productService;
 
         public ShoppingCartService(
-            ApplicationDbContext context)
+            ApplicationDbContext context,
+            IProductService productService)
         {
             this.context = context;
+            this.productService = productService;
         }
 
         public async Task<bool> AddProductToCart(string productId, string userId, int quantity)
@@ -62,6 +64,40 @@
             result = await this.context.SaveChangesAsync();
 
             return result > 0;
+        }
+
+        public async Task<bool> AddProductToSessionCart(ISession session, string productId, int quantity)
+        {
+            var sessionCart = this.GetOrCreateSessionCart(session);
+
+            if (!sessionCart.Products.Any(x => x.Id == productId))
+            {
+                // if a product with provided id doesn't exist get the product and add it to the cart
+                var product = await this.productService.GetProductForCart(productId);
+
+                product.Quantity = quantity;
+
+                product.TotalPrice = (double)(product.Price * product.Quantity);
+
+                sessionCart.Products.Add(product);
+            }
+            else
+            {
+                // if a product exists change its quantity and total price
+                var product = sessionCart.Products.SingleOrDefault(p => p.Id == productId);
+                sessionCart.Products.Remove(product);
+
+                product.Quantity += quantity;
+                product.TotalPrice += (double)(product.Price * quantity);
+
+                sessionCart.Products.Add(product);
+            }
+
+            sessionCart.TotalPrice = sessionCart.Products.Sum(p => p.TotalPrice);
+
+            SessionExtensions.SetObjectAsJson(session, GlobalConstants.ShoppingCartSession, sessionCart);
+
+            return true;
         }
 
         public async Task<IEnumerable<OrderProductViewModel>> GetCartProductsByUserId(string userId)
@@ -121,6 +157,21 @@
             return result > 0;
         }
 
+        public async Task<bool> RemoveProductFromSessionCart(ISession session, string productId)
+        {
+            var sessionCart = this.GetOrCreateSessionCart(session);
+
+            var product = sessionCart.Products.SingleOrDefault(p => p.Id == productId);
+
+            sessionCart.Products.Remove(product);
+
+            sessionCart.TotalPrice = sessionCart.Products.Sum(p => p.TotalPrice);
+
+            SessionExtensions.SetObjectAsJson(session, GlobalConstants.ShoppingCartSession, sessionCart);
+
+            return true;
+        }
+
         public async Task<bool> TransferSessionCartToAccountCart(string username, ISession session)
         {
             var sessionCart =
@@ -164,6 +215,44 @@
             var result = await this.context.SaveChangesAsync();
 
             return result > 0;
+        }
+
+        public async Task<bool> UpdateSessionProductCount(ISession session, string productId, int quantity)
+        {
+            var sessionCart = this.GetOrCreateSessionCart(session);
+
+            var product = sessionCart.Products.SingleOrDefault(p => p.Id == productId);
+            sessionCart.Products.Remove(product);
+
+            product.Quantity = quantity;
+
+            product.TotalPrice = (double)(product.Price * product.Quantity);
+
+            sessionCart.Products.Add(product);
+
+            sessionCart.TotalPrice = sessionCart.Products.Sum(p => p.TotalPrice);
+
+            SessionExtensions.SetObjectAsJson(session, GlobalConstants.ShoppingCartSession, sessionCart);
+
+            return true;
+        }
+
+        public ShoppingCartViewModel GetOrCreateSessionCart(ISession session)
+        {
+            var sessionCart =
+                SessionExtensions.GetObjectFromJson<ShoppingCartViewModel>(session, GlobalConstants.ShoppingCartSession);
+
+            if (sessionCart == null)
+            {
+                sessionCart = new ShoppingCartViewModel();
+            }
+
+            if (sessionCart.Products == null)
+            {
+                sessionCart.Products = new List<ShoppingCartProductViewModel>();
+            }
+
+            return sessionCart;
         }
 
         private async Task<string> GetOrCreateUserShoppingCartById(string userId)
