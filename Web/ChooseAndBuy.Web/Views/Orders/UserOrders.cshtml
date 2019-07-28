@@ -1,6 +1,6 @@
 ﻿@using ChooseAndBuy.Web.ViewModels.Orders
 
-@model UserOrdersViewModel
+@model UserOrderViewModel
 
 @{
     ViewData["Title"] = "My Orders";
@@ -13,7 +13,7 @@
             <div class="login-form">
                 <table class="table">
                     <h3 class="text-center">My Orders</h3>
-                    <hr style="height: 3px"/>
+                    <hr style="height: 3px" />
                     <thead>
                         <tr>
                             <th scope="col">Address</th>
@@ -33,10 +33,73 @@
                                 <td>@order.Quantity</td>
                                 <td>$@order.Price</td>
                                 <td>
-                                    <a asp-action="OrderDetails" asp-controller="Orders" asp-route-productId="@order.Id" class="genric-btn primary radius text-dark">
+                                    <a asp-action="OrderDetails" asp-controller="Orders" asp-route-productId="@order.Id"
+                                       id="details-@order.Id" class="genric-btn primary radius text-dark" data-toggle="modal" data-target="#modal-@order.Id">
                                         View Details
                                     </a>
                                 </td>
+                                <div class="modal fade bd-example-modal-lg" id="modal-@order.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Order Details</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-sm-7">
+                                                        <h5>Details</h5>
+                                                        <hr style="height: 3px" />
+                                                        <dl class="row">
+                                                            <dt class="col-sm-4">Order Status</dt>
+                                                            <dd class="col-sm-8">@order.Status</dd>
+                                                            <dt class="col-sm-4">Products Quantity</dt>
+                                                            <dd class="col-sm-8">x@(order.Quantity)</dd>
+                                                            <dt class="col-sm-4">Total Price</dt>
+                                                            <dd class="col-sm-8">$@order.Price</dd>
+                                                            <dt class="col-sm-4">Payment Method</dt>
+                                                            <dd class="col-sm-8">@order.PaymentType</dd>
+                                                            <dt class="col-sm-4">Delivery Option</dt>
+                                                            <dd class="col-sm-8">@order.DeliveryType</dd>
+                                                            <dt class="col-sm-4">Order Date</dt>
+                                                            <dd class="col-sm-8">@order.OrderDate</dd>
+                                                            <dt class="col-sm-4">Delivery Date</dt>
+                                                            @if (order.Status == "Delivered")
+                                                            {
+                                                                <dd class="col-sm-8">@order.DeliveryDate.Value.ToShortDateString()</dd>
+                                                            }
+                                                            else if (order.Status == "Canceled" || order.Status == "Returned")
+                                                            {
+                                                                <dd class="col-sm-8">-</dd>
+                                                            }
+                                                            else
+                                                            {
+                                                                <dd class="col-sm-8" id="deliveryDate-@order.Id">In proccess</dd>
+                                                            }
+                                                        </dl>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <h5>Products</h5>
+                                                        <hr style="height: 3px" />
+                                                        <dl class="row">
+                                                            @foreach (var product in order.Products)
+                                                            {
+                                                                <dt class="col-9">@product.Name</dt>
+                                                                <dd class="col-3">x@(product.Quantity)</dd>
+                                                            }
+                                                        </dl>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </tr>
                         }
                     </tbody>

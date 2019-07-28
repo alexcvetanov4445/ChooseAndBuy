@@ -74,6 +74,8 @@
             var orders = await this.context
                 .Orders
                 .Include(o => o.DeliveryAddress)
+                .Include(op => op.OrderProducts)
+                .ThenInclude(p => p.Product)
                 .Where(o => o.ApplicationUserId == userId)
                 .ToListAsync();
 

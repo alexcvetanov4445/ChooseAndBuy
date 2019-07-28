@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Text;
 
-    public class UserOrdersViewModel
+    public class UserOrderViewModel
     {
         public ICollection<OrderViewModel> Orders { get; set; }
     }

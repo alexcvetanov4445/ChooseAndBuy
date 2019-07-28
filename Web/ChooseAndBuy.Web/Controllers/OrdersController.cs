@@ -101,7 +101,7 @@
 
             var ordersViewModel = await this.orderService.GetAllUserOrders(userId);
 
-            UserOrdersViewModel model = new UserOrdersViewModel
+            UserOrderViewModel model = new UserOrderViewModel
             {
                 Orders = ordersViewModel.ToList(),
             };

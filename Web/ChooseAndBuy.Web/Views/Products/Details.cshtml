@@ -55,10 +55,30 @@
                     </div>
                     <div class="card_area d-flex align-items-center">
                         <button hidden id="productIdValue" value="@Model.ReviewModel.ProductId"></button>
-                        <input class="addCart primary-btn" id="addCart" type="button" value="Add to Cart" />
-                        <a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a>
+                        <input class="primary-btn" id="addCart" type="button" value="Add to Cart" />
+                        @if (this.User.Identity.IsAuthenticated)
+                        {
+                            <a class="icon_btn" id="addFav"><i class="lnr lnr lnr-heart"></i></a>
+                        }
+                        else
+                        {
+                            <a class="icon_btn" id="loginFav"><i class="lnr lnr lnr-heart"></i></a>
+                        }
                     </div>
-                    <div><h4 class="successP text-success mt-3" style="display: none;">Product added to cart!</h4></div>
+                    <!--================Dynamic Text Ajax Area =================-->
+                    <div>
+                        <h4 class="successP text-success mt-3" style="display: none;">Product added to Cart.</h4>
+                    </div>
+                    <div>
+                        <h4 class="successFav text-success mt-3" style="display: none;">Product added to Favorites.</h4>
+                    </div>
+                    <div>
+                        <h4 class="failFav text-success mt-3" style="display: none;">Product already added to Favorites.</h4>
+                    </div>
+                    <div>
+                        <h4 class="restrictFav text-success mt-3" style="display: none;">Login to use this feature.</h4>
+                    </div>
+                    <!--================End Dynamic Text Ajax Area =================-->
                 </div>
             </div>
         </div>
@@ -204,8 +224,10 @@
                         <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
                             <div class="single-related-product d-flex">
                                 <div style="height:100px; width:100px">
-                                    <a asp-action="Details" asp-controller="Products" asp-route-id="@product.Id"><img src="@product.ImageName" 
-                                    style="display: block; max-width: 100px; max-height: 100px; width:auto; height: auto; margin: 0 auto"></a>
+                                    <a asp-action="Details" asp-controller="Products" asp-route-id="@product.Id">
+                                        <img src="@product.ImageName"
+                                             style="display: block; max-width: 100px; max-height: 100px; width:auto; height: auto; margin: 0 auto">
+                                    </a>
                                 </div>
                                 <div class="desc">
                                     <a asp-action="Details" asp-controller="Products" asp-route-id="@product.Id" class="title">@product.Name</a>
@@ -257,10 +279,35 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json"
             });
-
-
         });
 
+        $("#addFav").click(function () {
+
+            var property1 = $("#productIdValue").val();
+
+            var JSONObject = {
+                "productId" : property1,
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Add", "Favorites")",
+                data: JSONObject,
+                success: function (result) {
+                    if (result.success) {
+                        $(".successFav").show().delay(2000).fadeOut();
+                    } else {
+                        $(".failFav").show().delay(2000).fadeOut();
+                    }
+                },
+                dataType: "json"
+            });
+        });
+
+        $("#loginFav").click(function() {
+            $(".restrictFav").show().delay(2000).fadeOut();
+        }
+    )
     </script>
 
     <partial name="_ValidationScriptsPartial" />
