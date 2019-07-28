@@ -1,4 +1,4 @@
-﻿namespace ChooseAndBuy.Web.ViewModels.Home
+﻿namespace ChooseAndBuy.Web.BindingModels.Home
 {
     using System.ComponentModel.DataAnnotations;
 

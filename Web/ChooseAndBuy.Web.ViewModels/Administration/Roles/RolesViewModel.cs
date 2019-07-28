@@ -1,7 +1,7 @@
 ﻿namespace ChooseAndBuy.Web.ViewModels.Administration.Roles
 {
     using System.Collections.Generic;
-
+    using ChooseAndBuy.Web.BindingModels.Administration.Roles;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
     public class RolesViewModel

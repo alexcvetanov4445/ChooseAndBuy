@@ -1,14 +1,9 @@
 ﻿namespace ChooseAndBuy.Web.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
-
-    using AutoMapper;
     using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Services;
-    using ChooseAndBuy.Web.ViewModels.Addresses;
+    using ChooseAndBuy.Web.BindingModels.Addresses;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;

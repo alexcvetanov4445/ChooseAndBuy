@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Data\ChooseAndBuy.Data\ChooseAndBuy.Data.csproj" />
+    <ProjectReference Include="..\..\Web\ChooseAndBuy.Web.BindingModels\ChooseAndBuy.Web.BindingModels.csproj" />
     <ProjectReference Include="..\..\Web\ChooseAndBuy.Web.ViewModels\ChooseAndBuy.Web.ViewModels.csproj" />
   </ItemGroup>
 

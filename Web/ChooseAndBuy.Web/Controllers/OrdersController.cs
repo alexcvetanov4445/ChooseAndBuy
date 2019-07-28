@@ -6,7 +6,8 @@
     using ChooseAndBuy.Common;
     using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Services;
-    using ChooseAndBuy.Web.ViewModels.Addresses;
+    using ChooseAndBuy.Web.BindingModels.Addresses;
+    using ChooseAndBuy.Web.ViewModels.Administration.Orders;
     using ChooseAndBuy.Web.ViewModels.Orders;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;

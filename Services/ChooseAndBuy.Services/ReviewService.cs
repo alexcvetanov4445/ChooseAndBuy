@@ -6,6 +6,7 @@
 
     using ChooseAndBuy.Data;
     using ChooseAndBuy.Data.Models;
+    using ChooseAndBuy.Web.BindingModels.Products;
     using ChooseAndBuy.Web.ViewModels.Products;
 
     public class ReviewService : IReviewService

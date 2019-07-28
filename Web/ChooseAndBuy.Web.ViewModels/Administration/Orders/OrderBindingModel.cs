@@ -1,4 +1,4 @@
-﻿namespace ChooseAndBuy.Web.ViewModels.Orders
+﻿namespace ChooseAndBuy.Web.ViewModels.Administration.Orders
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -6,6 +6,7 @@
     using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Data.Models.Enums;
     using ChooseAndBuy.Services.Mapping;
+    using ChooseAndBuy.Web.ViewModels.Orders;
 
     public class OrderBindingModel : IMapTo<Order>
     {

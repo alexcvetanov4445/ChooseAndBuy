@@ -7,6 +7,7 @@
 
     using ChooseAndBuy.Data;
     using ChooseAndBuy.Data.Models;
+    using ChooseAndBuy.Web.BindingModels.Administration.Products;
     using ChooseAndBuy.Web.ViewModels.Administration.Products;
     using ChooseAndBuy.Web.ViewModels.Products;
     using ChooseAndBuy.Web.ViewModels.ShoppingCart;

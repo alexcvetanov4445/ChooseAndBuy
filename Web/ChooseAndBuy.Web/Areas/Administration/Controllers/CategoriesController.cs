@@ -3,7 +3,7 @@
     using System.Threading.Tasks;
 
     using ChooseAndBuy.Services;
-    using ChooseAndBuy.Web.ViewModels.Administration.Categories;
+    using ChooseAndBuy.Web.BindingModels.Administration.Categories;
     using Microsoft.AspNetCore.Mvc;
 
     public class CategoriesController : AdministrationController

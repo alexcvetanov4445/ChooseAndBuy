@@ -1,14 +1,12 @@
 ﻿namespace ChooseNBuy.Controllers
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Linq;
     using System.Threading.Tasks;
     using ChooseAndBuy.Services;
+    using ChooseAndBuy.Web.BindingModels.Home;
     using ChooseAndBuy.Web.Controllers;
     using ChooseAndBuy.Web.ViewModels;
-    using ChooseAndBuy.Web.ViewModels.Home;
     using Microsoft.AspNetCore.Mvc;
 
     public class HomeController : BaseController

@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using System.Text;
 
+    using ChooseAndBuy.Web.BindingModels.ShoppingCart;
+
     public class ShoppingCartViewModel
     {
         public ICollection<ShoppingCartProductViewModel> Products { get; set; }

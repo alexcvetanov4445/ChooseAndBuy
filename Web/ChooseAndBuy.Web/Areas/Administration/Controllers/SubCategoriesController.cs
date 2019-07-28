@@ -2,8 +2,9 @@
 {
     using System.Linq;
     using System.Threading.Tasks;
+
     using ChooseAndBuy.Services;
-    using ChooseAndBuy.Web.ViewModels.Administration.SubCategories;
+    using ChooseAndBuy.Web.BindingModels.Administration.SubCategories;
     using Microsoft.AspNetCore.Mvc;
 
     public class SubCategoriesController : AdministrationController

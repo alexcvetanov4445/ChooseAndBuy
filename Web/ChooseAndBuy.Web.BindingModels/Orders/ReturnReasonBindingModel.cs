@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ChooseAndBuy.Web.ViewModels.Orders
+namespace ChooseAndBuy.Web.BindingModels.Orders
 {
     public class ReturnReasonBindingModel
     {

@@ -2,7 +2,7 @@
 {
     using System.Threading.Tasks;
 
-    using ChooseAndBuy.Web.ViewModels.Home;
+    using ChooseAndBuy.Web.BindingModels.Home;
 
     public interface IContactService
     {

@@ -7,7 +7,7 @@
     using System.Threading.Tasks;
     using ChooseAndBuy.Data;
     using ChooseAndBuy.Data.Models;
-    using ChooseAndBuy.Web.ViewModels.Administration.Categories;
+    using ChooseAndBuy.Web.BindingModels.Administration.Categories;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.EntityFrameworkCore;
 

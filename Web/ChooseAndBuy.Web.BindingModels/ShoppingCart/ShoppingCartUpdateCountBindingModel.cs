@@ -1,4 +1,4 @@
-﻿namespace ChooseAndBuy.Web.ViewModels.ShoppingCart
+﻿namespace ChooseAndBuy.Web.BindingModels.ShoppingCart
 {
     using System;
     using System.Collections.Generic;

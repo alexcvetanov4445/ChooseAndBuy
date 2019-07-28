@@ -1,10 +1,11 @@
-﻿using System.Threading.Tasks;
-using ChooseAndBuy.Data;
-using ChooseAndBuy.Data.Models;
-using ChooseAndBuy.Web.ViewModels.Home;
-
-namespace ChooseAndBuy.Services
+﻿namespace ChooseAndBuy.Services
 {
+    using System.Threading.Tasks;
+
+    using ChooseAndBuy.Data;
+    using ChooseAndBuy.Data.Models;
+    using ChooseAndBuy.Web.BindingModels.Home;
+
     public class ContactService : IContactService
     {
         private readonly ApplicationDbContext context;

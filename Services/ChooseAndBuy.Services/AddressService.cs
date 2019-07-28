@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
     using ChooseAndBuy.Data;
     using ChooseAndBuy.Data.Models;
+    using ChooseAndBuy.Web.BindingModels.Addresses;
     using ChooseAndBuy.Web.ViewModels.Addresses;
     using Microsoft.EntityFrameworkCore;
 

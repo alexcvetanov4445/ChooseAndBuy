@@ -6,6 +6,7 @@
 
     using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Services;
+    using ChooseAndBuy.Web.BindingModels.ShoppingCart;
     using ChooseAndBuy.Web.ViewModels.ShoppingCart;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;

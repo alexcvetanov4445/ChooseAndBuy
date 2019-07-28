@@ -1,4 +1,4 @@
-﻿namespace ChooseAndBuy.Web.ViewModels.Administration.Roles
+﻿namespace ChooseAndBuy.Web.BindingModels.Administration.Roles
 {
     using System.ComponentModel.DataAnnotations;
 

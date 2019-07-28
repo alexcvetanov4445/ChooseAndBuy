@@ -1,5 +1,6 @@
 ﻿namespace ChooseAndBuy.Web.ViewModels.Products
 {
+    using ChooseAndBuy.Web.BindingModels.Products;
     using System;
     using System.Collections.Generic;
     using System.Text;

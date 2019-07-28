@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
+    using ChooseAndBuy.Web.BindingModels.Addresses;
     using ChooseAndBuy.Web.ViewModels.Addresses;
 
     public interface IAddressService

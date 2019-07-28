@@ -1,14 +1,10 @@
 ﻿namespace ChooseAndBuy.Web.Areas.Administration.Controllers
 {
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-
-    using AutoMapper;
     using ChooseAndBuy.Services;
+    using ChooseAndBuy.Web.BindingModels.Orders;
     using ChooseAndBuy.Web.ViewModels.Administration.Orders;
-    using ChooseAndBuy.Web.ViewModels.Orders;
     using Microsoft.AspNetCore.Mvc;
 
     public class OrdersController : AdministrationController

@@ -1,4 +1,4 @@
-﻿namespace ChooseAndBuy.Web.ViewModels.Addresses
+﻿namespace ChooseAndBuy.Web.BindingModels.Addresses
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;

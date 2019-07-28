@@ -1,4 +1,4 @@
-﻿namespace ChooseAndBuy.Web.ViewModels.Administration.SubCategories
+﻿namespace ChooseAndBuy.Web.BindingModels.Administration.SubCategories
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;

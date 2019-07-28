@@ -3,8 +3,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    using ChooseAndBuy.Data.Models;
-    using ChooseAndBuy.Web.ViewModels.Administration.SubCategories;
+    using ChooseAndBuy.Web.BindingModels.Administration.SubCategories;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
     public interface ISubCategoryService

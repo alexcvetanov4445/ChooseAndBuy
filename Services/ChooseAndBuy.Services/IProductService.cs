@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using ChooseAndBuy.Data.Models;
+    using ChooseAndBuy.Web.BindingModels.Administration.Products;
     using ChooseAndBuy.Web.ViewModels.Administration.Products;
     using ChooseAndBuy.Web.ViewModels.Products;
     using ChooseAndBuy.Web.ViewModels.ShoppingCart;

@@ -8,6 +8,7 @@
     using AutoMapper;
     using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Services;
+    using ChooseAndBuy.Web.BindingModels.Products;
     using ChooseAndBuy.Web.ViewModels.Products;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Routing;

@@ -2,8 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-
-    using ChooseAndBuy.Data.Models;
+    using ChooseAndBuy.Web.BindingModels.Products;
     using ChooseAndBuy.Web.ViewModels.Products;
 
     public interface IReviewService

@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using ChooseAndBuy.Services;
+    using ChooseAndBuy.Web.BindingModels.Administration.Products;
     using ChooseAndBuy.Web.ViewModels.Administration.Products;
     using Microsoft.AspNetCore.Mvc;
 
