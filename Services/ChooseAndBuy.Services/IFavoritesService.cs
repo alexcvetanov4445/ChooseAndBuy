@@ -1,9 +1,10 @@
-﻿using ChooseAndBuy.Web.ViewModels.Favorites;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace ChooseAndBuy.Services
+﻿namespace ChooseAndBuy.Services
 {
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+
+    using ChooseAndBuy.Web.ViewModels.Favorites;
+
     public interface IFavoritesService
     {
         Task<bool> Add(string productId, string userId);

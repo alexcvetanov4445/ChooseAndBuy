@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Reflection;
     using System.Threading.Tasks;
 
@@ -21,13 +20,7 @@
         [Fact]
         public async Task CreateAddress_ShouldCreateAddressToUser()
         {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                    .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                    .Options;
-
-            AutoMapperConfig.RegisterMappings(
-                typeof(ErrorViewModel).GetTypeInfo().Assembly,
-                typeof(ErrorBindingModel).GetTypeInfo().Assembly);
+            var options = this.ConfigureContextOptionsAndAutoMapper();
 
             var context = new ApplicationDbContext(options);
 
@@ -58,13 +51,7 @@
         [Fact]
         public async Task GetAllUserAddresses_WithExistingUser_ShouldReturnCorrectAddresses()
         {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                    .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                    .Options;
-
-            AutoMapperConfig.RegisterMappings(
-                typeof(ErrorViewModel).GetTypeInfo().Assembly,
-                typeof(ErrorBindingModel).GetTypeInfo().Assembly);
+            var options = this.ConfigureContextOptionsAndAutoMapper();
 
             var context = new ApplicationDbContext(options);
 
@@ -95,13 +82,7 @@
         [Fact]
         public async Task GetAllUserAddresses_WithNonExistingUser_ShouldReturnCorrectAddresses()
         {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                .Options;
-
-            AutoMapperConfig.RegisterMappings(
-                typeof(ErrorViewModel).GetTypeInfo().Assembly,
-                typeof(ErrorBindingModel).GetTypeInfo().Assembly);
+            var options = this.ConfigureContextOptionsAndAutoMapper();
 
             var context = new ApplicationDbContext(options);
 
@@ -175,6 +156,19 @@
             };
 
             return addresses;
+        }
+
+        public DbContextOptions<ApplicationDbContext> ConfigureContextOptionsAndAutoMapper()
+        {
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                    .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                    .Options;
+
+            AutoMapperConfig.RegisterMappings(
+                typeof(ErrorViewModel).GetTypeInfo().Assembly,
+                typeof(ErrorBindingModel).GetTypeInfo().Assembly);
+
+            return options;
         }
     }
 }

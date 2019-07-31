@@ -29,5 +29,10 @@
         {
             Assert.True(obj != null, message);
         }
+
+        public static void NullWithMessage(object obj, string message)
+        {
+            Assert.True(obj == null, message);
+        }
     }
 }

@@ -107,7 +107,7 @@
         }
 
         [Fact]
-        public async Task GetCategoriesWithSubCategories_WithData_ShouldReturnEmptyCollection()
+        public async Task GetCategoriesWithSubCategories_WithoutData_ShouldReturnEmptyCollection()
         {
             var options = this.ConfigureContextOptionsAndAutoMapper();
 
@@ -120,6 +120,40 @@
             AssertExtensions.EmptyWithMessage(
                 actualCategoriesWithSubCategories,
                 "The returned collection is not empty or it's null");
+        }
+
+        [Fact]
+        public async Task ValidateCategoryName_WithExistingCategoryName_ShouldReturnFalse()
+        {
+            var options = this.ConfigureContextOptionsAndAutoMapper();
+
+            var context = new ApplicationDbContext(options);
+
+            await this.SeedCategories(context);
+
+            var categoryService = new CategoryService(context);
+
+            var firstCategory = this.GetCategories().First();
+
+            var result = await categoryService.ValidateCategoryName(firstCategory.Name);
+
+            Assert.False(result, "The method returned true on existing category name.");
+        }
+
+        [Fact]
+        public async Task ValidateCategoryName_WithNonExistingCategoryName_ShouldReturnFalse()
+        {
+            var options = this.ConfigureContextOptionsAndAutoMapper();
+
+            var context = new ApplicationDbContext(options);
+
+            var categoryService = new CategoryService(context);
+
+            var firstCategory = this.GetCategories().First();
+
+            var result = await categoryService.ValidateCategoryName(firstCategory.Name);
+
+            Assert.True(result, "The method returned false on non-existing category name.");
         }
 
         public async Task SeedCategories(ApplicationDbContext context)

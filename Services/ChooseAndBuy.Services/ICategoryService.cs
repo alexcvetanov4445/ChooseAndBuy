@@ -9,7 +9,7 @@
     public interface ICategoryService
     {
         Task<bool> AddCategory(CreateCategoryBindingModel model);
-        
+
         Task<IEnumerable<SelectListItem>> GetCategories();
 
         Task<Dictionary<string, ICollection<SelectListItem>>> GetCategoriesWithSubCategories();
