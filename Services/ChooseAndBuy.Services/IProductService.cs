@@ -23,8 +23,6 @@
 
         Task<EditProductBindingModel> GetEditProductInfoById(string productId);
 
-        Task<string> GetIdByName(string productName);
-
         Task<IEnumerable<ProductViewModel>> GetProducts(string search, string subCategoryId, int sortBy);
 
         IEnumerable<Product> GetSearchedProducts(string search);

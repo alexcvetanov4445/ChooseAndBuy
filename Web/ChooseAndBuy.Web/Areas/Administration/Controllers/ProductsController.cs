@@ -54,11 +54,9 @@
 
             await this.productService.AddProduct(model);
 
-            string productId = await this.productService.GetIdByName(model.Name);
-
             this.TempData["Success"] = $"Successully created {model.Name}";
 
-            return this.View(model);
+            return this.View();
         }
 
         [HttpPost]

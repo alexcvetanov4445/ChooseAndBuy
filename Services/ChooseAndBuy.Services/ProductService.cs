@@ -16,21 +16,21 @@
     public class ProductService : IProductService
     {
         private readonly ApplicationDbContext context;
-        private readonly ICloudinaryService imageService;
+        private readonly ICloudinaryService cloudinaryService;
 
         public ProductService(
             ApplicationDbContext context,
-            ICloudinaryService imageService)
+            ICloudinaryService cloudinaryService)
         {
             this.context = context;
-            this.imageService = imageService;
+            this.cloudinaryService = cloudinaryService;
         }
 
         public async Task<bool> AddProduct(CreateProductBindingModel model)
         {
             var product = AutoMapper.Mapper.Map<Product>(model);
 
-            string uniqueFileName = await this.imageService.CreateImage(model.FormImage, model.Name);
+            string uniqueFileName = await this.cloudinaryService.CreateImage(model.FormImage, model.Name);
             product.ImageName = uniqueFileName;
 
             await this.context.Products.AddAsync(product);
@@ -143,16 +143,6 @@
             return result;
         }
 
-        public async Task<string> GetIdByName(string productName)
-        {
-            var name = this.context
-                .Products
-                .SingleOrDefault(x => x.Name == productName)
-                .Name;
-
-            return name;
-        }
-
         public async Task<IEnumerable<ProductViewModel>> GetProducts(string search, string subCategoryId, int sortBy)
         {
             var products = new List<Product>();
@@ -223,18 +213,14 @@
             return result;
         }
 
-        private IEnumerable<Product> GetProductsByCategory(string id)
-        {
-            var products = this.context
-                .Products
-                .Where(sc => sc.SubCategoryId == id && sc.IsHidden == false);
-
-            return products;
-        }
-
         public async Task<ShoppingCartProductViewModel> GetProductForCart(string id)
         {
-            var product = this.context.Products.SingleOrDefault(p => p.Id == id);
+            var product = await this.context.Products.FirstOrDefaultAsync(p => p.Id == id);
+
+            if (product == null)
+            {
+                return null;
+            }
 
             var result = AutoMapper.Mapper.Map<ShoppingCartProductViewModel>(product);
 
@@ -245,5 +231,15 @@
 
             return result;
         }
+
+        private IEnumerable<Product> GetProductsByCategory(string id)
+        {
+            var products = this.context
+                .Products
+                .Where(sc => sc.SubCategoryId == id && sc.IsHidden == false);
+
+            return products;
+        }
+
     }
 }
