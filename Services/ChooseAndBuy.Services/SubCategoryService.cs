@@ -21,6 +21,13 @@
 
         public async Task<bool> AddSubCategory(SubCategoryBindingModel model)
         {
+            var categoryExists = await this.CategoryExists(model.CategoryId);
+
+            if (!categoryExists)
+            {
+                return false;
+            }
+
             var subCategory = AutoMapper.Mapper.Map<SubCategory>(model);
 
             await this.context.SubCategories.AddAsync(subCategory);
@@ -45,6 +52,20 @@
         public async Task<bool> SubCategoryExists(string name)
         {
             return await this.context.SubCategories.AnyAsync(sc => sc.Name == name);
+        }
+
+        private async Task<bool> CategoryExists(string categoryId)
+        {
+            var doesExist = await this.context
+                .Categories
+                .FirstOrDefaultAsync(c => c.Id == categoryId);
+
+            if (doesExist == null)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

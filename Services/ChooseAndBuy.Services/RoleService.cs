@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+
     using ChooseAndBuy.Data;
     using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Web.ViewModels.Administration.Roles;
@@ -28,7 +29,12 @@
 
         public async Task<bool> AddRole(string name)
         {
-            name = name.First().ToString().ToUpper() 
+            if (name == null)
+            {
+                return false;
+            }
+
+            name = name.First().ToString().ToUpper()
                 + name.ToLower().Substring(1);
 
             var roleExists = await this.roleManager.RoleExistsAsync(name);
@@ -50,11 +56,16 @@
         public async Task<bool> RemoveRole(string name)
         {
 
+            if (name == null)
+            {
+                return false;
+            }
+
             bool isNameValid = name != "Admin" && name != "User";
 
             bool roleExists = await this.roleManager.RoleExistsAsync(name);
 
-            if (!isNameValid)
+            if (!isNameValid || !roleExists)
             {
                 return false;
             }
@@ -120,6 +131,12 @@
         private async Task<bool> ReturnUsersToDefaultRole(string role)
         {
             var usersWithRole = await this.userManager.GetUsersInRoleAsync(role);
+
+            if (usersWithRole == null)
+            {
+                // It's null if there are no userswith this role
+                return true;
+            }
 
             foreach (var user in usersWithRole)
             {
