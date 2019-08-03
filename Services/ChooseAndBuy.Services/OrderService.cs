@@ -28,6 +28,12 @@
 
             order.OrderDate = DateTime.UtcNow;
             order.Status = OrderStatus.Pending;
+
+            if (orderBindingModel.Products == null)
+            {
+                return null;
+            }
+
             order.Quantity = orderBindingModel.Products.Sum(op => op.Quantity);
 
             order.DispatchDate = order.DeliveryType == DeliveryType.Express ?
@@ -43,6 +49,14 @@
 
         public async Task<bool> AddProductsToOrder(string orderId, List<OrderProductViewModel> products)
         {
+            bool orderExists = await this.OrderExists(orderId);
+            bool haveProducts = products == null ? false : true;
+
+            if (!orderExists || !haveProducts)
+            {
+                return false;
+            }
+
             foreach (var product in products)
             {
                 var orderProduct = AutoMapper.Mapper.Map<OrderProduct>(product);
@@ -116,7 +130,12 @@
 
         public async Task<bool> ApproveOrder(string orderId)
         {
-            var order = await this.context.Orders.SingleOrDefaultAsync(o => o.Id == orderId);
+            var order = await this.context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
+
+            if (order == null)
+            {
+                return false;
+            }
 
             order.Status = OrderStatus.DeliveryInProgress;
 
@@ -127,7 +146,12 @@
 
         public async Task<bool> DeliverOrder(string orderId)
         {
-            var order = await this.context.Orders.SingleOrDefaultAsync(o => o.Id == orderId);
+            var order = await this.context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
+
+            if (order == null)
+            {
+                return false;
+            }
 
             if (order.Status == OrderStatus.Canceled)
             {
@@ -144,7 +168,12 @@
 
         public async Task<bool> CancelOrder(string orderId)
         {
-            var order = await this.context.Orders.SingleOrDefaultAsync(o => o.Id == orderId);
+            var order = await this.context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
+
+            if (order == null)
+            {
+                return false;
+            }
 
             if (order.Status == OrderStatus.Delivered)
             {
@@ -169,6 +198,18 @@
             var result = await this.context.SaveChangesAsync();
 
             return result > 0;
+        }
+
+        private async Task<bool> OrderExists(string orderId)
+        {
+            var order = await this.context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
+
+            if (order == null)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
