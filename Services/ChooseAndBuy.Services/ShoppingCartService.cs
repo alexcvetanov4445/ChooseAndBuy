@@ -1,5 +1,6 @@
 ﻿namespace ChooseAndBuy.Services
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -29,6 +30,16 @@
 
         public async Task<bool> AddProductToCart(string productId, string userId, int quantity)
         {
+            // Validations for input data
+            bool productExists = await this.ProductExists(productId);
+            bool userExists = await this.UserExists(userId);
+            bool isValidQuantity = quantity < 1 ? false : true;
+
+            if (!productExists || !userExists || !isValidQuantity)
+            {
+                return false;
+            }
+
             // Calls a private method to do the job for getting the shopping cart id
             string shoppingCartId = await this.GetOrCreateUserShoppingCartById(userId);
 
@@ -143,6 +154,16 @@
 
         public async Task<bool> RemoveProductFromCart(string productId, string userId)
         {
+            // Validations for input data
+            bool productExists = await this.ProductExists(productId);
+            bool userExists = await this.UserExists(userId);
+
+            if (!productExists || !userExists)
+            {
+                return false;
+            }
+
+            // Method Logic
             string shoppingCartId = await this.GetOrCreateUserShoppingCartById(userId);
 
             var product = await this.context
@@ -205,11 +226,17 @@
 
         public async Task<bool> UpdateProductCount(string productId, string userId, int quantity)
         {
-            if (quantity <= 0)
+            // Validations for input data
+            bool productExists = await this.ProductExists(productId);
+            bool userExists = await this.UserExists(userId);
+            bool isValidQuantity = quantity < 1 ? false : true;
+
+            if (!productExists || !userExists || !isValidQuantity)
             {
                 return false;
             }
 
+            // Method Logic
             var shoppingCartId = await this.GetOrCreateUserShoppingCartById(userId);
 
             var shoppingCartProduct = await this.context
@@ -313,6 +340,30 @@
                 .Id;
 
             return shoppingCartId;
+        }
+
+        private async Task<bool> UserExists(string userId)
+        {
+            var user = await this.context.Users.FirstOrDefaultAsync(p => p.Id == userId);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private async Task<bool> ProductExists(string productId)
+        {
+            var product = await this.context.Products.FirstOrDefaultAsync(p => p.Id == productId);
+
+            if (product == null)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
