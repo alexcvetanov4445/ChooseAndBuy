@@ -32,7 +32,7 @@
 
             this.TempData["Success"] = $"Successully created {model.Name} category.";
 
-            return this.View(model);
+            return this.View();
         }
 
         [AcceptVerbs("Get", "Post")]

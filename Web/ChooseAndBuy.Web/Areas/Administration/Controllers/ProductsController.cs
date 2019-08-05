@@ -45,7 +45,6 @@
         public async Task<IActionResult> Create(CreateProductBindingModel model)
         {
             var subCategories = await this.subCategoryService.GetSubCategories();
-            model.SubCategories = subCategories.ToList();
 
             if (!this.ModelState.IsValid)
             {
@@ -56,7 +55,9 @@
 
             this.TempData["Success"] = $"Successully created {model.Name}";
 
-            return this.View();
+            var emptyModel = new CreateProductBindingModel { SubCategories = subCategories.ToList() };
+
+            return this.View(emptyModel);
         }
 
         [HttpPost]

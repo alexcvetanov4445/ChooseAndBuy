@@ -6,6 +6,7 @@
     using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Data.Models.Enums;
     using ChooseAndBuy.Services.Mapping;
+    using ChooseAndBuy.Web.BindingModels.Attributes;
     using ChooseAndBuy.Web.ViewModels.Orders;
 
     public class OrderBindingModel : IMapTo<Order>
@@ -17,14 +18,18 @@
         [Required(ErrorMessage = "Please choose a delivery address.")]
         public string DeliveryAddressId { get; set; }
 
+        [Required(ErrorMessage = "Please choose a delivery address.")]
         public Address DeliveryAddress { get; set; }
 
-        [Required(ErrorMessage = "This field is required")]
+        private int DefaultSelect = 0;
+
         [Display(Name = "Payment Option")]
+        [Required(ErrorMessage = "This field is required")]
+        [DropdownRequired]
         public PaymentType PaymentType { get; set; }
 
-        [Required(ErrorMessage = "This field is required")]
         [Display(Name = "Delivery Type")]
+        [DropdownRequired]
         public DeliveryType DeliveryType { get; set; }
 
         [Display(Name = "Additional Info - not necessary")]

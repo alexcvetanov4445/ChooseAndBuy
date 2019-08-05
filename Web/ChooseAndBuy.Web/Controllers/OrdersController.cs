@@ -44,6 +44,12 @@
 
             var cartProducts = await this.shoppingCartService.GetCartProductsByUserId(user.Id);
 
+            // If there are no products in the cart the user will be redirected
+            if (cartProducts.Count() == 0)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
             var totalPrice = cartProducts.Sum(p => p.TotalPrice) + GlobalConstants.DeliveryFee;
 
             AddressCreateBindingModel addressBindingModel = new AddressCreateBindingModel
@@ -73,9 +79,14 @@
         [HttpPost]
         public async Task<IActionResult> Create(OrderBindingModel orderCreate)
         {
-            // maps the order and sets its remaining values manually
-            // after that the shoppingCart is deleted
 
+            // Validation
+            if (!this.ModelState.IsValid)
+            {
+
+            }
+
+            // Post Logic
             // creates the order and recieves it's id
             var orderId = await this.orderService.CreateOrder(orderCreate);
 

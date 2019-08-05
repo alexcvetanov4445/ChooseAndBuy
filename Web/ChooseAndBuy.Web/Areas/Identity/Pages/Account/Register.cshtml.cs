@@ -8,7 +8,6 @@
     using ChooseAndBuy.Common;
     using ChooseAndBuy.Data;
     using ChooseAndBuy.Data.Models;
-
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.UI.Services;
@@ -112,7 +111,6 @@
 
             [Required]
             [EmailAddress]
-            [Display(Name = "Email")]
             public string Email { get; set; }
         }
     }

@@ -55,6 +55,7 @@
                     options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequiredLength = 6;
                     options.SignIn.RequireConfirmedEmail = true;
+                    options.User.RequireUniqueEmail = true;
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddUserStore<ApplicationUserStore>()
@@ -95,18 +96,18 @@
                     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
                 });
 
-            // External logins
+            // External logins 
             services
                 .AddAuthentication()
                 .AddFacebook(facebookOptions =>
                 {
-                    facebookOptions.AppId = "Facebook:AppId";
-                    facebookOptions.AppSecret = "Facebook:AppSecret";
+                    facebookOptions.AppId = this.configuration["Facebook:AppId"];
+                    facebookOptions.AppSecret = this.configuration["Facebook:AppSecret"];
                 })
                 .AddGoogle(googleOptions =>
                 {
-                    googleOptions.ClientId = "Google:ClientId";
-                    googleOptions.ClientSecret = "Google:ClientSecret";
+                    googleOptions.ClientId = this.configuration["Google:ClientId"];
+                    googleOptions.ClientSecret = this.configuration["Google:ClientSecret"];
                 });
 
             services

@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using ChooseAndBuy.Data;
@@ -197,6 +198,7 @@
         {
             ApplicationRole role = new ApplicationRole
             {
+                Id = "moderatorId",
                 Name = "Moderator",
             };
 
@@ -204,6 +206,7 @@
 
             ApplicationRole role2 = new ApplicationRole
             {
+                Id = "adminId",
                 Name = "Admin",
             };
 
@@ -211,10 +214,56 @@
 
             ApplicationRole role3 = new ApplicationRole
             {
+                Id = "userId",
                 Name = "User",
             };
 
             await roleManager.CreateAsync(role3);
+        }
+
+        public async Task SeedUsersWithRoles(ApplicationDbContext context)
+        {
+            List<ApplicationUser> users = new List<ApplicationUser>
+            {
+                new ApplicationUser
+                {
+                    Id = "FirstTestUserId",
+                    UserName = "First",
+                },
+                new ApplicationUser
+                {
+                    Id = "SecondTestUserId",
+                    UserName = "Second",
+                },
+                new ApplicationUser
+                {
+                    Id = "ThirdTestUserId",
+                    UserName = "Third",
+                },
+            };
+
+            List<IdentityUserRole<string>> userRoles = new List<IdentityUserRole<string>>()
+            {
+                new IdentityUserRole<string>
+                {
+                    RoleId = "moderatorId",
+                    UserId = "FirstTestUserId",
+                },
+                new IdentityUserRole<string>
+                {
+                    RoleId = "adminId",
+                    UserId = "SecondTestUserId",
+                },
+                new IdentityUserRole<string>
+                {
+                    RoleId = "userId",
+                    UserId = "ThirdTestUserId",
+                },
+            };
+
+            await context.Users.AddRangeAsync(users);
+            await context.UserRoles.AddRangeAsync(userRoles);
+            await context.SaveChangesAsync();
         }
 
         public UserManager<ApplicationUser> ConfigureUserManager(ApplicationDbContext context)

@@ -6,6 +6,10 @@
     ViewData["Title"] = "Active Orders";
 }
 
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+
 <div class="container">
     <div class="row">
         <partial name="~/Views/Shared/_AdminPanePartial.cshtml" />
@@ -39,33 +43,33 @@
                                 <td>@order.Username</td>
                                 @if (order.Status == "Delivered" || order.Status == "Canceled" || order.Status == "Returned")
                                 {
-                            <td>
-                                <a class="genric-btn radius text-dark disable">Deliver</a>
-                                @if (order.Status == "Returned")
-                                {
-                                    <button type="button" class="genric-btn warning radius text-dark mt-3" data-toggle="modal" data-target="#reasonModal">
-                                        Reason
-                                    </button>
-                                    <!-- Modal Reason-->
-                                    <div id="reasonModal" class="modal fade" role="dialog">
-                                        <div class="modal-dialog">
-                                            <!-- That is for showing the already returned order reason, need one more for returning with textarea post action-->
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">Return Reason</h4>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <p><strong>Return reason:</strong></p>
-                                                    <p>@order.ReturnReason</p>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <td>
+                                        <a class="genric-btn radius text-dark disable">Deliver</a>
+                                        @if (order.Status == "Returned")
+                                        {
+                                            <button type="button" class="genric-btn warning radius text-dark mt-3" data-toggle="modal" data-target="#reasonModal">
+                                                Reason
+                                            </button>
+                                            <!-- Modal Reason-->
+                                            <div id="reasonModal" class="modal fade" role="dialog">
+                                                <div class="modal-dialog">
+                                                    <!-- That is for showing the already returned order reason, need one more for returning with textarea post action-->
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Return Reason</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p><strong>Return reason:</strong></p>
+                                                            <p>@order.ReturnReason</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                }
-                            </td>
+                                        }
+                                    </td>
                                     <td>
                                         <a class="genric-btn radius text-dark disable">Cancel</a>
                                     </td>

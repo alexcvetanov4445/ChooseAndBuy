@@ -14,12 +14,12 @@
         public int Rating { get; set; }
 
         [Required]
-        [Display(Name = "Full Name")]
-        [StringLength(50, MinimumLength = 10, ErrorMessage = "Name must be atleast {1} and less than {0} characters long.")]
+        [StringLength(50, MinimumLength = 10, ErrorMessage = "Name must be atleast {2} and less than {1} characters long.")]
+        [Display(Name = "Name")]
         public string ClientFullName { get; set; }
 
         [Required]
-        [StringLength(300, MinimumLength = 10, ErrorMessage = "Comment must be atleast {1} and less than {0} characters long.")]
+        [StringLength(300, MinimumLength = 10, ErrorMessage = "Comment must be atleast {2} and less than {1} characters long.")]
         public string Comment { get; set; }
     }
 }

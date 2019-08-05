@@ -44,7 +44,9 @@
 
             this.TempData["Success"] = $"Successully created {model.Name} sub-category.";
 
-            return this.View(model);
+            var emptyModel = new SubCategoryBindingModel { Categories = categories.ToList() };
+
+            return this.View(emptyModel);
         }
 
         public async Task<IActionResult> ValidateSubCategoryName (string name)

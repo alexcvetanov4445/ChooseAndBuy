@@ -96,6 +96,7 @@
                                             <td><input asp-for="OrderCreate.DeliveryAddressId" type="radio" value="@address.Id" /></td>
                                         </tr>
                                     }
+                                    <span asp-validation-for="OrderCreate.DeliveryAddressId" class="text-danger"></span>
                                 </tbody>
                             </table>
 
@@ -109,14 +110,12 @@
                             <div class="col-4 form-group p_star">
                                 <label asp-for="OrderCreate.PaymentType" class="float-left"></label>
                                 <select asp-for="OrderCreate.PaymentType" asp-items="Html.GetEnumSelectList<ChooseAndBuy.Data.Models.Enums.PaymentType>()">
-                                    <option selected="selected" value="">Please select</option>
                                 </select>
                                 <span asp-validation-for="OrderCreate.PaymentType" class="text-danger"></span>
                             </div>
                             <div class="col-4 form-group p_star">
                                 <label asp-for="OrderCreate.DeliveryType" class="float-left"></label>
                                 <select asp-for="OrderCreate.DeliveryType" asp-items="Html.GetEnumSelectList<ChooseAndBuy.Data.Models.Enums.DeliveryType>()">
-                                    <option selected="selected" value="">Please select</option>
                                 </select>
                                 <span asp-validation-for="OrderCreate.DeliveryType" class="text-danger"></span>
                             </div>
@@ -193,6 +192,6 @@
             });
         });
     </script>
-    
+
     <partial name="_ValidationScriptsPartial" />
 }
