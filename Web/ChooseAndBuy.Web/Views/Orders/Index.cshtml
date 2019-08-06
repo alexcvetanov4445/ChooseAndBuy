@@ -14,6 +14,7 @@
 <section class="checkout_area section_gap">
     <div class="container">
         <div class="billing_details">
+            <!--================Start Address Create Modal Area =================-->
             <div class="modal fade" id="crtWindow">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
@@ -60,14 +61,15 @@
                     </div>
                 </div>
             </div>
+            <!--================End Address Create Modal Area =================-->
             <div class="row mt-3">
+                <!--================Start Order Details =================-->
                 <div class="col-lg-8 order_box">
                     <h3>Order Details</h3>
                     <form class="row contact_form" asp-action="Create" asp-controller="Orders" method="post">
                         <input asp-for="OrderCreate.ApplicationUserId" type="hidden" />
                         @for (int i = 0; i < Model.OrderCreate.Products.Count(); i++)
                         {
-
                             <input asp-for="OrderCreate.Products[i].ProductId" type="hidden" />
                             <input asp-for="OrderCreate.Products[i].Name" type="hidden" />
                             <input asp-for="OrderCreate.Products[i].Price" type="hidden" />
@@ -109,14 +111,12 @@
                         <div class="col">
                             <div class="col-4 form-group p_star">
                                 <label asp-for="OrderCreate.PaymentType" class="float-left"></label>
-                                <select asp-for="OrderCreate.PaymentType" asp-items="Html.GetEnumSelectList<ChooseAndBuy.Data.Models.Enums.PaymentType>()">
-                                </select>
+                                <select asp-for="OrderCreate.PaymentType" asp-items="Html.GetEnumSelectList<ChooseAndBuy.Data.Models.Enums.PaymentType>()"></select>
                                 <span asp-validation-for="OrderCreate.PaymentType" class="text-danger"></span>
                             </div>
                             <div class="col-4 form-group p_star">
                                 <label asp-for="OrderCreate.DeliveryType" class="float-left"></label>
-                                <select asp-for="OrderCreate.DeliveryType" asp-items="Html.GetEnumSelectList<ChooseAndBuy.Data.Models.Enums.DeliveryType>()">
-                                </select>
+                                <select asp-for="OrderCreate.DeliveryType" asp-items="Html.GetEnumSelectList<ChooseAndBuy.Data.Models.Enums.DeliveryType>()"></select>
                                 <span asp-validation-for="OrderCreate.DeliveryType" class="text-danger"></span>
                             </div>
                         </div>
@@ -157,6 +157,8 @@
                         </div>
                     </form>
                 </div>
+                <!--================End Order Details =================-->
+                <!--================Start Side Bar (Terms and Conditions) =================-->
                 <div class="col-lg-4">
                     <div class="order_box">
                         <h4>Terms and Conditions</h4>
@@ -177,6 +179,7 @@
                             capitalisation and/or he/she or they, are taken as interchangeable and therefore as referring to same. Read more <a asp-action="Privacy" asp-controller="Home">here.</a>
                     </div>
                 </div>
+                <!--================End Side Bar (Terms and Conditions) =================-->
             </div>
         </div>
     </div>
@@ -184,7 +187,6 @@
 <!--================End Checkout Area =================-->
 
 @section Scripts{
-
     <script>
         $(document).ready(function () {
             $("#crtAddress").click(function () {
@@ -192,6 +194,5 @@
             });
         });
     </script>
-
     <partial name="_ValidationScriptsPartial" />
 }

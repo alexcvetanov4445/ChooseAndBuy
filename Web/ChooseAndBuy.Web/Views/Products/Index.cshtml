@@ -35,8 +35,8 @@
                 </ul>
             </div>
         </div>
+        <!-- Start Filter Bar -->
         <div class="col-xl-9 col-lg-8 col-md-7">
-            <!-- Start Filter Bar -->
             <form method="post" asp-controller="products" asp-action="index">
                 <div class="filter-bar d-flex flex-wrap align-items-center">
                     <input type="hidden" name="SubCategoryId" value="@Model.SubCategoryId">
@@ -158,79 +158,6 @@
 </div>
 
 @section Scripts{
-    <script>
-
-    $(".addCart").click(function () {
-        var property1 = $(this).attr("id");
-        var property2 = 1;
-
-        var JSONObject = {
-            "ProductId" : property1,
-            "Quantity" : property2
-        };
-
-        $.ajax({
-            type: "POST",
-            url: "@Url.Action("Add", "ShoppingCart")",
-            data: JSON.stringify(JSONObject),
-            success: function () {
-                $("#successCart-" + property1).show().delay(2000).fadeOut();
-            },
-            contentType: "application/json; charset=utf-8",
-            dataType: "json"
-        });
-    });
-
-    $(".addFav").click(function () {
-        var property1 = $(this).attr("id");
-
-        var JSONObject = {
-            "productId" : property1
-        };
-
-        $.ajax({
-            type: "POST",
-            url: "@Url.Action("Add", "Favorites")",
-            data: JSONObject,
-            success: function (result) {
-                if (result.success) {
-                    $("#successFav-" + property1).show().delay(2000).fadeOut();
-                } else {
-                    $("#errorFav-" + property1).show().delay(2000).fadeOut();
-                }
-            },
-            dataType: "json"
-        });
-    });
-
-    $(".FavDenied").click(function () {
-        var property1 = $(this).attr("id");
-
-        var JSONObject = {
-            "productId" : property1
-        };
-
-        $("#LoginFav-" + property1).show().delay(2000).fadeOut();
-    });
-
-    $(document).ready(function () {
-        var num = $(".removeSpan").text().substr(1);
-        console.log(num);
-        $(".removeSpan").find("span").remove();
-        $(".removeSpan").append("<a></a>");
-        $(".removeSpan").find("a").text(num).addClass("active");
-    });
-
-    $("#Search").autocomplete({
-        source: "/Products/Search",
-        minLength: 1,
-
-        select: function (event, ui) {
-            window.location.href = ui.item.url;
-        }
-    });
-
-    </script>
-
+    <script src="~/js/productsIndex.js"></script>
     <partial name="_ValidationScriptsPartial" />
 }

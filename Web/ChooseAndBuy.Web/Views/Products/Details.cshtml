@@ -34,11 +34,11 @@
                     <p>
                         @if (Model.DetailsInfo.Description.Length <= 200)
                         {
-                        @Model.DetailsInfo.Description
+                            @Model.DetailsInfo.Description
                         }
                         else
                         {
-                        @(Model.DetailsInfo.Description.Substring(0, 200) + "...")
+                            @(Model.DetailsInfo.Description.Substring(0, 200) + "...")
                         }
                     </p>
                     <div class="product_count">
@@ -58,11 +58,11 @@
                         <input class="primary-btn" id="addCart" type="button" value="Add to Cart" />
                         @if (this.User.Identity.IsAuthenticated)
                         {
-                        <a class="icon_btn" id="addFav"><i class="lnr lnr lnr-heart"></i></a>
+                            <a class="icon_btn" id="addFav"><i class="lnr lnr lnr-heart"></i></a>
                         }
                         else
                         {
-                        <a class="icon_btn" id="loginFav"><i class="lnr lnr lnr-heart"></i></a>
+                            <a class="icon_btn" id="loginFav"><i class="lnr lnr lnr-heart"></i></a>
                         }
                     </div>
                     <!--================Dynamic Text Ajax Area =================-->
@@ -117,11 +117,11 @@
                                     <h5>Overall</h5>
                                     @if (Model.DetailsInfo.Reviews.Count() == 0)
                                     {
-                                    <h4>0</h4>
+                                        <h4>0</h4>
                                     }
                                     else
                                     {
-                                    <h4>@(Model.DetailsInfo.Reviews.Sum(x => x.Rating) / Model.DetailsInfo.Reviews.Count())</h4>
+                                        <h4>@(Model.DetailsInfo.Reviews.Sum(x => x.Rating) / Model.DetailsInfo.Reviews.Count())</h4>
                                     }
                                     <h6>(@Model.DetailsInfo.Reviews.Count() Reviews)</h6>
                                 </div>
@@ -130,33 +130,33 @@
                         <div class="review_list mt-3">
                             @if (Model.DetailsInfo.Reviews.Count == 0)
                             {
-                            <div class="mt3 text-center">
-                                <h4>There are no user reviews for this product.</h4>
-                            </div>
+                                <div class="mt3 text-center">
+                                    <h4>There are no user reviews for this product.</h4>
+                                </div>
                             }
                             @foreach (var rev in Model.DetailsInfo.Reviews)
                             {
-                            <div class="review_item">
-                                <div class="media">
-                                    <div class="media-body">
-                                        <h4>@rev.ClientFullName</h4>
-                                        @for (int i = 1; i <= 5; i++)
-                                        {
-                                        if (i <= rev.Rating)
-                                        {
-                                        <i class="fa fa-star"></i>
-                                        }
-                                        else
-                                        {
-                                        <i class="fa fa-star-o"></i>
-                                        }
-                                        }
+                                <div class="review_item">
+                                    <div class="media">
+                                        <div class="media-body">
+                                            <h4>@rev.ClientFullName</h4>
+                                            @for (int i = 1; i <= 5; i++)
+                                            {
+                                                if (i <= rev.Rating)
+                                                {
+                                                    <i class="fa fa-star"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="fa fa-star-o"></i>
+                                                }
+                                            }
+                                        </div>
                                     </div>
+                                    <p>
+                                        @rev.Comment
+                                    </p>
                                 </div>
-                                <p>
-                                    @rev.Comment
-                                </p>
-                            </div>
                             }
                         </div>
                     </div>
@@ -221,22 +221,22 @@
                 <div class="row">
                     @foreach (var product in Model.RecommendedProducts)
                     {
-                    <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
-                        <div class="single-related-product d-flex">
-                            <div style="height:100px; width:100px">
-                                <a asp-action="Details" asp-controller="Products" asp-route-id="@product.Id">
-                                    <img src="@product.ImageName"
-                                         style="display: block; max-width: 100px; max-height: 100px; width:auto; height: auto; margin: 0 auto">
-                                </a>
-                            </div>
-                            <div class="desc">
-                                <a asp-action="Details" asp-controller="Products" asp-route-id="@product.Id" class="title">@product.Name</a>
-                                <div class="price">
-                                    <h6>$@product.Price</h6>
+                        <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
+                            <div class="single-related-product d-flex">
+                                <div style="height:100px; width:100px">
+                                    <a asp-action="Details" asp-controller="Products" asp-route-id="@product.Id">
+                                        <img src="@product.ImageName"
+                                             style="display: block; max-width: 100px; max-height: 100px; width:auto; height: auto; margin: 0 auto">
+                                    </a>
+                                </div>
+                                <div class="desc">
+                                    <a asp-action="Details" asp-controller="Products" asp-route-id="@product.Id" class="title">@product.Name</a>
+                                    <div class="price">
+                                        <h6>$@product.Price</h6>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     }
                 </div>
             </div>
@@ -244,71 +244,8 @@
     </div>
 </section>
 <!-- End related-product Area -->
+
 @section Scripts{
-<script>
-        $(".ratingStar").hover(function () {
-            $(".ratingStar").addClass("fa-star-o").removeClass("fa-star");
-
-            $(this).addClass("fa-star").removeClass("fa-star-o");
-            $(this).prevAll(".ratingStar").addClass("fa-star").removeClass("fa-star-o");
-        });
-
-        $(".ratingStar").click(function () {
-            var starRating = $(this).attr("dataValue");
-
-            $("#ratingsValue").val(starRating);
-        });
-
-        $("#addCart").click(function () {
-
-            var property1 = $("#productIdValue").val();
-            var property2 = $("#sst").val();
-
-            var JSONObject = {
-                "ProductId" : property1,
-                "Quantity" : property2
-            };
-
-            $.ajax({
-                type: "POST",
-                url: "@Url.Action("Add", "ShoppingCart")",
-                data: JSON.stringify(JSONObject),
-                success: function () {
-                    $(".successP").show().delay(2000).fadeOut();
-                },
-                contentType: "application/json; charset=utf-8",
-                dataType: "json"
-            });
-        });
-
-        $("#addFav").click(function () {
-
-            var property1 = $("#productIdValue").val();
-
-            var JSONObject = {
-                "productId" : property1,
-            };
-
-            $.ajax({
-                type: "POST",
-                url: "@Url.Action("Add", "Favorites")",
-                data: JSONObject,
-                success: function (result) {
-                    if (result.success) {
-                        $(".successFav").show().delay(2000).fadeOut();
-                    } else {
-                        $(".failFav").show().delay(2000).fadeOut();
-                    }
-                },
-                dataType: "json"
-            });
-        });
-
-    $("#loginFav").click(function () {
-        $(".restrictFav").show().delay(2000).fadeOut();
-    });
-
-</script>
-
-<partial name="_ValidationScriptsPartial" />
+    <script src="~/js/productDetails.js"></script>
+    <partial name="_ValidationScriptsPartial" />
 }

@@ -6,10 +6,6 @@
     ViewData["Title"] = "Shopping Cart";
 }
 
-<script src="~/lib/jquery/dist/jquery.js"></script>
-<script src="~/lib/jquery-validation/jquery.validate.js"></script>
-<script src="~/lib/jquery-validate-unobtrusive/jquery.validate.unobtrusive.js"></script>
-
 <!--================Cart Area =================-->
 <section class="cart_area">
     <div class="container">
@@ -127,36 +123,5 @@
 </section>
 <!--================End Cart Area =================-->
 @section Scripts {
-    <script>
-        $(".removeProduct").click(function () {
-
-            var prdId = $(this).attr("id");
-            var prdPrice = $(this).attr("accesskey");
-            var totalPrice = $(".totalP").text().substr(1);
-
-            var JSONObject = {
-                "productId" : prdId
-            };
-
-            $.ajax({
-                type: "POST",
-                url: "@Url.Action("Remove", "ShoppingCart")",
-                data: JSONObject,
-                dataType: "json",
-                success: function () {
-                    $("#" + prdId).fadeOut();
-
-                    var newPrice = parseFloat(totalPrice) - parseFloat(prdPrice);
-
-                    $(".totalP").text("$" + newPrice.toFixed(2));
-
-                    if (newPrice == 0) {
-                        $("#checkoutBtn").hide();
-                    }
-                }
-            });
-        });
-    </script>
-
-    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/shoppingCart.js"></script>
 }

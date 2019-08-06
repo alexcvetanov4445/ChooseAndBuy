@@ -13,6 +13,7 @@
 <!--================Contact Area =================-->
 <section class="contact_area section_gap_bottom">
     <div class="container mt-3">
+        <!--================Start Send Success Alert =================-->
         @if (TempData["Success"] != null)
         {
             <div class="alert alert-success" role="alert">
@@ -22,9 +23,11 @@
                 </button>
             </div>
         }
-    <div class="row">
-        <div class="col-lg-9">
-            <form class="row contact_form" method="post">
+        <!--================End Send Success Alert =================-->
+        <!--================Start Message Form Area =================-->
+        <div class="row">
+            <div class="col-lg-9">
+                <form class="row contact_form" method="post">
                     <div class="col-md-12">
                         <h5>If you have any questions or advice for our company, please contact us by writing a message or just call us.</h5>
                     </div>
@@ -51,23 +54,24 @@
                     <div class="col-md-12 text-right">
                         <button type="submit" value="submit" class="primary-btn">Send Message</button>
                     </div>
-            </form>
-        </div>
-        <div class="col-lg-3">
-            <div class="contact_info">
-                <div class="info_item">
-                    <i class="lnr lnr-phone-handset"></i>
-                    <h6><a href="#">02/876 7656</a></h6>
-                    <p>24/7 Service</p>
-                </div>
-                <div class="info_item">
-                    <i class="lnr lnr-envelope"></i>
-                    <h6><a href="#">ChooseAndBuy@gmail.com</a></h6>
-                    <p>Send us your query anytime!</p>
+                </form>
+            </div>
+            <div class="col-lg-3">
+                <div class="contact_info">
+                    <div class="info_item">
+                        <i class="lnr lnr-phone-handset"></i>
+                        <h6><a href="#">02/876 7656</a></h6>
+                        <p>24/7 Service</p>
+                    </div>
+                    <div class="info_item">
+                        <i class="lnr lnr-envelope"></i>
+                        <h6><a href="#">ChooseAndBuy@gmail.com</a></h6>
+                        <p>Send us your query anytime!</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+        <!--================End Message Form Area =================-->
     </div>
 </section>
 <!--================Contact Area =================-->

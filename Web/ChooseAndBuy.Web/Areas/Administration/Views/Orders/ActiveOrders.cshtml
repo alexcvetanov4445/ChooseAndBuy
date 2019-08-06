@@ -50,10 +50,9 @@
                                             <button type="button" class="genric-btn warning radius text-dark mt-3" data-toggle="modal" data-target="#reasonModal">
                                                 Reason
                                             </button>
-                                            <!-- Modal Reason-->
+                                            <!-- Start Modal View Reason-->
                                             <div id="reasonModal" class="modal fade" role="dialog">
                                                 <div class="modal-dialog">
-                                                    <!-- That is for showing the already returned order reason, need one more for returning with textarea post action-->
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h4 class="modal-title">Return Reason</h4>
@@ -68,6 +67,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <!-- End Modal View Reason-->
                                         }
                                     </td>
                                     <td>
@@ -81,10 +81,9 @@
                                         <button type="button" id="return-@order.Id" class="genric-btn warning radius text-dark mt-3" data-toggle="modal" data-target="#returnModal">
                                             Return
                                         </button>
-                                        <!-- Modal Return-->
+                                        <!-- Start Modal Return Input Form-->
                                         <div id="returnModal" class="modal fade" role="dialog">
                                             <div class="modal-dialog">
-                                                <!--Need ReturnReasonBindingModel-->
                                                 <div class="modal-content">
                                                     <div class="modal-header text-center">
                                                         <h4 class="modal-title">Return Reason</h4>
@@ -110,6 +109,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <!-- End Modal Return Input Form-->
                                     </td>
 
                                     <td><a class="cancelAction genric-btn danger radius text-dark" id="cancelAction-@order.Id">Cancel</a></td>
@@ -120,7 +120,7 @@
                                     </button>
                                 </td>
                             </tr>
-                            <!-- Modal Details-->
+                            <!-- Start Modal View Details-->
                             <div class="modal fade bd-example-modal-lg" id="modal-@order.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-lg" role="document">
                                     <div class="modal-content">
@@ -185,6 +185,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- End Modal View Details-->
                         }
                     </tbody>
                 </table>
@@ -195,62 +196,6 @@
 </div>
 
 @section Scripts{
-    <script>
-        $(".deliverAction").click(function () {
-
-            var ordId = $(this).attr("id");
-            ordId = ordId.substring(14, ordId.length);
-
-            var JSONObject = {
-                "orderId" : ordId
-            };
-
-            $.ajax({
-                type: "POST",
-                url: "@Url.Action("Deliver", "Orders", new { area = "Administration" })",
-                data: JSONObject,
-                dataType: "json",
-                success: function () {
-                    $(".statusText-" + ordId).text("Delivered");
-                    $(this).addClass("disable");
-                    $("#cancelAction-" + ordId).addClass("disable");
-                    $("#deliverAction-" + ordId).addClass("disable");
-                    $("#return-" + ordId).fadeOut();
-
-                    var d = new Date();
-
-                    var dateString = d.getUTCDate().toString()
-                        + '.' + (d.getUTCMonth() + 1).toString()
-                        + '.' + d.getFullYear().toString();
-
-                    $("#deliveryDate-" + ordId).text(dateString);
-                },
-            });
-        });
-
-        $(".cancelAction").click(function () {
-
-            var ordId = $(this).attr("id");
-            ordId = ordId.substring(13, ordId.length);
-
-            var JSONObject = {
-                "orderId" : ordId
-            };
-
-            $.ajax({
-                type: "POST",
-                url: "@Url.Action("Cancel", "Orders", new { area = "Administration" })",
-                data: JSONObject,
-                dataType: "json",
-                success: function () {
-                    $(".statusText-" + ordId).text("Canceled");
-                    $("#cancelAction-" + ordId).addClass("disable");
-                    $("#deliverAction-" + ordId).addClass("disable");
-                    $("#deliveryDate-" + ordId).text("Canceled");
-                    $("#return-" + ordId).fadeOut();
-                },
-            });
-        });
-    </script>
+    <script src="~/js/activeOrders.js"></script>
 }
 

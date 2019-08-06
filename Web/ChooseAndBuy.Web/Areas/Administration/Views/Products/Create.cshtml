@@ -11,6 +11,7 @@
 }
 
 <div class="container">
+    <!-- Start Success Alert -->
     @if (TempData["Success"] != null)
     {
         <div class="alert alert-success" role="alert">
@@ -20,6 +21,7 @@
             </button>
         </div>
     }
+    <!-- End Success Alert -->
     <div class="row">
         <partial name="~/Views/Shared/_AdminPanePartial.cshtml" />
         <div class="col-xl-9 col-lg-8 col-md-7">
@@ -63,7 +65,7 @@
                         <div class="col-md-7 form-group">
                             <label asp-for="FormImage" class="control-label"></label>
                             <input asp-for="FormImage" type='file' id="inputFile" />
-                            <img id="image_upload_preview" src="http://placehold.it/100x100" alt="your image" style="height: 100px; width: auto;"/>
+                            <img id="image_upload_preview" src="http://placehold.it/100x100" alt="your image" style="height: 100px; width: auto;" />
                             <span asp-validation-for="FormImage" class="text-danger"></span>
                         </div>
                         <div class="col-md-12 mt-3 text-center">

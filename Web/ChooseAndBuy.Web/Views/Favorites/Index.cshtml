@@ -2,30 +2,30 @@
 
 @model IEnumerable<FavoriteProductViewModel>
 
-@{
+    @{
     ViewData["Title"] = "My Favorite Products";
-}
+    }
 
-<!-- Start Table Area -->
-<section class="cart_area">
-    <div class="container">
-        <div class="cart_inner">
-            <div class="login-form">
-                <table class="table">
-                    <h3 class="text-center">My Favorite Products</h3>
-                    <hr style="height: 3px" />
-                    <thead>
-                        <tr>
-                            <th scope="col"></th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Price</th>
-                            <th scope="col"></th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var product in Model)
-                        {
+    <!-- Start Table Area -->
+    <section class="cart_area">
+        <div class="container">
+            <div class="cart_inner">
+                <div class="login-form">
+                    <table class="table">
+                        <h3 class="text-center">My Favorite Products</h3>
+                        <hr style="height: 3px" />
+                        <thead>
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Price</th>
+                                <th scope="col"></th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var product in Model)
+                            {
                             <tr id="@product.Id">
                                 <td><img src="@product.ImageName" style="max-height: 100px;"></td>
                                 <td class="text-primary"><a asp-action="Details" asp-controller="Products" asp-route-id="@product.Id">@product.Name</a></td>
@@ -41,34 +41,15 @@
                                     </a>
                                 </td>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
-</section>
-<!--================End Table Area =================-->
+    </section>
+    <!--================End Table Area =================-->
 
-@section Scripts{ 
-    <script>
-        $(".removeProduct").click(function () {
-
-            var prdId = $(this).attr("id");
-
-            var JSONObject = {
-                "productId" : prdId
-            };
-
-            $.ajax({
-                type: "POST",
-                url: "@Url.Action("Remove", "Favorites")",
-                data: JSONObject,
-                dataType: "json",
-                success: function () {
-                    $("#" + prdId).fadeOut();
-                }
-            });
-        });
-    </script>
-}
+    @section Scripts{
+    <script src="~/js/favoritesIndex.js"></script>
+    }

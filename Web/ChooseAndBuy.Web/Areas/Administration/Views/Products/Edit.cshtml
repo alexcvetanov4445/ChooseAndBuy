@@ -11,6 +11,7 @@
 }
 
 <div class="container">
+    <!-- Start Success Alert -->
     @if (TempData["Success"] != null)
     {
         <div class="alert alert-success" role="alert">
@@ -20,6 +21,7 @@
             </button>
         </div>
     }
+    <!-- End Success Alert -->
     <div class="row">
         <partial name="~/Views/Shared/_AdminPanePartial.cshtml" />
         <div class="col-xl-9 col-lg-8 col-md-7">

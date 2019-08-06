@@ -25,7 +25,7 @@
                     <div class="col">
 
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".modalRemove">Remove Role</button>
-                        <!-- Remove Role Modal -->
+                        <!-- Start Remove Role Modal -->
                         <div class="modal fade modalRemove" tabindex="-1" role="dialog" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
@@ -46,11 +46,12 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- End Remove Role Modal -->
                     </div>
                     <div class="col">
 
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".modalAdd">New Role</button>
-                        <!-- Add Role Modal -->
+                        <!-- Start Add Role Modal -->
                         <div class="modal fade modalAdd" tabindex="-1" role="dialog" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
@@ -60,7 +61,7 @@
                                     <form method="post" asp-action="AddRole" asp-controller="Roles">
                                         <div class="row mt-3 mb-4">
                                             <div class="col-6 d-flex justify-content-center default-select" id="default-select">
-                                                <input asp-for="AddModel.RoleName" class="form-control ml-3" placeholder="Role Name"/>
+                                                <input asp-for="AddModel.RoleName" class="form-control ml-3" placeholder="Role Name" />
                                                 <span asp-validation-for="AddModel.RoleName" class="text-danger"></span>
                                             </div>
                                             <div class="col-6 d-flex justify-content-center">
@@ -71,9 +72,10 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- End Add Role Modal -->
                     </div>
                 </div>
-                <!-- Make unable to remove User and Admin role. If Role is removed make all users with that role to user. -->
+                <!-- Start Users Table Area -->
                 <table class="table">
                     <thead>
                         <tr>
@@ -103,7 +105,7 @@
                                 </td>
                                 <td>
                                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".modal-@user.Username">Change Role</button>
-                                    <!-- Change User Role Modal -->
+                                    <!-- Start Change User Role Modal -->
                                     <div class="modal fade modal-@user.Username" tabindex="-1" role="dialog" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
@@ -124,12 +126,14 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <!-- End Change User Role Modal -->
                                 </td>
                             </tr>
 
                         }
                     </tbody>
                 </table>
+                <!-- End Users Table Area -->
             </section>
             <!-- End Content Section -->
         </div>
