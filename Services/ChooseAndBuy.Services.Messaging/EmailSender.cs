@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
 
+    using ChooseAndBuy.Common;
     using Microsoft.AspNetCore.Identity.UI.Services;
     using Microsoft.Extensions.Options;
     using SendGrid;
@@ -29,7 +30,7 @@
             var client = new SendGridClient(apiKey);
             var msg = new SendGridMessage()
             {
-                From = new EmailAddress("alexcvetanov4445@gmail.com", "Choose And Buy Team"),
+                From = new EmailAddress(GlobalConstants.EmailSenderMail, GlobalConstants.EmailSenderTitle),
                 Subject = subject,
                 PlainTextContent = message,
                 HtmlContent = message,

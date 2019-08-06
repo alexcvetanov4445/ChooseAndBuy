@@ -31,10 +31,4 @@
     </Reference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Administration\Categories\" />
-    <Folder Include="Administration\SubCategories\" />
-    <Folder Include="Home\" />
-  </ItemGroup>
-
 </Project>

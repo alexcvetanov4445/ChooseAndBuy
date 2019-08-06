@@ -15,5 +15,9 @@
         public const string ShoppingCartSession = "shoppingCart";
 
         public const string ProductDetailsUrl = "https://localhost:44319/Products/Details/";
+
+        public const string EmailSenderMail = "alexcvetanov4445@gmail.com";
+
+        public const string EmailSenderTitle = "Choose And Buy Team";
     }
 }

@@ -1,8 +1,8 @@
 ﻿namespace ChooseNBuy.Controllers
 {
-    using System;
     using System.Diagnostics;
     using System.Threading.Tasks;
+
     using ChooseAndBuy.Services;
     using ChooseAndBuy.Web.BindingModels.Home;
     using ChooseAndBuy.Web.Controllers;

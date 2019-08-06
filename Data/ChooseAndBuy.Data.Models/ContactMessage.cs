@@ -1,8 +1,8 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-
-namespace ChooseAndBuy.Data.Models
+﻿namespace ChooseAndBuy.Data.Models
 {
+    using System;
+    using System.ComponentModel.DataAnnotations;
+
     public class ContactMessage
     {
         public string Id { get; set; }

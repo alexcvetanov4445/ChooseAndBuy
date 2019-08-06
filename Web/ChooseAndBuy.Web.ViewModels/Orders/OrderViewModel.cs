@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+
     using AutoMapper;
     using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Data.Models.Enums;

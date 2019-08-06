@@ -36,7 +36,5 @@
         public string CityId { get; set; }
 
         public IEnumerable<SelectListItem> Cities { get; set; }
-
-
     }
 }

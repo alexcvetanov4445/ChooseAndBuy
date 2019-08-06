@@ -36,7 +36,7 @@
                 PhoneNumber = "0001112333",
             };
 
-            // Gets the user and creates the address using the model and the users Id
+            // Gets the user and creates the address using the model and the user's Id
             var user = this.GetUser();
             await addressService.CreateAddress(model, user.Id);
 
@@ -61,8 +61,9 @@
             await this.SeedTestUser(context);
             await this.SeedUserAddresses(context);
 
-            // gets the user id and his addresses
+            // gets the user id
             var userId = this.GetUser().Id;
+
             var addresses = await addressService.GetAllUserAddresses(userId);
 
             var expectedUserAddressesCount = this.GetAddressesForUser().Count;
@@ -77,6 +78,26 @@
                 expectedUserAddressesCount,
                 actualCount,
                 "AddressService.GetAllUserAddresses does not return the expected count.");
+        }
+
+        [Fact]
+        public async Task GetAllUserAddresses_WithNoSeededAddresses_ShouldReturnAnEmptyCollection()
+        {
+            var options = this.ConfigureContextOptionsAndAutoMapper();
+
+            var context = new ApplicationDbContext(options);
+
+            var addressService = new AddressService(context);
+
+            // seeding a user only
+            await this.SeedTestUser(context);
+
+            // gets the user id
+            var userId = this.GetUser().Id;
+
+            var addresses = await addressService.GetAllUserAddresses(userId);
+
+            AssertExtensions.EmptyWithMessage(addresses, "The method did not return an empty collection upon no seeded addresses.");
         }
 
         [Fact]

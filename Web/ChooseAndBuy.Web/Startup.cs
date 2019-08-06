@@ -96,7 +96,7 @@
                     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
                 });
 
-            // External logins 
+            // External logins
             services
                 .AddAuthentication()
                 .AddFacebook(facebookOptions =>

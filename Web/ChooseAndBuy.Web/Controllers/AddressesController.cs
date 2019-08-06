@@ -1,6 +1,7 @@
 ﻿namespace ChooseAndBuy.Web.Controllers
 {
     using System.Threading.Tasks;
+
     using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Services;
     using ChooseAndBuy.Web.BindingModels.Addresses;

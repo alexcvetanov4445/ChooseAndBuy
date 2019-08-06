@@ -1,6 +1,7 @@
 ﻿namespace ChooseAndBuy.Web.ViewModels.Products
 {
     using System.Collections.Generic;
+
     using AutoMapper;
     using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Services.Mapping;

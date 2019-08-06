@@ -1,9 +1,5 @@
 ﻿namespace ChooseAndBuy.Data.Models
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-
     public class CategoryProduct
     {
         public string ProductId { get; set; }

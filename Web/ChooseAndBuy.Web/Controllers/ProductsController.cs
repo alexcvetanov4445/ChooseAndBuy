@@ -1,18 +1,14 @@
 ﻿namespace ChooseAndBuy.Web.Controllers
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
-    using AutoMapper;
     using ChooseAndBuy.Common;
-    using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Services;
     using ChooseAndBuy.Web.BindingModels.Products;
     using ChooseAndBuy.Web.ViewModels.Products;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Routing;
     using X.PagedList;
 
     public class ProductsController : BaseController
@@ -31,6 +27,7 @@
             this.reviewService = reviewService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index(ProductsViewModel model)
         {
             // TODO: make the default values contstants
