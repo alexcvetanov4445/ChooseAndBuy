@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
 
     using AutoMapper;
+    using ChooseAndBuy.Common;
     using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Services;
     using ChooseAndBuy.Web.BindingModels.Products;
@@ -47,6 +48,7 @@
             return this.View(model);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Search(string term)
         {
             var products = this.productsService.GetSearchedProducts(term);
@@ -66,12 +68,13 @@
             var result = products.Select(x => new SearchViewModel
             {
                 Value = x.Name,
-                Url = "https://localhost:44319/Products/Details/" + x.Id,
+                Url = GlobalConstants.ProductDetailsUrl + x.Id,
             });
 
             return this.Json(result);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Details(string id)
         {
             var detailsInfo = await this.productsService.GetById(id);
@@ -91,7 +94,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> Details(ReviewBindingModel productModel)
+        public async Task<IActionResult> AddReview(ReviewBindingModel productModel)
         {
             await this.reviewService.AddReview(productModel);
 

@@ -49,6 +49,11 @@
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            if (this.User.Identity.IsAuthenticated)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
             returnUrl = returnUrl ?? this.Url.Content("/Identity/Account/Login");
             if (this.ModelState.IsValid)
             {

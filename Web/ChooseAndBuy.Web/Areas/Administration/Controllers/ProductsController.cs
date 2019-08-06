@@ -24,6 +24,7 @@
             this.imageService = imageService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> All()
         {
             var products = await this.productService.GetAllProducts();
@@ -32,6 +33,7 @@
             return this.View(model);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
             var categories = await this.subCategoryService.GetSubCategories();
@@ -76,6 +78,7 @@
             return this.Json(result);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Edit(string productId)
         {
             var model = await this.productService.GetEditProductInfoById(productId);
@@ -107,11 +110,8 @@
             {
                 return this.Json(false);
             }
-            else
-            {
-                return this.Json(true);
-            }
 
+            return this.Json(true);
         }
     }
 }

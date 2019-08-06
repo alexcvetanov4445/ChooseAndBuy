@@ -22,6 +22,7 @@
             this.userManager = userManager;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             string userId = this.userManager.GetUserId(this.HttpContext.User);

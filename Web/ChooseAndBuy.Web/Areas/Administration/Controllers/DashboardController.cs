@@ -13,6 +13,7 @@
             this.settingsService = settingsService;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             var viewModel = new IndexViewModel { SettingsCount = this.settingsService.GetCount(), };

@@ -15,6 +15,7 @@
             this.categoryService = categoryService;
         }
 
+        [HttpGet]
         public IActionResult Create()
         {
             return this.View();

@@ -163,7 +163,7 @@
                     <div class="col-lg-6">
                         <div class="review_box">
                             <h4>Add a Review</h4>
-                            <form class="row reg_form" method="post">
+                            <form asp-action="AddReview" asp-controller="Products" class="row reg_form" method="post">
                                 <div asp-validation-summary="All" class="text-danger ml-3"></div>
                                 <input asp-for="ReviewModel.ProductId" type="hidden" name="ProductId" id="ProductIdValue" />
                                 <div class="col-md-12 text-warning">

@@ -17,6 +17,7 @@
             this.orderService = orderService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> PendingOrders()
         {
             var orders = await this.orderService.GetPendingOrders();
@@ -29,6 +30,7 @@
             return this.View(model);
         }
 
+        [HttpGet]
         public async Task<IActionResult> ActiveOrders()
         {
             var orders = await this.orderService.GetActiveOrders();

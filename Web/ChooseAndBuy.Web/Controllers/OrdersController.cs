@@ -9,9 +9,11 @@
     using ChooseAndBuy.Web.BindingModels.Addresses;
     using ChooseAndBuy.Web.ViewModels.Administration.Orders;
     using ChooseAndBuy.Web.ViewModels.Orders;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
+    [Authorize]
     public class OrdersController : BaseController
     {
         private readonly UserManager<ApplicationUser> userManager;
@@ -34,6 +36,7 @@
             this.orderService = orderService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var user = await this.userManager.GetUserAsync(this.User);
@@ -79,14 +82,6 @@
         [HttpPost]
         public async Task<IActionResult> Create(OrderBindingModel orderCreate)
         {
-
-            // Validation
-            if (!this.ModelState.IsValid)
-            {
-
-            }
-
-            // Post Logic
             // creates the order and recieves it's id
             var orderId = await this.orderService.CreateOrder(orderCreate);
 
@@ -99,6 +94,7 @@
             return this.RedirectToAction("Confirmation", new { orderId = orderId });
         }
 
+        [HttpGet]
         public async Task<IActionResult> Confirmation(string orderId)
         {
             var model = await this.orderService.GetConfirmationInfo(orderId);
@@ -106,6 +102,7 @@
             return this.View(model);
         }
 
+        [HttpGet]
         public async Task<IActionResult> UserOrders()
         {
             string userId = this.userManager.GetUserId(this.HttpContext.User);

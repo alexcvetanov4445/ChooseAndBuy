@@ -20,6 +20,7 @@
             this.subCategoryService = subCategoryService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
             var categories = await this.categoryService.GetCategories();
@@ -49,6 +50,7 @@
             return this.View(emptyModel);
         }
 
+        [AcceptVerbs("Get", "Post")]
         public async Task<IActionResult> ValidateSubCategoryName (string name)
         {
             var subCategoryExists = await this.subCategoryService.SubCategoryExists(name);

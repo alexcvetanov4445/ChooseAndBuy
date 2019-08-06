@@ -13,5 +13,7 @@
         public const decimal DeliveryFee = 3.90m;
 
         public const string ShoppingCartSession = "shoppingCart";
+
+        public const string ProductDetailsUrl = "https://localhost:44319/Products/Details/";
     }
 }

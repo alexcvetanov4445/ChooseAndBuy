@@ -14,19 +14,17 @@
     public class ShoppingCartController : BaseController
     {
         private readonly IShoppingCartService shoppingCartService;
-        private readonly IProductService productService;
         private readonly UserManager<ApplicationUser> userManager;
 
         public ShoppingCartController(
             IShoppingCartService shoppingCartService,
-            IProductService productService,
             UserManager<ApplicationUser> userManager)
         {
             this.shoppingCartService = shoppingCartService;
-            this.productService = productService;
             this.userManager = userManager;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             if (this.User.Identity.IsAuthenticated)

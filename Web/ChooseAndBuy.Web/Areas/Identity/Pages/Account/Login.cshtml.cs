@@ -62,6 +62,11 @@
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            if (this.User.Identity.IsAuthenticated)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
             returnUrl = returnUrl ?? this.Url.Content("~/");
 
             if (this.ModelState.IsValid)
@@ -69,7 +74,6 @@
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await this.signInManager.PasswordSignInAsync(this.Input.Username, this.Input.Password, this.Input.RememberMe, lockoutOnFailure: true);
-
 
                 if (result.Succeeded)
                 {
