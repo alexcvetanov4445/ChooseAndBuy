@@ -33,7 +33,23 @@
 
             this.TempData["Success"] = $"Successully created {model.Name} category.";
 
-            return this.View();
+            return this.RedirectToAction("Create");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Deletable()
+        {
+            var deletableCategoriesModels = await this.categoryService.GetDeletableCategories();
+
+            return this.View(deletableCategoriesModels);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var result = await this.categoryService.DeleteCategory(id);
+
+            return this.Json(result);
         }
 
         [AcceptVerbs("Get", "Post")]

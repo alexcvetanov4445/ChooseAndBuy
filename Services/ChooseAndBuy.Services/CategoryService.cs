@@ -7,6 +7,7 @@
     using ChooseAndBuy.Data;
     using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Web.BindingModels.Administration.Categories;
+    using ChooseAndBuy.Web.ViewModels.Administration.Categories;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.EntityFrameworkCore;
 
@@ -25,6 +26,23 @@
 
             await this.context.Categories.AddAsync(category);
 
+            var result = await this.context.SaveChangesAsync();
+
+            return result > 0;
+        }
+
+        public async Task<bool> DeleteCategory(string id)
+        {
+            var category = await this.context
+                .Categories
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (category == null)
+            {
+                return false;
+            }
+
+            this.context.Categories.Remove(category);
             var result = await this.context.SaveChangesAsync();
 
             return result > 0;
@@ -66,6 +84,17 @@
             }
 
             return dict;
+        }
+
+        public async Task<IEnumerable<CategoryViewModel>> GetDeletableCategories()
+        {
+            var categories = this.context.Categories
+                .Include(sc => sc.SubCategories)
+                .Where(x => x.SubCategories.Count == 0);
+
+            var result = AutoMapper.Mapper.Map<List<CategoryViewModel>>(categories);
+
+            return result;
         }
 
         public async Task<bool> ValidateCategoryName(string name)

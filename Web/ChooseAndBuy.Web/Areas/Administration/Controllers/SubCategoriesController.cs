@@ -45,9 +45,23 @@
 
             this.TempData["Success"] = $"Successully created {model.Name} sub-category.";
 
-            var emptyModel = new SubCategoryBindingModel { Categories = categories.ToList() };
+            return this.RedirectToAction("Create");
+        }
 
-            return this.View(emptyModel);
+        [HttpGet]
+        public async Task<IActionResult> Deletable()
+        {
+            var subCategoriesModels = await this.subCategoryService.GetDeletableSubCategories();
+
+            return this.View(subCategoriesModels);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var result = await this.subCategoryService.DeleteSubCategory(id);
+
+            return this.Json(result);
         }
 
         [AcceptVerbs("Get", "Post")]

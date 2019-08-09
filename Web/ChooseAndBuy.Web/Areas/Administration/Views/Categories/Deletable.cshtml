@@ -1,0 +1,54 @@
+﻿@using ChooseAndBuy.Web.ViewModels.Administration.Categories;
+
+@model IEnumerable<CategoryViewModel>
+
+@{
+    ViewData["Title"] = "Deletable Categories";
+}
+
+<div class="container">
+    <div class="row">
+        <partial name="~/Views/Shared/_AdminPanePartial.cshtml" />
+        <div class="col-xl-9 col-lg-8 col-md-7">
+            <!-- Start Content Section -->
+            <section class="container mt-4 mb-4">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="text-primary">NOTE: Here will be listed only categories with no sub-categories</th>
+                        </tr>
+                        <tr>
+                            <th scope="col">Category Name</th>
+                            <th scope="col"></th>
+                        </tr>                        
+                    </thead>
+                    <tbody>
+                        @foreach (var category in Model)
+                        {
+                            <tr id="tr-@category.Id">
+                                <td hidden><button id="catId" value="@category.Id"></button></td>
+                                <td class="text-primary">
+                                    <strong>
+                                        @category.Name
+                                    </strong>
+                                </td>
+                                <!-- Start Single Row Buttons -->
+                                <td>
+                                    <a class="genric-btn danger radius text-dark deleteBtn" id="@category.Id">
+                                        Delete
+                                    </a>
+                                </td>
+                                <!-- End Single Row Buttons -->
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </section>
+            <!-- End Content Section -->
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/categoriesDeletable.js"></script>
+}

@@ -1,0 +1,63 @@
+﻿@using ChooseAndBuy.Web.ViewModels.Administration.SubCategories
+
+@model IEnumerable<SubCategoryViewModel>
+
+@{
+    ViewData["Title"] = "Deletable Sub-Categories";
+}
+
+<div class="container">
+    <div class="row">
+        <partial name="~/Views/Shared/_AdminPanePartial.cshtml" />
+        <div class="col-xl-9 col-lg-8 col-md-7">
+            <!-- Start Content Section -->
+            <section class="container mt-4 mb-4">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="text-primary"></th>
+                            <th scope="col" class="text-primary">NOTE: Here will be listed only sub-categories with no products.</th>
+                            <th scope="col" class="text-primary"></th>
+                        </tr>
+                        <tr>
+                            <th scope="col">Sub-Category Name</th>
+                            <th scope="col">Main Category Name</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var subCategory in Model)
+                        {
+                            <tr id="tr-@subCategory.Id">
+                                <td hidden><button id="catId" value="@subCategory.Id"></button></td>
+                                <td class="text-primary">
+                                    <strong>
+                                        @subCategory.Name
+                                    </strong>
+                                </td>
+                                <td class="text-primary">
+                                    <strong>
+                                        @subCategory.MainCategory
+                                    </strong>
+                                </td>
+                                <!-- Start Single Row Buttons -->
+                                <td>
+                                    <a class="genric-btn danger radius text-dark deleteBtn" id="@subCategory.Id">
+                                        Delete
+                                    </a>
+                                </td>
+                                <!-- End Single Row Buttons -->
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </section>
+            <!-- End Content Section -->
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/subCategoriesDeletable.js"></script>
+}
+
