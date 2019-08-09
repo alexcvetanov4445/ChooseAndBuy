@@ -346,6 +346,7 @@ healthchecksdb
 MigrationBackup/
 
 # Custom ignores
+appsettings.json
 appsettings.Production.json
 *.min.css
 *.min.js
