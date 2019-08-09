@@ -3,17 +3,14 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using System.Threading.Tasks;
 
     using ChooseAndBuy.Common;
     using ChooseAndBuy.Data;
     using ChooseAndBuy.Data.Models;
     using ChooseAndBuy.Data.Models.Enums;
-    using ChooseAndBuy.Services.Mapping;
+    using ChooseAndBuy.Services.Tests.Common;
     using ChooseAndBuy.Services.Tests.Extensions;
-    using ChooseAndBuy.Web.BindingModels;
-    using ChooseAndBuy.Web.ViewModels;
     using ChooseAndBuy.Web.ViewModels.Administration.Orders;
     using ChooseAndBuy.Web.ViewModels.Orders;
     using Microsoft.EntityFrameworkCore;
@@ -21,394 +18,31 @@
 
     public class OrderServiceTests
     {
-        [Fact]
-        public async Task CreateOrder_WithNoProducts_ShouldrReturnNull()
+        private async Task<List<OrderProductViewModel>> GetProductsForOrder()
         {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var orderService = new OrderService(context);
-
-            OrderBindingModel model = new OrderBindingModel
+            var products = new List<OrderProductViewModel>()
             {
-                DeliveryType = DeliveryType.Express,
-                PaymentType = PaymentType.OnDelivery,
+                new OrderProductViewModel
+                {
+                    Name = "product1",
+                    TotalPrice = 10,
+                },
+                new OrderProductViewModel
+                {
+                    Name = "product2",
+                    TotalPrice = 10,
+                },
+                new OrderProductViewModel
+                {
+                    Name = "product3",
+                    TotalPrice = 10,
+                },
             };
 
-            var orderId = await orderService.CreateOrder(model);
-
-            AssertExtensions.NullWithMessage(orderId, "The method did not return null upon invalid input.");
+            return products;
         }
 
-        [Fact]
-        public async Task CreateOrder_WithGivenProducts_ShouldrCreateOrderSuccessfully()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var orderService = new OrderService(context);
-
-            OrderBindingModel model = new OrderBindingModel
-            {
-                DeliveryType = DeliveryType.Express,
-                PaymentType = PaymentType.OnDelivery,
-                Products = await this.GetProductsForOrder(),
-            };
-
-            var orderId = await orderService.CreateOrder(model);
-
-            var orderFromDatabase = await context.Orders.FirstOrDefaultAsync(x => x.Id == orderId);
-
-            AssertExtensions.NotNullWithMessage(orderFromDatabase, "The order was not added to the database.");
-        }
-
-        [Fact]
-        public async Task AddProductsToOrder_WithExistingOrderAndGivenProducts_ShouldAddProductsSuccessfully()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var orderService = new OrderService(context);
-
-            var products = await this.GetProductsForOrder();
-
-            OrderBindingModel model = new OrderBindingModel
-            {
-                DeliveryType = DeliveryType.Express,
-                PaymentType = PaymentType.OnDelivery,
-                Products = products,
-            };
-
-            var orderId = await orderService.CreateOrder(model);
-
-            var methodResult = await orderService.AddProductsToOrder(orderId, products);
-
-            Assert.True(methodResult, "The method returned false with valid data.");
-
-            var orderFromDatabase = context.OrderProducts.Where(x => x.OrderId == orderId);
-
-            var expectedCount = products.Count;
-
-            AssertExtensions.EqualCountWithMessage(expectedCount, orderFromDatabase.Count(), "The returned order products don't match the expected count.");
-        }
-
-        [Fact]
-        public async Task AddProductsToOrder_WithNonExistingOrderAndGivenProducts_ShouldReturnFalse()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var orderService = new OrderService(context);
-
-            var products = await this.GetProductsForOrder();
-
-            var orderId = "FakeOrderId";
-
-            var methodResult = await orderService.AddProductsToOrder(orderId, products);
-
-            Assert.False(methodResult, "The method returned true upon invalid orderId.");
-        }
-
-        [Fact]
-        public async Task AddProductsToOrder_WithExistingOrderAndNoProducts_ShouldReturnFalse()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var orderService = new OrderService(context);
-
-            var products = await this.GetProductsForOrder();
-
-            OrderBindingModel model = new OrderBindingModel
-            {
-                DeliveryType = DeliveryType.Express,
-                PaymentType = PaymentType.OnDelivery,
-                Products = products,
-            };
-
-            var orderId = await orderService.CreateOrder(model);
-
-            // Passing null instead of the products
-            var methodResult = await orderService.AddProductsToOrder(orderId, null);
-
-            Assert.False(methodResult, "The method returned true upon no products input.");
-        }
-
-        [Fact]
-        public async Task GetConfirmationInfo_WithExistingOrder_ShouldReturnModel()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var orderService = new OrderService(context);
-
-            var orderId = await this.SeedOrderWithProducts(context);
-
-            var confirmationModel = await orderService.GetConfirmationInfo(orderId);
-
-            AssertExtensions.NotNullWithMessage(confirmationModel, "The returned model is null.");
-
-            var orderFromDatabase = await context.Orders
-                .FirstOrDefaultAsync(x =>
-                confirmationModel.QuantityProducts == x.Quantity &&
-                confirmationModel.TotalPrice == x.TotalPrice &&
-                confirmationModel.PaymentMethod == x.PaymentType.ToString());
-
-            AssertExtensions.EqualStringWithMessage(orderId, orderFromDatabase.Id, "The model does not provide correct data for the order.");
-        }
-
-        [Fact]
-        public async Task GetConfirmationInfo_WithNonExistingOrder_ShouldReturnNull()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var orderService = new OrderService(context);
-
-            var orderId = "FakeOrderId";
-
-            var confirmationModel = await orderService.GetConfirmationInfo(orderId);
-
-            AssertExtensions.NullWithMessage(confirmationModel, "The method did not return null upon non-existing order.");
-        }
-
-        [Fact]
-        public async Task GetAllUserOrders_WithSeededUserWithOrders_ShouldReturnCorrectOrders()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var orderService = new OrderService(context);
-
-            // Seeding the orders for one user and recieves the orders.
-            var orders = await this.SeedUserWithMultipleOrders(context);
-
-            var userId = orders.First().ApplicationUserId;
-
-            var methodResult = await orderService.GetAllUserOrders(userId);
-
-            var expectedCount = orders.Count;
-            var actualCount = methodResult.Count();
-
-            AssertExtensions.EqualCountWithMessage(expectedCount, actualCount, "The returned orders are not the same count as expected.");
-        }
-
-        [Fact]
-        public async Task GetAllUserOrders_WithNonExistingUser_ShouldReturnAnEmptyCollection()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var orderService = new OrderService(context);
-
-            var userId = "FakeUserId";
-
-            var methodResult = await orderService.GetAllUserOrders(userId);
-
-            AssertExtensions.EmptyWithMessage(methodResult, "The method did not return an empty collection with non-existing user.");
-        }
-
-        [Fact]
-        public async Task GetAllUserOrders_WithUserWithNoOrders_ShouldReturnAnEmptyCollection()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var orderService = new OrderService(context);
-
-            // Seeding only one user with no orders
-            var userId = await this.SeedSingleUser(context);
-
-            var methodResult = await orderService.GetAllUserOrders(userId);
-
-            AssertExtensions.EmptyWithMessage(methodResult, "The method did not return an empty collection with no user orders.");
-        }
-
-        [Fact]
-        public async Task GetPendingOrders_WithSeededOrders_ShouldReturnCorrectOrders()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var orderService = new OrderService(context);
-
-            // Seeding multiple orders with 2 pending orders
-            await this.SeedMultipleOrders(context);
-
-            var pendingOrders = await orderService.GetPendingOrders();
-
-            var expectedCount = 2;
-
-            AssertExtensions.EqualCountWithMessage(expectedCount, pendingOrders.Count(), "The method did not return the correct orders.");
-        }
-
-        [Fact]
-        public async Task GetPendingOrders_WithNoOrders_ShouldReturnAnEmptyCollection()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var orderService = new OrderService(context);
-
-            var pendingOrders = await orderService.GetPendingOrders();
-
-            AssertExtensions.EmptyWithMessage(pendingOrders, "The method did not return an empty collection.");
-        }
-
-        [Fact]
-        public async Task GetActiveOrders_WithSeededOrders_ShouldReturnCorrectOrders()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var orderService = new OrderService(context);
-
-            // Seeding multiple orders with 2 active orders
-            await this.SeedMultipleOrders(context);
-
-            var pendingOrders = await orderService.GetActiveOrders();
-
-            var expectedCount = 2;
-
-            AssertExtensions.EqualCountWithMessage(expectedCount, pendingOrders.Count(), "The method did not return the correct orders.");
-        }
-
-        [Fact]
-        public async Task GetActiveOrders_WithNoOrders_ShouldReturnAnEmptyCollection()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var orderService = new OrderService(context);
-
-            var pendingOrders = await orderService.GetActiveOrders();
-
-            AssertExtensions.EmptyWithMessage(pendingOrders, "The method did not return an empty collection.");
-        }
-
-        [Fact]
-        public async Task ApproveOrder_WithExistingOrder_ShouldApproveSuccessfully()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var orderService = new OrderService(context);
-
-            var orderId = await this.SeedSingleOrder(context);
-
-            bool methodResult = await orderService.ApproveOrder(orderId);
-
-            Assert.True(methodResult, "The method did not return true on valid order.");
-
-            var orderFromDatabase = await context.Orders.FirstOrDefaultAsync(x => x.Id == orderId);
-
-            Assert.True(orderFromDatabase.Status == OrderStatus.DeliveryInProgress, "The order status was not changed properly");
-        }
-
-        [Fact]
-        public async Task ApproveOrder_WithNonExistingOrder_ShouldReturnFalse()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var orderService = new OrderService(context);
-
-            var orderId = "FakeOrderId";
-
-            bool methodResult = await orderService.ApproveOrder(orderId);
-
-            Assert.False(methodResult, "The method did not return false on non-existing order.");
-        }
-
-        [Fact]
-        public async Task CancelOrder_WithExistingOrder_ShouldApproveSuccessfully()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var orderService = new OrderService(context);
-
-            var orderId = await this.SeedSingleOrder(context);
-
-            bool methodResult = await orderService.CancelOrder(orderId);
-
-            Assert.True(methodResult, "The method did not return true on valid order.");
-
-            var orderFromDatabase = await context.Orders.FirstOrDefaultAsync(x => x.Id == orderId);
-
-            Assert.True(orderFromDatabase.Status == OrderStatus.Canceled, "The order status was not changed properly");
-        }
-
-        [Fact]
-        public async Task CancelOrder_WithNonExistingOrder_ShouldReturnFalse()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var orderService = new OrderService(context);
-
-            var orderId = "FakeOrderId";
-
-            bool methodResult = await orderService.CancelOrder(orderId);
-
-            Assert.False(methodResult, "The method did not return false on non-existing order.");
-        }
-
-        [Fact]
-        public async Task DeliverOrder_WithExistingOrder_ShouldApproveSuccessfully()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var orderService = new OrderService(context);
-
-            var orderId = await this.SeedSingleOrder(context);
-
-            bool methodResult = await orderService.DeliverOrder(orderId);
-
-            Assert.True(methodResult, "The method did not return true on valid order.");
-
-            var orderFromDatabase = await context.Orders.FirstOrDefaultAsync(x => x.Id == orderId);
-
-            Assert.True(orderFromDatabase.Status == OrderStatus.Delivered, "The order status was not changed properly");
-        }
-
-        [Fact]
-        public async Task DeliverOrder_WithNonExistingOrder_ShouldReturnFalse()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var orderService = new OrderService(context);
-
-            var orderId = "FakeOrderId";
-
-            bool methodResult = await orderService.DeliverOrder(orderId);
-
-            Assert.False(methodResult, "The method did not return false on non-existing order.");
-        }
-
-        public async Task<string> SeedSingleOrder(ApplicationDbContext context)
+        private async Task<string> SeedSingleOrder(ApplicationDbContext context)
         {
             Order order = new Order
             {
@@ -422,7 +56,7 @@
             return order.Id;
         }
 
-        public async Task<string> SeedSingleUser(ApplicationDbContext context)
+        private async Task<string> SeedSingleUser(ApplicationDbContext context)
         {
             ApplicationUser user = new ApplicationUser
             {
@@ -436,7 +70,7 @@
             return user.Id;
         }
 
-        public async Task SeedMultipleOrders(ApplicationDbContext context)
+        private async Task SeedMultipleOrders(ApplicationDbContext context)
         {
             var orders = new List<Order>()
             {
@@ -486,7 +120,7 @@
             await context.SaveChangesAsync();
         }
 
-        public async Task<string> SeedOrderWithProducts(ApplicationDbContext context)
+        private async Task<string> SeedOrderWithProducts(ApplicationDbContext context)
         {
             var orderId = string.Empty;
 
@@ -559,7 +193,7 @@
             return orderId;
         }
 
-        public async Task<List<Order>> SeedUserWithMultipleOrders(ApplicationDbContext context)
+        private async Task<List<Order>> SeedUserWithMultipleOrders(ApplicationDbContext context)
         {
             ApplicationUser user = new ApplicationUser
             {
@@ -628,41 +262,410 @@
             return orders;
         }
 
-        public async Task<List<OrderProductViewModel>> GetProductsForOrder()
+        public OrderServiceTests()
         {
-            var products = new List<OrderProductViewModel>()
-            {
-                new OrderProductViewModel
-                {
-                    Name = "product1",
-                    TotalPrice = 10,
-                },
-                new OrderProductViewModel
-                {
-                    Name = "product2",
-                    TotalPrice = 10,
-                },
-                new OrderProductViewModel
-                {
-                    Name = "product3",
-                    TotalPrice = 10,
-                },
-            };
-
-            return products;
+            MapperInitializer.InitializeMapper();
         }
 
-        public DbContextOptions<ApplicationDbContext> ConfigureContextOptionsAndAutoMapper()
+        [Fact]
+        public async Task CreateOrder_WithNoProducts_ShouldrReturnNull()
         {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                    .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                    .Options;
+            string onNotNullErrorMessage = "The method did not return null upon invalid input.";
 
-            AutoMapperConfig.RegisterMappings(
-                typeof(ErrorViewModel).GetTypeInfo().Assembly,
-                typeof(ErrorBindingModel).GetTypeInfo().Assembly);
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
 
-            return options;
+            var orderService = new OrderService(context);
+
+            OrderBindingModel model = new OrderBindingModel
+            {
+                DeliveryType = DeliveryType.Express,
+                PaymentType = PaymentType.OnDelivery,
+            };
+
+            var orderId = await orderService.CreateOrder(model);
+
+            AssertExtensions.NullWithMessage(orderId, onNotNullErrorMessage);
+        }
+
+        [Fact]
+        public async Task CreateOrder_WithGivenProducts_ShouldrCreateOrderSuccessfully()
+        {
+            string onNullErrorMessage = "The order was not added to the database.";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var orderService = new OrderService(context);
+
+            OrderBindingModel model = new OrderBindingModel
+            {
+                DeliveryType = DeliveryType.Express,
+                PaymentType = PaymentType.OnDelivery,
+                Products = await this.GetProductsForOrder(),
+            };
+
+            var orderId = await orderService.CreateOrder(model);
+
+            var orderFromDatabase = await context.Orders.FirstOrDefaultAsync(x => x.Id == orderId);
+
+            AssertExtensions.NotNullWithMessage(orderFromDatabase, onNullErrorMessage);
+        }
+
+        [Fact]
+        public async Task AddProductsToOrder_WithExistingOrderAndGivenProducts_ShouldAddProductsSuccessfully()
+        {
+            string onFalseErrorMessage = "The method returned false with valid data.";
+            string onCountDifferenceErrorMessage = "The returned order products don't match the expected count.";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var orderService = new OrderService(context);
+
+            var products = await this.GetProductsForOrder();
+
+            OrderBindingModel model = new OrderBindingModel
+            {
+                DeliveryType = DeliveryType.Express,
+                PaymentType = PaymentType.OnDelivery,
+                Products = products,
+            };
+
+            var orderId = await orderService.CreateOrder(model);
+
+            var methodResult = await orderService.AddProductsToOrder(orderId, products);
+
+            Assert.True(methodResult, onFalseErrorMessage);
+
+            var orderFromDatabase = context.OrderProducts.Where(x => x.OrderId == orderId);
+
+            var expectedCount = products.Count;
+
+            AssertExtensions.EqualCountWithMessage(expectedCount, orderFromDatabase.Count(), onCountDifferenceErrorMessage);
+        }
+
+        [Fact]
+        public async Task AddProductsToOrder_WithNonExistingOrderAndGivenProducts_ShouldReturnFalse()
+        {
+            string onTrueErrorMessage = "The method returned true upon invalid orderId.";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var orderService = new OrderService(context);
+
+            var products = await this.GetProductsForOrder();
+
+            var orderId = "FakeOrderId";
+
+            var methodResult = await orderService.AddProductsToOrder(orderId, products);
+
+            Assert.False(methodResult, onTrueErrorMessage);
+        }
+
+        [Fact]
+        public async Task AddProductsToOrder_WithExistingOrderAndNoProducts_ShouldReturnFalse()
+        {
+            string onTrueErrorMessage = "The method returned true upon no products input.";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var orderService = new OrderService(context);
+
+            var products = await this.GetProductsForOrder();
+
+            OrderBindingModel model = new OrderBindingModel
+            {
+                DeliveryType = DeliveryType.Express,
+                PaymentType = PaymentType.OnDelivery,
+                Products = products,
+            };
+
+            var orderId = await orderService.CreateOrder(model);
+
+            // Passing null instead of the products
+            var methodResult = await orderService.AddProductsToOrder(orderId, null);
+
+            Assert.False(methodResult, onTrueErrorMessage);
+        }
+
+        [Fact]
+        public async Task GetConfirmationInfo_WithExistingOrder_ShouldReturnModel()
+        {
+            string onNullErrorMessage = "The returned model is null.";
+            string onStringDifference = "The model does not provide correct data for the order.";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var orderService = new OrderService(context);
+
+            var orderId = await this.SeedOrderWithProducts(context);
+
+            var confirmationModel = await orderService.GetConfirmationInfo(orderId);
+
+            AssertExtensions.NotNullWithMessage(confirmationModel, onNullErrorMessage);
+
+            var orderFromDatabase = await context.Orders
+                .FirstOrDefaultAsync(x =>
+                confirmationModel.QuantityProducts == x.Quantity &&
+                confirmationModel.TotalPrice == x.TotalPrice &&
+                confirmationModel.PaymentMethod == x.PaymentType.ToString());
+
+            AssertExtensions.EqualStringWithMessage(orderId, orderFromDatabase.Id, onStringDifference);
+        }
+
+        [Fact]
+        public async Task GetConfirmationInfo_WithNonExistingOrder_ShouldReturnNull()
+        {
+            string onNotNullErrorMessage = "The method did not return null upon non-existing order.";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var orderService = new OrderService(context);
+
+            var orderId = "FakeOrderId";
+
+            var confirmationModel = await orderService.GetConfirmationInfo(orderId);
+
+            AssertExtensions.NullWithMessage(confirmationModel, onNotNullErrorMessage);
+        }
+
+        [Fact]
+        public async Task GetAllUserOrders_WithSeededUserWithOrders_ShouldReturnCorrectOrders()
+        {
+            string onCountDifferenceErrorMessage = "The returned orders are not the same count as expected.";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var orderService = new OrderService(context);
+
+            // Seeding the orders for one user and recieves the orders.
+            var orders = await this.SeedUserWithMultipleOrders(context);
+
+            var userId = orders.First().ApplicationUserId;
+
+            var methodResult = await orderService.GetAllUserOrders(userId);
+
+            var expectedCount = orders.Count;
+            var actualCount = methodResult.Count();
+
+            AssertExtensions.EqualCountWithMessage(
+                expectedCount,
+                actualCount,
+                onCountDifferenceErrorMessage);
+        }
+
+        [Fact]
+        public async Task GetAllUserOrders_WithNonExistingUser_ShouldReturnAnEmptyCollection()
+        {
+            string onNonEmptyCollectionErrorMessage = "The method did not return an empty collection with non-existing user.";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var orderService = new OrderService(context);
+
+            var userId = "FakeUserId";
+
+            var methodResult = await orderService.GetAllUserOrders(userId);
+
+            AssertExtensions.EmptyWithMessage(methodResult, onNonEmptyCollectionErrorMessage);
+        }
+
+        [Fact]
+        public async Task GetAllUserOrders_WithUserWithNoOrders_ShouldReturnAnEmptyCollection()
+        {
+            string onNonEmptyCollectionErrorMessage = "The method did not return an empty collection with no user orders.";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var orderService = new OrderService(context);
+
+            // Seeding only one user with no orders
+            var userId = await this.SeedSingleUser(context);
+
+            var methodResult = await orderService.GetAllUserOrders(userId);
+
+            AssertExtensions.EmptyWithMessage(methodResult, onNonEmptyCollectionErrorMessage);
+        }
+
+        [Fact]
+        public async Task GetPendingOrders_WithSeededOrders_ShouldReturnCorrectOrders()
+        {
+            string onCountDifferenceErrorMessage = "The method did not return the correct orders.";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var orderService = new OrderService(context);
+
+            // Seeding multiple orders with 2 pending orders
+            await this.SeedMultipleOrders(context);
+
+            var pendingOrders = await orderService.GetPendingOrders();
+
+            var expectedCount = 2;
+
+            AssertExtensions.EqualCountWithMessage(
+                expectedCount,
+                pendingOrders.Count(),
+                onCountDifferenceErrorMessage);
+        }
+
+        [Fact]
+        public async Task GetPendingOrders_WithNoOrders_ShouldReturnAnEmptyCollection()
+        {
+            string onNonEmptyCollectionErrorMessage = "The method did not return an empty collection.";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var orderService = new OrderService(context);
+
+            var pendingOrders = await orderService.GetPendingOrders();
+
+            AssertExtensions.EmptyWithMessage(pendingOrders, onNonEmptyCollectionErrorMessage);
+        }
+
+        [Fact]
+        public async Task GetActiveOrders_WithSeededOrders_ShouldReturnCorrectOrders()
+        {
+            string onCountDifferenceErrorMessage = "The method did not return the correct orders.";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var orderService = new OrderService(context);
+
+            // Seeding multiple orders with 2 active orders
+            await this.SeedMultipleOrders(context);
+
+            var pendingOrders = await orderService.GetActiveOrders();
+
+            var expectedCount = 2;
+
+            AssertExtensions.EqualCountWithMessage(
+                expectedCount,
+                pendingOrders.Count(),
+                onCountDifferenceErrorMessage);
+        }
+
+        [Fact]
+        public async Task GetActiveOrders_WithNoOrders_ShouldReturnAnEmptyCollection()
+        {
+            string onNonEmptyCollectionErrorMessage = "The method did not return an empty collection.";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var orderService = new OrderService(context);
+
+            var pendingOrders = await orderService.GetActiveOrders();
+
+            AssertExtensions.EmptyWithMessage(pendingOrders, onNonEmptyCollectionErrorMessage);
+        }
+
+        [Fact]
+        public async Task ApproveOrder_WithExistingOrder_ShouldApproveSuccessfully()
+        {
+            string onFalseMethodResultErrorMessage = "The method did not return true on valid order.";
+            string onFalseDatabaseResultErrorMessage = "The order status was not changed properly";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var orderService = new OrderService(context);
+
+            var orderId = await this.SeedSingleOrder(context);
+
+            bool methodResult = await orderService.ApproveOrder(orderId);
+
+            Assert.True(methodResult, onFalseMethodResultErrorMessage);
+
+            var orderFromDatabase = await context.Orders.FirstOrDefaultAsync(x => x.Id == orderId);
+
+            Assert.True(orderFromDatabase.Status == OrderStatus.DeliveryInProgress, onFalseDatabaseResultErrorMessage);
+        }
+
+        [Fact]
+        public async Task ApproveOrder_WithNonExistingOrder_ShouldReturnFalse()
+        {
+            string onTrueErrorMessage = "The method did not return false on non-existing order.";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var orderService = new OrderService(context);
+
+            var orderId = "FakeOrderId";
+
+            bool methodResult = await orderService.ApproveOrder(orderId);
+
+            Assert.False(methodResult, onTrueErrorMessage);
+        }
+
+        [Fact]
+        public async Task CancelOrder_WithExistingOrder_ShouldApproveSuccessfully()
+        {
+            string onFalseMethodResultErrorMessage = "The method did not return true on valid order.";
+            string onFalseDatabaseResultErrorMessage = "The order status was not changed properly";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var orderService = new OrderService(context);
+
+            var orderId = await this.SeedSingleOrder(context);
+
+            bool methodResult = await orderService.CancelOrder(orderId);
+
+            Assert.True(methodResult, onFalseMethodResultErrorMessage);
+
+            var orderFromDatabase = await context.Orders.FirstOrDefaultAsync(x => x.Id == orderId);
+
+            Assert.True(orderFromDatabase.Status == OrderStatus.Canceled, onFalseDatabaseResultErrorMessage);
+        }
+
+        [Fact]
+        public async Task CancelOrder_WithNonExistingOrder_ShouldReturnFalse()
+        {
+            string onTrueErrorMessage = "The method did not return false on non-existing order.";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var orderService = new OrderService(context);
+
+            var orderId = "FakeOrderId";
+
+            bool methodResult = await orderService.CancelOrder(orderId);
+
+            Assert.False(methodResult, onTrueErrorMessage);
+        }
+
+        [Fact]
+        public async Task DeliverOrder_WithExistingOrder_ShouldApproveSuccessfully()
+        {
+            string onFalseMethodReturnErrorMessage = "The method did not return true on valid order.";
+            string onFalseDatabaseReturnErrorMessage = "The order status was not changed properly";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var orderService = new OrderService(context);
+
+            var orderId = await this.SeedSingleOrder(context);
+
+            bool methodResult = await orderService.DeliverOrder(orderId);
+
+            Assert.True(methodResult, onFalseMethodReturnErrorMessage);
+
+            var orderFromDatabase = await context.Orders.FirstOrDefaultAsync(x => x.Id == orderId);
+
+            Assert.True(orderFromDatabase.Status == OrderStatus.Delivered, onFalseDatabaseReturnErrorMessage);
+        }
+
+        [Fact]
+        public async Task DeliverOrder_WithNonExistingOrder_ShouldReturnFalse()
+        {
+            string onTrueErrorMessage = "The method did not return false on non-existing order.";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var orderService = new OrderService(context);
+
+            var orderId = "FakeOrderId";
+
+            bool methodResult = await orderService.DeliverOrder(orderId);
+
+            Assert.False(methodResult, onTrueErrorMessage);
         }
     }
 }

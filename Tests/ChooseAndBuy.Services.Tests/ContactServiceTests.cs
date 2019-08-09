@@ -6,6 +6,7 @@
 
     using ChooseAndBuy.Data;
     using ChooseAndBuy.Services.Mapping;
+    using ChooseAndBuy.Services.Tests.Common;
     using ChooseAndBuy.Services.Tests.Extensions;
     using ChooseAndBuy.Web.BindingModels;
     using ChooseAndBuy.Web.BindingModels.Home;
@@ -15,27 +16,7 @@
 
     public class ContactServiceTests
     {
-        [Fact]
-        public async Task AddContactMessage_WithData_ShouldAddTheMessageToDatabase()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var contactService = new ContactService(context);
-
-            var messageModel = this.GetMessageModel();
-
-            var methodResult = await contactService.AddContactMessage(messageModel);
-
-            Assert.True(methodResult, "The method returned a false statement.");
-
-            var contactMessageFromDb = await context.ContactMessages.FirstOrDefaultAsync();
-
-            AssertExtensions.NotNullWithMessage(contactMessageFromDb, "Contact message not found in database.");
-        }
-
-        public ContactBindingModel GetMessageModel()
+        private ContactBindingModel GetMessageModel()
         {
             ContactBindingModel model = new ContactBindingModel
             {
@@ -48,17 +29,30 @@
             return model;
         }
 
-        public DbContextOptions<ApplicationDbContext> ConfigureContextOptionsAndAutoMapper()
+        public ContactServiceTests()
         {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                    .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                    .Options;
+            MapperInitializer.InitializeMapper();
+        }
 
-            AutoMapperConfig.RegisterMappings(
-                typeof(ErrorViewModel).GetTypeInfo().Assembly,
-                typeof(ErrorBindingModel).GetTypeInfo().Assembly);
+        [Fact]
+        public async Task AddContactMessage_WithData_ShouldAddTheMessageToDatabase()
+        {
+            string onFalseErrorMessage = "The method returned a false statement.";
+            string onNullErrorMessage = "Contact message not found in database.";
 
-            return options;
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var contactService = new ContactService(context);
+
+            var messageModel = this.GetMessageModel();
+
+            var methodResult = await contactService.AddContactMessage(messageModel);
+
+            Assert.True(methodResult, onFalseErrorMessage);
+
+            var contactMessageFromDb = await context.ContactMessages.FirstOrDefaultAsync();
+
+            AssertExtensions.NotNullWithMessage(contactMessageFromDb, onNullErrorMessage);
         }
     }
 }

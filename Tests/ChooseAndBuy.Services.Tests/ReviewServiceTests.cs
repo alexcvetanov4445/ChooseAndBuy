@@ -1,84 +1,20 @@
 ﻿namespace ChooseAndBuy.Services.Tests
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using System.Threading.Tasks;
 
     using ChooseAndBuy.Data;
     using ChooseAndBuy.Data.Models;
-    using ChooseAndBuy.Services.Mapping;
+    using ChooseAndBuy.Services.Tests.Common;
     using ChooseAndBuy.Services.Tests.Extensions;
-    using ChooseAndBuy.Web.BindingModels;
     using ChooseAndBuy.Web.BindingModels.Products;
-    using ChooseAndBuy.Web.ViewModels;
     using Microsoft.EntityFrameworkCore;
     using Xunit;
 
     public class ReviewServiceTests
     {
-        [Fact]
-        public async Task AddReview_WithCorrectData_ShouldCreateSuccessfully()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var reviewService = new ReviewService(context);
-
-            ReviewBindingModel model = new ReviewBindingModel
-            {
-                ClientFullName = "TestClient",
-                Comment = "TestComment",
-                Rating = 5,
-            };
-
-            var methodResult = await reviewService.AddReview(model);
-
-            Assert.True(methodResult, "The method returned false on valid creation model.");
-
-            var reviewExists = context.Reviews.FirstOrDefaultAsync(x => x.ClientFullName == model.ClientFullName);
-
-            AssertExtensions.NotNullWithMessage(reviewExists, "The review was not added to the database.");
-        }
-
-        [Fact]
-        public async Task GetReviewsForProduct_WithSeededReviews_ShouldReturnCorrectReviews()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var reviewService = new ReviewService(context);
-
-            // Seeding 3 reviews for 1 product with Id - TestProductId
-            var expectedReviews = await this.SeedAndGetReviewsForProduct(context);
-
-            var productId = "TestProductId";
-
-            var methodResult = await reviewService.GetReviewsForProduct(productId);
-
-            Assert.True(methodResult.Any(x => expectedReviews.Any(y => y.ClientFullName == x.ClientFullName)), "The returned reviews are not correct.");
-        }
-
-        [Fact]
-        public async Task GetReviewsForProduct_WithNoExistingProduct_ShouldReturnEmptyCollection()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var reviewService = new ReviewService(context);
-
-            var productId = "TestProductId";
-
-            var methodResult = await reviewService.GetReviewsForProduct(productId);
-
-            AssertExtensions.EmptyWithMessage(methodResult, "The method did not return an empty collection.");
-        }
-
-        public async Task<List<Review>> SeedAndGetReviewsForProduct(ApplicationDbContext context)
+        private async Task<List<Review>> SeedAndGetReviewsForProduct(ApplicationDbContext context)
         {
             var product = new Product
             {
@@ -117,17 +53,74 @@
             return reviews;
         }
 
-        public DbContextOptions<ApplicationDbContext> ConfigureContextOptionsAndAutoMapper()
+        public ReviewServiceTests()
         {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                    .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                    .Options;
-
-            AutoMapperConfig.RegisterMappings(
-                typeof(ErrorViewModel).GetTypeInfo().Assembly,
-                typeof(ErrorBindingModel).GetTypeInfo().Assembly);
-
-            return options;
+            MapperInitializer.InitializeMapper();
         }
+
+        [Fact]
+        public async Task AddReview_WithCorrectData_ShouldCreateSuccessfully()
+        {
+            string onFalseErrorMessage = "The method returned false on valid creation model.";
+            string onNullErrorMessage = "The review was not added to the database.";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var reviewService = new ReviewService(context);
+
+            ReviewBindingModel model = new ReviewBindingModel
+            {
+                ClientFullName = "TestClient",
+                Comment = "TestComment",
+                Rating = 5,
+            };
+
+            var methodResult = await reviewService.AddReview(model);
+
+            Assert.True(methodResult, onFalseErrorMessage);
+
+            var reviewExists = context.Reviews.FirstOrDefaultAsync(x => x.ClientFullName == model.ClientFullName);
+
+            AssertExtensions.NotNullWithMessage(reviewExists, onNullErrorMessage);
+        }
+
+        [Fact]
+        public async Task GetReviewsForProduct_WithSeededReviews_ShouldReturnCorrectReviews()
+        {
+            string onFalseErrorMessage = "The returned reviews are not correct.";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var reviewService = new ReviewService(context);
+
+            // Seeding 3 reviews for 1 product with Id - TestProductId
+            var expectedReviews = await this.SeedAndGetReviewsForProduct(context);
+
+            var productId = "TestProductId";
+
+            var methodResult = await reviewService.GetReviewsForProduct(productId);
+
+            Assert.True(
+                methodResult.Any(x => expectedReviews.Any(y => y.ClientFullName == x.ClientFullName)),
+                onFalseErrorMessage);
+        }
+
+        [Fact]
+        public async Task GetReviewsForProduct_WithNoExistingProduct_ShouldReturnEmptyCollection()
+        {
+            string onNonEmptyCollectionErrorMessage = "The method did not return an empty collection.";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var reviewService = new ReviewService(context);
+
+            var productId = "TestProductId";
+
+            var methodResult = await reviewService.GetReviewsForProduct(productId);
+
+            AssertExtensions.EmptyWithMessage(methodResult, onNonEmptyCollectionErrorMessage);
+        }
+
+
     }
 }

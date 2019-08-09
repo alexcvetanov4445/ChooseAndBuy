@@ -1,182 +1,20 @@
 ﻿namespace ChooseAndBuy.Services.Tests
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using System.Threading.Tasks;
 
     using ChooseAndBuy.Data;
     using ChooseAndBuy.Data.Models;
-    using ChooseAndBuy.Services.Mapping;
+    using ChooseAndBuy.Services.Tests.Common;
     using ChooseAndBuy.Services.Tests.Extensions;
-    using ChooseAndBuy.Web.BindingModels;
     using ChooseAndBuy.Web.BindingModels.Administration.Categories;
-    using ChooseAndBuy.Web.ViewModels;
     using Microsoft.EntityFrameworkCore;
     using Xunit;
 
     public class CategoryServiceTests
     {
-        [Fact]
-        public async Task AddCategory_ShouldCreateCategorySuccessfully()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var categoryService = new CategoryService(context);
-
-            CreateCategoryBindingModel model =
-                new CreateCategoryBindingModel
-                {
-                    Name = "TestCategory",
-                };
-
-            var methodResult = await categoryService.AddCategory(model);
-            Assert.True(methodResult, "Method returned false bool.");
-
-            var categoryFromDb = context.Categories.FirstOrDefaultAsync();
-            AssertExtensions.NotNullWithMessage(categoryFromDb, "Category was not stored in the database.");
-        }
-
-        [Fact]
-        public async Task GetCategories_WithData_ShouldReturnCorrectData()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var categoryService = new CategoryService(context);
-
-            await this.SeedCategories(context);
-
-            var expectedCategories = this.GetCategories();
-            var actualCategories = await categoryService.GetCategories();
-
-            foreach (var actualCategory in actualCategories)
-            {
-                Assert.True(expectedCategories.Any(x => x.Name == actualCategory.Text), "Returned categories are not correct.");
-            }
-        }
-
-        [Fact]
-        public async Task GetCategories_WithoutData_ShouldReturnEmptyCollection()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var categoryService = new CategoryService(context);
-
-            var actualCategories = await categoryService.GetCategories();
-
-            AssertExtensions.EmptyWithMessage(actualCategories, "The method does not return an empty collection.");
-        }
-
-        [Fact]
-        public async Task GetCategoriesWithSubCategories_WithData_ShouldReturnCorrectData()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var categoryService = new CategoryService(context);
-
-            await this.SeedCategoriesWithSubCategories(context);
-
-            var expectedCategories = this.GetCategories();
-            var expectedSubCategories = this.GetSubCategories();
-
-            var actualCategoriesWithSubCategories = await categoryService.GetCategoriesWithSubCategories();
-
-            foreach (var ctg in actualCategoriesWithSubCategories)
-            {
-                // ctg -> string(category) with SelectListItem Collection(subcategory)
-                var categoryName = ctg.Key;
-                var subCategories = ctg.Value;
-
-                Assert.True(
-                    expectedCategories.Any(x => x.Name == categoryName),
-                    "The Category names don't match.");
-
-                Assert.True(
-                    expectedSubCategories.Any(x => subCategories.Any(y => y.Text == x.Name)),
-                    "The SubCategory name don't match.");
-            }
-        }
-
-        [Fact]
-        public async Task GetCategoriesWithSubCategories_WithoutData_ShouldReturnEmptyCollection()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var categoryService = new CategoryService(context);
-
-            var actualCategoriesWithSubCategories = await categoryService.GetCategoriesWithSubCategories();
-
-            AssertExtensions.EmptyWithMessage(
-                actualCategoriesWithSubCategories,
-                "The returned collection is not empty or it's null");
-        }
-
-        [Fact]
-        public async Task ValidateCategoryName_WithExistingCategoryName_ShouldReturnFalse()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            await this.SeedCategories(context);
-
-            var categoryService = new CategoryService(context);
-
-            var firstCategory = this.GetCategories().First();
-
-            var result = await categoryService.ValidateCategoryName(firstCategory.Name);
-
-            Assert.False(result, "The method returned true on existing category name.");
-        }
-
-        [Fact]
-        public async Task ValidateCategoryName_WithNonExistingCategoryName_ShouldReturnFalse()
-        {
-            var options = this.ConfigureContextOptionsAndAutoMapper();
-
-            var context = new ApplicationDbContext(options);
-
-            var categoryService = new CategoryService(context);
-
-            var firstCategory = this.GetCategories().First();
-
-            var result = await categoryService.ValidateCategoryName(firstCategory.Name);
-
-            Assert.True(result, "The method returned false on non-existing category name.");
-        }
-
-        public async Task SeedCategories(ApplicationDbContext context)
-        {
-            var categories = this.GetCategories();
-
-            await context.Categories.AddRangeAsync(categories);
-
-            await context.SaveChangesAsync();
-        }
-
-        public async Task SeedCategoriesWithSubCategories(ApplicationDbContext context)
-        {
-            var categories = this.GetCategories();
-            var subcategories = this.GetSubCategories();
-
-            await context.AddRangeAsync(categories);
-            await context.AddRangeAsync(subcategories);
-
-            await context.SaveChangesAsync();
-        }
-
-        public ICollection<SubCategory> GetSubCategories()
+        private ICollection<SubCategory> GetSubCategories()
         {
             var subCategories = new List<SubCategory>
             {
@@ -200,7 +38,7 @@
             return subCategories;
         }
 
-        public ICollection<Category> GetCategories()
+        private ICollection<Category> GetCategories()
         {
             var categories = new List<Category>
             {
@@ -224,17 +62,169 @@
             return categories;
         }
 
-        public DbContextOptions<ApplicationDbContext> ConfigureContextOptionsAndAutoMapper()
+        private async Task SeedCategories(ApplicationDbContext context)
         {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                    .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                    .Options;
+            var categories = this.GetCategories();
 
-            AutoMapperConfig.RegisterMappings(
-                typeof(ErrorViewModel).GetTypeInfo().Assembly,
-                typeof(ErrorBindingModel).GetTypeInfo().Assembly);
+            await context.Categories.AddRangeAsync(categories);
 
-            return options;
+            await context.SaveChangesAsync();
+        }
+
+        private async Task SeedCategoriesWithSubCategories(ApplicationDbContext context)
+        {
+            var categories = this.GetCategories();
+            var subcategories = this.GetSubCategories();
+
+            await context.AddRangeAsync(categories);
+            await context.AddRangeAsync(subcategories);
+
+            await context.SaveChangesAsync();
+        }
+
+        public CategoryServiceTests()
+        {
+            MapperInitializer.InitializeMapper();
+        }
+
+        [Fact]
+        public async Task AddCategory_ShouldCreateCategorySuccessfully()
+        {
+            string onFalseErrorMessage = "Method returned false bool.";
+            string onNullErrorMessage = "Category was not stored in the database.";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var categoryService = new CategoryService(context);
+
+            CreateCategoryBindingModel model =
+                new CreateCategoryBindingModel
+                {
+                    Name = "TestCategory",
+                };
+
+            var methodResult = await categoryService.AddCategory(model);
+            Assert.True(methodResult, onFalseErrorMessage);
+
+            var categoryFromDb = context.Categories.FirstOrDefaultAsync();
+            AssertExtensions.NotNullWithMessage(categoryFromDb, onNullErrorMessage);
+        }
+
+        [Fact]
+        public async Task GetCategories_WithData_ShouldReturnCorrectData()
+        {
+            string onFalseErrorMessage = "Returned categories are not correct.";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var categoryService = new CategoryService(context);
+
+            await this.SeedCategories(context);
+
+            var expectedCategories = this.GetCategories();
+            var actualCategories = await categoryService.GetCategories();
+
+            foreach (var actualCategory in actualCategories)
+            {
+                Assert.True(expectedCategories.Any(x => x.Name == actualCategory.Text), onFalseErrorMessage);
+            }
+        }
+
+        [Fact]
+        public async Task GetCategories_WithoutData_ShouldReturnEmptyCollection()
+        {
+            string onNonEmptyCollectionErrorMessage = "The method does not return an empty collection.";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var categoryService = new CategoryService(context);
+
+            var actualCategories = await categoryService.GetCategories();
+
+            AssertExtensions.EmptyWithMessage(actualCategories, onNonEmptyCollectionErrorMessage);
+        }
+
+        [Fact]
+        public async Task GetCategoriesWithSubCategories_WithData_ShouldReturnCorrectData()
+        {
+            string onFalseWithCategoryErrorMessage = "The Category names don't match.";
+            string onFalseWithSubCategoryErrorMessage = "The SubCategory name don't match.";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var categoryService = new CategoryService(context);
+
+            await this.SeedCategoriesWithSubCategories(context);
+
+            var expectedCategories = this.GetCategories();
+            var expectedSubCategories = this.GetSubCategories();
+
+            var actualCategoriesWithSubCategories = await categoryService.GetCategoriesWithSubCategories();
+
+            foreach (var ctg in actualCategoriesWithSubCategories)
+            {
+                // ctg -> string(category) with SelectListItem Collection(subcategory)
+                var categoryName = ctg.Key;
+                var subCategories = ctg.Value;
+
+                Assert.True(
+                    expectedCategories.Any(x => x.Name == categoryName),
+                    onFalseWithCategoryErrorMessage);
+
+                Assert.True(
+                    expectedSubCategories.Any(x => subCategories.Any(y => y.Text == x.Name)),
+                    onFalseWithSubCategoryErrorMessage);
+            }
+        }
+
+        [Fact]
+        public async Task GetCategoriesWithSubCategories_WithoutData_ShouldReturnEmptyCollection()
+        {
+            string onNonEmptyCollectionErrorMessage = "The returned collection is not empty or it's null";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var categoryService = new CategoryService(context);
+
+            var actualCategoriesWithSubCategories = await categoryService.GetCategoriesWithSubCategories();
+
+            AssertExtensions.EmptyWithMessage(
+                actualCategoriesWithSubCategories,
+                onNonEmptyCollectionErrorMessage);
+        }
+
+        [Fact]
+        public async Task ValidateCategoryName_WithExistingCategoryName_ShouldReturnFalse()
+        {
+            string onTrueErrorMessage = "The method returned true on existing category name.";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            await this.SeedCategories(context);
+
+            var categoryService = new CategoryService(context);
+
+            var firstCategory = this.GetCategories().First();
+
+            var result = await categoryService.ValidateCategoryName(firstCategory.Name);
+
+            Assert.False(result, onTrueErrorMessage);
+        }
+
+        [Fact]
+        public async Task ValidateCategoryName_WithNonExistingCategoryName_ShouldReturnFalse()
+        {
+            string onTrueErrorMessage = "The method returned false on non-existing category name.";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var categoryService = new CategoryService(context);
+
+            var firstCategory = this.GetCategories().First();
+
+            var result = await categoryService.ValidateCategoryName(firstCategory.Name);
+
+            Assert.True(result, onTrueErrorMessage);
         }
     }
 }
