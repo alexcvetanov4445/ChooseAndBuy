@@ -226,5 +226,80 @@
 
             Assert.False(methodResult, onTrueErrorMessage);
         }
+
+        [Fact]
+        public async Task DeleteSubCategory_WithExistingCategory_ShouldDeleteCategorySuccessfully()
+        {
+            string onFalseErrorMessage = "The method returned false upon valid sub-category input.";
+            string onNotNullErrorMessage = "The sub-category is not deleted from the database.";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var subCategoryService = new SubCategoryService(context);
+
+            await this.SeedAndGetSubCategoriesWithCategories(context);
+
+            string validSubCategoryId = "A-SubCategoryId-forFirst";
+
+            var methodResult = await subCategoryService.DeleteSubCategory(validSubCategoryId);
+
+            Assert.True(methodResult, onFalseErrorMessage);
+
+            var categoriesFromDb = await context
+                .Categories
+                .FirstOrDefaultAsync(c => c.Id == validSubCategoryId);
+
+            AssertExtensions.NullWithMessage(categoriesFromDb, onNotNullErrorMessage);
+        }
+
+        [Fact]
+        public async Task DeleteSubCategory_WithNonExistingCategory_ShouldReturnFalse()
+        {
+            string onTrueErrorMessage = "The method returned true upon valid category input.";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var subCategoryService = new SubCategoryService(context);
+
+            string invalidSubCategoryId = "FakeCategoryId";
+
+            var methodResult = await subCategoryService.DeleteSubCategory(invalidSubCategoryId);
+
+            Assert.False(methodResult, onTrueErrorMessage);
+        }
+
+        [Fact]
+        public async Task GetDeletableSubCategories_WithDeletableSubCategories_ShouldReturnCorrectCollection()
+        {
+            string onCountDiferenceErrorMessage = "The method did not return the expected collection with elements.";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var subCategoryService = new SubCategoryService(context);
+
+            await this.SeedAndGetSubCategoriesWithCategories(context);
+
+            var methodResult = await subCategoryService.GetDeletableSubCategories();
+
+            var expectedCount = 6;
+
+            AssertExtensions.EqualCountWithMessage(expectedCount, methodResult.Count(), onCountDiferenceErrorMessage);
+        }
+
+        [Fact]
+        public async Task GetDeletableSubCategories_WithNoSubCategories_ShouldReturnAnEmptyCollection()
+        {
+            string onCountDiferenceErrorMessage = "The method did not return an empty collection.";
+
+            var context = ApplicationDbContextInMemoryFactory.InitializeContext();
+
+            var subCategoryService = new SubCategoryService(context);
+
+            var methodResult = await subCategoryService.GetDeletableSubCategories();
+
+            var expectedCount = 0;
+
+            AssertExtensions.EqualCountWithMessage(expectedCount, methodResult.Count(), onCountDiferenceErrorMessage);
+        }
     }
 }
