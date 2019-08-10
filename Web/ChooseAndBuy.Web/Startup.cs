@@ -1,6 +1,7 @@
 ﻿namespace ChooseAndBuy.Web
 {
     using System;
+    using System.Linq;
     using System.Reflection;
     using System.Threading.Tasks;
 
@@ -159,8 +160,6 @@
                 typeof(ErrorViewModel).GetTypeInfo().Assembly,
                 typeof(ErrorBindingModel).GetTypeInfo().Assembly);
 
-            this.CreateRoles(serviceProvider).Wait();
-
             // Seed data on application startup
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
@@ -171,8 +170,29 @@
                     dbContext.Database.Migrate();
                 }
 
+                dbContext.Database.EnsureCreated();
+
+                if (!dbContext.Cities.Any())
+                {
+                    dbContext.Cities.Add(new City
+                    {
+                        Name = "Sofia",
+                        Postcode = "1000",
+                    });
+
+                    dbContext.Cities.Add(new City
+                    {
+                        Name = "Plovdiv",
+                        Postcode = "2000",
+                    });
+                }
+
+                dbContext.SaveChanges();
+
                 new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
             }
+
+            this.CreateRoles(serviceProvider).Wait();
 
             if (env.IsDevelopment())
             {
