@@ -165,11 +165,6 @@
             {
                 var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-                if (env.IsDevelopment())
-                {
-                    dbContext.Database.Migrate();
-                }
-
                 dbContext.Database.EnsureCreated();
 
                 if (!dbContext.Cities.Any())

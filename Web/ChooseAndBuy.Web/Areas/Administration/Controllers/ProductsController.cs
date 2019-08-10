@@ -57,9 +57,7 @@
 
             this.TempData["Success"] = $"Successully created {model.Name}";
 
-            var emptyModel = new CreateProductBindingModel { SubCategories = subCategories.ToList() };
-
-            return this.View(emptyModel);
+            return this.RedirectToAction("Create");
         }
 
         [HttpPost]

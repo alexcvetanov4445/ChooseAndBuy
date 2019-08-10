@@ -37,7 +37,7 @@
         </div>
         <!-- Start Filter Bar -->
         <div class="col-xl-9 col-lg-8 col-md-7">
-            <form method="post" asp-controller="products" asp-action="index">
+            <form asp-action="index" asp-controller="products" method="get">
                 <div class="filter-bar d-flex flex-wrap align-items-center">
                     <input type="hidden" name="SubCategoryId" value="@Model.SubCategoryId">
                     <input type="hidden" name="PageNum" value="@Model.PageNum">
