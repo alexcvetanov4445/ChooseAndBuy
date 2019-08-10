@@ -30,10 +30,9 @@
         [HttpGet]
         public async Task<IActionResult> Index(ProductsViewModel model)
         {
-            // TODO: make the default values contstants
-            var page = model.PageNum ?? 1;
-            var show = model.ShowNum ?? 6;
-            var sortBy = model.SortBy ?? 1;
+            var page = model.PageNum ?? GlobalConstants.DefaultProductsPage;
+            var show = model.ShowNum ?? GlobalConstants.DefaultProductsShow;
+            var sortBy = model.SortBy ?? GlobalConstants.DefaultProductsSorting;
 
             var products = await this.productsService.GetProducts(model.Search, model.SubCategoryId, sortBy);
 
@@ -56,7 +55,7 @@
                 {
                     new SearchViewModel
                     {
-                        Value = "No results were found",
+                        Value = GlobalConstants.SearchNoResults,
                         Url = string.Empty,
                     },
                 });

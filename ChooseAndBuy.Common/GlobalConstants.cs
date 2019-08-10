@@ -12,6 +12,14 @@
 
         public const decimal DeliveryFee = 3.90m;
 
+        public const int DefaultProductsPage = 1;
+
+        public const int DefaultProductsShow = 6;
+
+        public const int DefaultProductsSorting = 1;
+
+        public const string SearchNoResults = "No results were found.";
+
         public const string ShoppingCartSession = "shoppingCart";
 
         public const string ProductDetailsUrl = "https://localhost:44319/Products/Details/";
